@@ -1,10 +1,10 @@
 function PlayBack() {
     this.map = {};
+    this.replayData = {};
 };
 
-PlayBack.prototype.init = function() {
+PlayBack.prototype.init = function(data) {
 
-
-
-    this.map = new Map();
+    this.replayData = JSON.parse(data);
+    this.map = new Map(this.replayData.map);
 };

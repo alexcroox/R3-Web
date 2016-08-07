@@ -1,0 +1,10 @@
+{
+    "name": "altis",
+    "width": 30721,
+    "height": 30720,
+    "bgColor": "#C7E6FC",
+    "maxZoom": 7,
+    "minZoom": 3,
+    "initZoom": 4,
+    "doubleSize": 0
+}

@@ -6,6 +6,6 @@ $('document').ready(function() {
     if($('.playback-list').length)
         playBackList.init();
 
-    if(typeof playBackPresets !== "undefined")
-        playBack.init();
+    if(typeof replayData !== "undefined")
+        playBack.init(replayData);
 });

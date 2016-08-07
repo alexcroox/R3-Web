@@ -34,7 +34,7 @@ class Replays {
                 replays r
             WHERE
                 hidden = 0 AND
-                (SELECT missionTime FROM events WHERE replayId = r.id ORDER BY missionTime DESC LIMIT 1) > 200
+                (SELECT missionTime FROM events WHERE replayId = r.id ORDER BY missionTime DESC LIMIT 1) > :minTime
             ORDER BY
                 dateStarted DESC
         ");

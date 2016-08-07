@@ -7,7 +7,7 @@ define('UNIT_NAME', 'Example Unit Name');
     to appear in the missions list. This prevents
     test missions from cluttering the list
 */
-define('MIN_MISSION_TIME', 200);
+define('MIN_MISSION_TIME', 100);
 
 /*
     Minutes after last event received before playback can be viewed.
