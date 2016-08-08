@@ -244,13 +244,13 @@ L.Map.mergeOptions({
     measureControl: false
 });
 
-L.Map.addInitHook(function () {
+L.Map.addInitHook(function() {
     if (this.options.measureControl) {
         this.measureControl = new L.Control.Measure();
         this.addControl(this.measureControl);
     }
 });
 
-L.control.measure = function (options) {
+L.control.measure = function(options) {
     return new L.Control.Measure(options);
 };

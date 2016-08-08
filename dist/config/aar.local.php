@@ -25,3 +25,14 @@ define('WEB_PATH', 'http://aar.local');
     If you have set this up change the below to TRUE
  */
 define('TILE_SUBDOMAINS', FALSE);
+
+
+/*
+    If enabled the events will be cached to a flat file on first load and
+    the original data deleted from the db table.
+
+    With 5R we saw a big reduction in CPU usage when switching to flat file caches.
+    If your site experiences heavy traffic consider setting up nginx as a reverse proxy to apache
+    so it can serve up these static files avoiding resource hungry PHP altogether
+*/
+define('CACHE_EVENTS', FALSE); // Will delete original data, backup your cache folder regularly!

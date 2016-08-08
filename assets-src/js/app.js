@@ -1,11 +1,10 @@
-var playBackList = new PlayBackList(),
-    playBack = new PlayBack();
-
 $('document').ready(function() {
+
+    var playBackList = new PlayBackList();
 
     if($('.playback-list').length)
         playBackList.init();
 
-    if(typeof replayData !== "undefined")
-        playBack.init(replayData);
+    if(typeof replayDetails !== "undefined")
+        new PlayBack(replayDetails, sharedPresets, cacheAvailable);
 });

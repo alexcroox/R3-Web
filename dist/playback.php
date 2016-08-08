@@ -22,8 +22,12 @@ $title = $replayDetails->missionName;
 
 $replayDetails->{'tileSubDomains'} = TILE_SUBDOMAINS;
 
+// Do we have a cached version of this playback?
+$cacheAvailable = $replays->isCachedVersionAvailable($replayDetails->id);
+
 $view->render('playback', array(
     'title' => $title,
-    'replayData' => $replayDetails,
-    'urlVars' => $_GET
+    'replayDetails' => $replayDetails,
+    'sharedPresets' => $_GET,
+    'cacheAvailable' => $cacheAvailable
 ));

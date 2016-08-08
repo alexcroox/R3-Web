@@ -1,1608 +1,1608 @@
 [
 {
-    "value": "AAC airfield",
+    "label": "AAC airfield",
     "type": "namelocal",
     "x": "11461.2000",
     "y": "11661.7000"
 },
 {
-    "value": "Vikos",
+    "label": "Vikos",
     "type": "namelocal",
     "x": "11556.9000",
     "y": "9417.0600"
 },
 {
-    "value": "Sfaka",
+    "label": "Sfaka",
     "type": "namelocal",
     "x": "9213.9500",
     "y": "8079.0300"
 },
 {
-    "value": "Makrynisi",
+    "label": "Makrynisi",
     "type": "namelocal",
     "x": "13471.9000",
     "y": "12018.5000"
 },
 {
-    "value": "Eginio",
+    "label": "Eginio",
     "type": "namelocal",
     "x": "11549.2000",
     "y": "7088.3900"
 },
 {
-    "value": "Edessa",
+    "label": "Edessa",
     "type": "namelocal",
     "x": "7194.2300",
     "y": "11044.0000"
 },
 {
-    "value": "Xirolimni Dam",
+    "label": "Xirolimni Dam",
     "type": "namelocal",
     "x": "9115.2200",
     "y": "13959.8000"
 },
 {
-    "value": "Kavirida",
+    "label": "Kavirida",
     "type": "namelocal",
     "x": "7324.2400",
     "y": "12125.4000"
 },
 {
-    "value": "Agios Kosmas",
+    "label": "Agios Kosmas",
     "type": "namelocal",
     "x": "8555.3200",
     "y": "7335.5100"
 },
 {
-    "value": "Faronaki",
+    "label": "Faronaki",
     "type": "namelocal",
     "x": "14934.4000",
     "y": "11079.5000"
 },
 {
-    "value": "Monisi",
+    "label": "Monisi",
     "type": "namelocal",
     "x": "7813.3600",
     "y": "7641.1900"
 },
 {
-    "value": "Agios Panagiotis",
+    "label": "Agios Panagiotis",
     "type": "namelocal",
     "x": "6272.7500",
     "y": "12173.9000"
 },
 {
-    "value": "Edoris",
+    "label": "Edoris",
     "type": "namelocal",
     "x": "6002.7500",
     "y": "10511.4000"
 },
 {
-    "value": "dump",
+    "label": "dump",
     "type": "namelocal",
     "x": "5900.4700",
     "y": "12454.4000"
 },
 {
-    "value": "Cap Makrinos",
+    "label": "Cap Makrinos",
     "type": "namelocal",
     "x": "14225.9000",
     "y": "6237.9900"
 },
 {
-    "value": "Pyrgi",
+    "label": "Pyrgi",
     "type": "namelocal",
     "x": "14489.9000",
     "y": "5871.7000"
 },
 {
-    "value": "factory",
+    "label": "factory",
     "type": "namelocal",
     "x": "12577.4000",
     "y": "16352.8000"
 },
 {
-    "value": "quarry",
+    "label": "quarry",
     "type": "namelocal",
     "x": "17060.5000",
     "y": "11339.1000"
 },
 {
-    "value": "military",
+    "label": "military",
     "type": "namelocal",
     "x": "12771.6000",
     "y": "16694.3000"
 },
 {
-    "value": "airbase",
+    "label": "airbase",
     "type": "namelocal",
     "x": "14037.6000",
     "y": "16143.3000"
 },
 {
-    "value": "Chelonisi",
+    "label": "Chelonisi",
     "type": "namelocal",
     "x": "16636.5000",
     "y": "13582.2000"
 },
 {
-    "value": "quarry",
+    "label": "quarry",
     "type": "namelocal",
     "x": "4379.1500",
     "y": "12594.4000"
 },
 {
-    "value": "factory",
+    "label": "factory",
     "type": "namelocal",
     "x": "5307.1200",
     "y": "14500.1000"
 },
 {
-    "value": "Stadium",
+    "label": "Stadium",
     "type": "namelocal",
     "x": "5429.6900",
     "y": "14996.7000"
 },
 {
-    "value": "Amfissa",
+    "label": "Amfissa",
     "type": "namelocal",
     "x": "8088.8100",
     "y": "17257.7000"
 },
 {
-    "value": "Athanos",
+    "label": "Athanos",
     "type": "namelocal",
     "x": "3571.2200",
     "y": "10243.7000"
 },
 {
-    "value": "Terminal",
+    "label": "Terminal",
     "type": "namelocal",
     "x": "14522.4000",
     "y": "16833.9000"
 },
 {
-    "value": "power plant",
+    "label": "power plant",
     "type": "namelocal",
     "x": "15420.8000",
     "y": "16223.6000"
 },
 {
-    "value": "factory",
+    "label": "factory",
     "type": "namelocal",
     "x": "6109.4900",
     "y": "16246.2000"
 },
 {
-    "value": "military",
+    "label": "military",
     "type": "namelocal",
     "x": "15137.2000",
     "y": "17297.8000"
 },
 {
-    "value": "power plant",
+    "label": "power plant",
     "type": "namelocal",
     "x": "4163.6000",
     "y": "15047.2000"
 },
 {
-    "value": "Livadi",
+    "label": "Livadi",
     "type": "namelocal",
     "x": "18410.5000",
     "y": "8098.3000"
 },
 {
-    "value": "Kavala Pier",
+    "label": "Kavala Pier",
     "type": "namelocal",
     "x": "3014.8300",
     "y": "12587.3000"
 },
 {
-    "value": "Kastro",
+    "label": "Kastro",
     "type": "namelocal",
     "x": "3041.4000",
     "y": "13162.8000"
 },
 {
-    "value": "Cap Drakontas",
+    "label": "Cap Drakontas",
     "type": "namelocal",
     "x": "2657.3200",
     "y": "11461.5000"
 },
 {
-    "value": "military",
+    "label": "military",
     "type": "namelocal",
     "x": "16030.4000",
     "y": "17004.8000"
 },
 {
-    "value": "Savri",
+    "label": "Savri",
     "type": "namelocal",
     "x": "2370.9500",
     "y": "11507.0000"
 },
 {
-    "value": "mine",
+    "label": "mine",
     "type": "namelocal",
     "x": "18435.1000",
     "y": "14301.8000"
 },
 {
-    "value": "Fournos",
+    "label": "Fournos",
     "type": "namelocal",
     "x": "2313.6700",
     "y": "9289.3100"
 },
 {
-    "value": "Gori",
+    "label": "Gori",
     "type": "namelocal",
     "x": "5455.7200",
     "y": "17553.7000"
 },
 {
-    "value": "storage",
+    "label": "storage",
     "type": "namelocal",
     "x": "18260.6000",
     "y": "15551.2000"
 },
 {
-    "value": "factory",
+    "label": "factory",
     "type": "namelocal",
     "x": "14294.6000",
     "y": "18928.5000"
 },
 {
-    "value": "quarry",
+    "label": "quarry",
     "type": "namelocal",
     "x": "19566.4000",
     "y": "15617.3000"
 },
 {
-    "value": "Surf Club",
+    "label": "Surf Club",
     "type": "namelocal",
     "x": "21339.4000",
     "y": "10434.0000"
 },
 {
-    "value": "Aktinarki",
+    "label": "Aktinarki",
     "type": "namelocal",
     "x": "21449.9000",
     "y": "10873.8000"
 },
 {
-    "value": "dump",
+    "label": "dump",
     "type": "namelocal",
     "x": "5887.1300",
     "y": "20236.5000"
 },
 {
-    "value": "Limni",
+    "label": "Limni",
     "type": "namelocal",
     "x": "20920.8000",
     "y": "14775.4000"
 },
 {
-    "value": "Zeloran",
+    "label": "Zeloran",
     "type": "namelocal",
     "x": "17043.5000",
     "y": "19592.2000"
 },
 {
-    "value": "Aristi",
+    "label": "Aristi",
     "type": "namelocal",
     "x": "7914.0500",
     "y": "21305.2000"
 },
 {
-    "value": "Fotia",
+    "label": "Fotia",
     "type": "namelocal",
     "x": "2993.4800",
     "y": "18517.4000"
 },
 {
-    "value": "Cap Zefyris",
+    "label": "Cap Zefyris",
     "type": "namelocal",
     "x": "18049.3000",
     "y": "19186.6000"
 },
 {
-    "value": "Trachia",
+    "label": "Trachia",
     "type": "namelocal",
     "x": "22128.1000",
     "y": "8453.9800"
 },
 {
-    "value": "Krya Nera",
+    "label": "Krya Nera",
     "type": "namelocal",
     "x": "9681.5800",
     "y": "22294.5000"
 },
 {
-    "value": "Mazi",
+    "label": "Mazi",
     "type": "namelocal",
     "x": "21772.4000",
     "y": "6014.5300"
 },
 {
-    "value": "Cap Kategidis",
+    "label": "Cap Kategidis",
     "type": "namelocal",
     "x": "22792.0000",
     "y": "13638.4000"
 },
 {
-    "value": "Agios Georgios",
+    "label": "Agios Georgios",
     "type": "namelocal",
     "x": "20296.3000",
     "y": "18635.1000"
 },
 {
-    "value": "Agia Pelagia",
+    "label": "Agia Pelagia",
     "type": "namelocal",
     "x": "22707.6000",
     "y": "6930.5700"
 },
 {
-    "value": "castle",
+    "label": "castle",
     "type": "namelocal",
     "x": "4802.9900",
     "y": "21855.5000"
 },
 {
-    "value": "Faros",
+    "label": "Faros",
     "type": "namelocal",
     "x": "6565.3000",
     "y": "22639.1000"
 },
 {
-    "value": "Nychi",
+    "label": "Nychi",
     "type": "namelocal",
     "x": "16837.4000",
     "y": "21890.0000"
 },
 {
-    "value": "Cap Agrios",
+    "label": "Cap Agrios",
     "type": "namelocal",
     "x": "14688.2000",
     "y": "23496.2000"
 },
 {
-    "value": "Ochrolimni",
+    "label": "Ochrolimni",
     "type": "namelocal",
     "x": "23650.1000",
     "y": "16227.3000"
 },
 {
-    "value": "Cap Thelos",
+    "label": "Cap Thelos",
     "type": "namelocal",
     "x": "24067.6000",
     "y": "15560.3000"
 },
 {
-    "value": "Bomos",
+    "label": "Bomos",
     "type": "namelocal",
     "x": "2307.3100",
     "y": "22165.2000"
 },
 {
-    "value": "Atsalis",
+    "label": "Atsalis",
     "type": "namelocal",
     "x": "8304.8300",
     "y": "25081.2000"
 },
 {
-    "value": "Almyra",
+    "label": "Almyra",
     "type": "namelocal",
     "x": "23495.6000",
     "y": "18392.6000"
 },
 {
-    "value": "Iraklia",
+    "label": "Iraklia",
     "type": "namelocal",
     "x": "21628.3000",
     "y": "21274.9000"
 },
 {
-    "value": "military",
+    "label": "military",
     "type": "namelocal",
     "x": "23533.2000",
     "y": "21108.0000"
 },
 {
-    "value": "Nidasos",
+    "label": "Nidasos",
     "type": "namelocal",
     "x": "23662.9000",
     "y": "21796.1000"
 },
 {
-    "value": "power plant",
+    "label": "power plant",
     "type": "namelocal",
     "x": "25462.6000",
     "y": "20357.7000"
 },
 {
-    "value": "military",
+    "label": "military",
     "type": "namelocal",
     "x": "25350.6000",
     "y": "21790.9000"
 },
 {
-    "value": "Sideras",
+    "label": "Sideras",
     "type": "namelocal",
     "x": "23274.5000",
     "y": "24198.3000"
 },
 {
-    "value": "Gatolia",
+    "label": "Gatolia",
     "type": "namelocal",
     "x": "26723.0000",
     "y": "21230.3000"
 },
 {
-    "value": "Limnichori",
+    "label": "Limnichori",
     "type": "namelocal",
     "x": "25703.7000",
     "y": "23561.6000"
 },
 {
-    "value": "Molos Airfield",
+    "label": "Molos Airfield",
     "type": "namelocal",
     "x": "26939.8000",
     "y": "24743.8000"
 },
 {
-    "value": "Polemistia",
+    "label": "Polemistia",
     "type": "namelocal",
     "x": "27998.6000",
     "y": "23775.8000"
 },
 {
-    "value": "Cap Strigla",
+    "label": "Cap Strigla",
     "type": "namelocal",
     "x": "28059.2000",
     "y": "25626.4000"
 },
 {
-    "value": "Therisa",
+    "label": "Therisa",
     "type": "namevillage",
     "x": "10618.9000",
     "y": "12237.3000"
 },
 {
-    "value": "Katalaki",
+    "label": "Katalaki",
     "type": "namevillage",
     "x": "11701.1000",
     "y": "13672.1000"
 },
 {
-    "value": "Alikampos",
+    "label": "Alikampos",
     "type": "namevillage",
     "x": "11112.6000",
     "y": "14573.7000"
 },
 {
-    "value": "Sagonisi",
+    "label": "Sagonisi",
     "type": "namevillage",
     "x": "14281.2000",
     "y": "13469.3000"
 },
 {
-    "value": "Stavros",
+    "label": "Stavros",
     "type": "namevillage",
     "x": "12950.1000",
     "y": "15041.6000"
 },
 {
-    "value": "Panochori",
+    "label": "Panochori",
     "type": "namevillage",
     "x": "5033.3100",
     "y": "11245.2000"
 },
 {
-    "value": "Topolia",
+    "label": "Topolia",
     "type": "namevillage",
     "x": "7375.8100",
     "y": "15429.5000"
 },
 {
-    "value": "Ekali",
+    "label": "Ekali",
     "type": "namevillage",
     "x": "17059.7000",
     "y": "9992.3200"
 },
 {
-    "value": "Orino",
+    "label": "Orino",
     "type": "namevillage",
     "x": "10410.4000",
     "y": "17243.1000"
 },
 {
-    "value": "Neri",
+    "label": "Neri",
     "type": "namevillage",
     "x": "4116.1100",
     "y": "11736.1000"
 },
 {
-    "value": "Aggelochori",
+    "label": "Aggelochori",
     "type": "namevillage",
     "x": "3687.7800",
     "y": "13776.1000"
 },
 {
-    "value": "Koroni",
+    "label": "Koroni",
     "type": "namevillage",
     "x": "11786.7000",
     "y": "18372.4000"
 },
 {
-    "value": "Anthrakia",
+    "label": "Anthrakia",
     "type": "namevillage",
     "x": "16584.3000",
     "y": "16104.0000"
 },
 {
-    "value": "Negades",
+    "label": "Negades",
     "type": "namevillage",
     "x": "4885.9800",
     "y": "16171.3000"
 },
 {
-    "value": "Galati",
+    "label": "Galati",
     "type": "namevillage",
     "x": "10270.3000",
     "y": "19036.0000"
 },
 {
-    "value": "Ifestiona",
+    "label": "Ifestiona",
     "type": "namevillage",
     "x": "12787.0000",
     "y": "19679.3000"
 },
 {
-    "value": "Agios Konstantinos",
+    "label": "Agios Konstantinos",
     "type": "namevillage",
     "x": "3948.7700",
     "y": "17277.8000"
 },
 {
-    "value": "Abdera",
+    "label": "Abdera",
     "type": "namevillage",
     "x": "9425.4200",
     "y": "20284.0000"
 },
 {
-    "value": "Panagia",
+    "label": "Panagia",
     "type": "namevillage",
     "x": "20490.2000",
     "y": "8907.1200"
 },
 {
-    "value": "Nifi",
+    "label": "Nifi",
     "type": "namevillage",
     "x": "19473.3000",
     "y": "15453.7000"
 },
 {
-    "value": "Kalithea",
+    "label": "Kalithea",
     "type": "namevillage",
     "x": "17826.5000",
     "y": "18129.4000"
 },
 {
-    "value": "Selakano",
+    "label": "Selakano",
     "type": "namevillage",
     "x": "20769.8000",
     "y": "6736.4600"
 },
 {
-    "value": "Agios Petros",
+    "label": "Agios Petros",
     "type": "namevillage",
     "x": "19339.4000",
     "y": "17641.6000"
 },
 {
-    "value": "Feres",
+    "label": "Feres",
     "type": "namevillage",
     "x": "21640.7000",
     "y": "7583.9300"
 },
 {
-    "value": "Agia Triada",
+    "label": "Agia Triada",
     "type": "namevillage",
     "x": "16668.5000",
     "y": "20487.0000"
 },
 {
-    "value": "Oreokastro",
+    "label": "Oreokastro",
     "type": "namevillage",
     "x": "4560.4500",
     "y": "21460.6000"
 },
 {
-    "value": "Ioannina",
+    "label": "Ioannina",
     "type": "namevillage",
     "x": "23199.7000",
     "y": "19986.6000"
 },
 {
-    "value": "Delfinaki",
+    "label": "Delfinaki",
     "type": "namevillage",
     "x": "23908.6000",
     "y": "20144.7000"
 },
 {
-    "value": "Zaros",
+    "label": "Zaros",
     "type": "namecity",
     "x": "9091.8100",
     "y": "11961.9000"
 },
 {
-    "value": "Poliakko",
+    "label": "Poliakko",
     "type": "namecity",
     "x": "10966.5000",
     "y": "13435.3000"
 },
 {
-    "value": "Neochori",
+    "label": "Neochori",
     "type": "namecity",
     "x": "12502.0000",
     "y": "14337.0000"
 },
 {
-    "value": "Lakka",
+    "label": "Lakka",
     "type": "namecity",
     "x": "12282.0000",
     "y": "15732.3000"
 },
 {
-    "value": "Agios Dionysios",
+    "label": "Agios Dionysios",
     "type": "namecity",
     "x": "9187.9500",
     "y": "15947.8000"
 },
 {
-    "value": "Kore",
+    "label": "Kore",
     "type": "namecity",
     "x": "7062.4200",
     "y": "16472.1000"
 },
 {
-    "value": "Gravia",
+    "label": "Gravia",
     "type": "namecity",
     "x": "14479.8000",
     "y": "17614.3000"
 },
 {
-    "value": "Syrta",
+    "label": "Syrta",
     "type": "namecity",
     "x": "8625.1300",
     "y": "18301.6000"
 },
 {
-    "value": "Telos",
+    "label": "Telos",
     "type": "namecity",
     "x": "16207.0000",
     "y": "17296.7000"
 },
 {
-    "value": "Charkia",
+    "label": "Charkia",
     "type": "namecity",
     "x": "18049.1000",
     "y": "15264.1000"
 },
 {
-    "value": "Dorida",
+    "label": "Dorida",
     "type": "namecity",
     "x": "19336.9000",
     "y": "13252.3000"
 },
 {
-    "value": "Chalkeia",
+    "label": "Chalkeia",
     "type": "namecity",
     "x": "20194.6000",
     "y": "11660.7000"
 },
 {
-    "value": "Rodopoli",
+    "label": "Rodopoli",
     "type": "namecity",
     "x": "18753.4000",
     "y": "16597.1000"
 },
 {
-    "value": "Frini",
+    "label": "Frini",
     "type": "namecity",
     "x": "14612.5000",
     "y": "20786.7000"
 },
 {
-    "value": "Paros",
+    "label": "Paros",
     "type": "namecity",
     "x": "20885.4000",
     "y": "16958.8000"
 },
 {
-    "value": "Kalochori",
+    "label": "Kalochori",
     "type": "namecity",
     "x": "21351.6000",
     "y": "16361.9000"
 },
 {
-    "value": "Sofia",
+    "label": "Sofia",
     "type": "namecity",
     "x": "25680.5000",
     "y": "21365.1000"
 },
 {
-    "value": "Molos",
+    "label": "Molos",
     "type": "namecity",
     "x": "26943.9000",
     "y": "23170.7000"
 },
 {
-    "value": "Pyrgos",
+    "label": "Pyrgos",
     "type": "namecitycapital",
     "x": "16780.6000",
     "y": "12604.5000"
 },
 {
-    "value": "Kavala",
+    "label": "Kavala",
     "type": "namecitycapital",
     "x": "3458.9500",
     "y": "12966.4000"
 },
 {
-    "value": "Athira",
+    "label": "Athira",
     "type": "namecitycapital",
     "x": "13993.0000",
     "y": "18709.4000"
 },
 {
-    "value": "Melanera Bay",
+    "label": "Melanera Bay",
     "type": "namemarine",
     "x": "11226.2000",
     "y": "10574.7000"
 },
 {
-    "value": "Zaros Bay",
+    "label": "Zaros Bay",
     "type": "namemarine",
     "x": "9210.6600",
     "y": "10250.5000"
 },
 {
-    "value": "Katalaki Bay",
+    "label": "Katalaki Bay",
     "type": "namemarine",
     "x": "12269.8000",
     "y": "13659.3000"
 },
 {
-    "value": "Edessa Bay",
+    "label": "Edessa Bay",
     "type": "namemarine",
     "x": "6862.3300",
     "y": "10614.1000"
 },
 {
-    "value": "Naftia Bay",
+    "label": "Naftia Bay",
     "type": "namemarine",
     "x": "12157.6000",
     "y": "6376.2400"
 },
 {
-    "value": "Pyrgos Gulf",
+    "label": "Pyrgos Gulf",
     "type": "namemarine",
     "x": "15139.2000",
     "y": "14229.9000"
 },
 {
-    "value": "Iremi Bay",
+    "label": "Iremi Bay",
     "type": "namemarine",
     "x": "5117.6300",
     "y": "9761.5000"
 },
 {
-    "value": "Panochori Bay",
+    "label": "Panochori Bay",
     "type": "namemarine",
     "x": "4005.2900",
     "y": "9908.5900"
 },
 {
-    "value": "Neri Bay",
+    "label": "Neri Bay",
     "type": "namemarine",
     "x": "3166.0000",
     "y": "11234.2000"
 },
 {
-    "value": "Kavala Bay",
+    "label": "Kavala Bay",
     "type": "namemarine",
     "x": "3004.5800",
     "y": "13675.9000"
 },
 {
-    "value": "Negades Bay",
+    "label": "Negades Bay",
     "type": "namemarine",
     "x": "3458.0400",
     "y": "16859.6000"
 },
 {
-    "value": "Kalithea Bay",
+    "label": "Kalithea Bay",
     "type": "namemarine",
     "x": "18161.0000",
     "y": "18676.6000"
 },
 {
-    "value": "Chalkeia Bay",
+    "label": "Chalkeia Bay",
     "type": "namemarine",
     "x": "21859.6000",
     "y": "12594.9000"
 },
 {
-    "value": "Ammolofi Bay",
+    "label": "Ammolofi Bay",
     "type": "namemarine",
     "x": "9525.4400",
     "y": "22649.0000"
 },
 {
-    "value": "Mazi Bay",
+    "label": "Mazi Bay",
     "type": "namemarine",
     "x": "22181.4000",
     "y": "6154.2300"
 },
 {
-    "value": "Tonos Bay",
+    "label": "Tonos Bay",
     "type": "namemarine",
     "x": "11988.3000",
     "y": "22985.7000"
 },
 {
-    "value": "Thelos Bay",
+    "label": "Thelos Bay",
     "type": "namemarine",
     "x": "22979.7000",
     "y": "14939.0000"
 },
 {
-    "value": "Pefkas Bay",
+    "label": "Pefkas Bay",
     "type": "namemarine",
     "x": "21204.7000",
     "y": "20464.6000"
 },
 {
-    "value": "Galana Nera Bay",
+    "label": "Galana Nera Bay",
     "type": "namemarine",
     "x": "24924.1000",
     "y": "24206.6000"
 },
 {
-    "value": "Molos Bay",
+    "label": "Molos Bay",
     "type": "namemarine",
     "x": "27826.8000",
     "y": "24244.4000"
 },
 {
-    "value": 15,
+    "label": 15,
     "type": "mount",
     "x": "10890.0000",
     "y": "10537.5000"
 },
 {
-    "value": 17,
+    "label": 17,
     "type": "mount",
     "x": "10717.5000",
     "y": "10672.5000"
 },
 {
-    "value": 12,
+    "label": 12,
     "type": "mount",
     "x": "10935.0000",
     "y": "10657.5000"
 },
 {
-    "value": 14,
+    "label": 14,
     "type": "mount",
     "x": "10882.5000",
     "y": "10717.5000"
 },
 {
-    "value": 12,
+    "label": 12,
     "type": "mount",
     "x": "10710.0000",
     "y": "10732.5000"
 },
 {
-    "value": 14,
+    "label": 14,
     "type": "mount",
     "x": "10635.0000",
     "y": "10635.0000"
 },
 {
-    "value": 6,
+    "label": 6,
     "type": "mount",
     "x": "10987.5000",
     "y": "10567.5000"
 },
 {
-    "value": 14,
+    "label": 14,
     "type": "mount",
     "x": "10882.5000",
     "y": "10770.0000"
 },
 {
-    "value": 13,
+    "label": 13,
     "type": "mount",
     "x": "10627.5000",
     "y": "10702.5000"
 },
 {
-    "value": 11,
+    "label": 11,
     "type": "mount",
     "x": "11002.5000",
     "y": "10717.5000"
 },
 {
-    "value": 15,
+    "label": 15,
     "type": "mount",
     "x": "10912.5000",
     "y": "10815.0000"
 },
 {
-    "value": 12,
+    "label": 12,
     "type": "mount",
     "x": "11032.5000",
     "y": "10762.5000"
 },
 {
-    "value": 5,
+    "label": 5,
     "type": "mount",
     "x": "10537.5000",
     "y": "10710.0000"
 },
 {
-    "value": 7,
+    "label": 7,
     "type": "mount",
     "x": "10957.5000",
     "y": "10327.5000"
 },
 {
-    "value": 7,
+    "label": 7,
     "type": "mount",
     "x": "10552.5000",
     "y": "10777.5000"
 },
 {
-    "value": 9,
+    "label": 9,
     "type": "mount",
     "x": "10590.0000",
     "y": "10335.0000"
 },
 {
-    "value": 12,
+    "label": 12,
     "type": "mount",
     "x": "11077.5000",
     "y": "10785.0000"
 },
 {
-    "value": 21,
+    "label": 21,
     "type": "mount",
     "x": "10920.0000",
     "y": "10912.5000"
 },
 {
-    "value": 1,
+    "label": 1,
     "type": "mount",
     "x": "10440.0000",
     "y": "10530.0000"
 },
 {
-    "value": "10",
+    "label": "10",
     "type": "mount",
     "x": "10567.5000",
     "y": "10282.5000"
 },
 {
-    "value": 28,
+    "label": 28,
     "type": "mount",
     "x": "10897.5000",
     "y": "10972.5000"
 },
 {
-    "value": "3",
+    "label": "3",
     "type": "mount",
     "x": "11032.5000",
     "y": "10260.0000"
 },
 {
-    "value": "3",
+    "label": "3",
     "type": "mount",
     "x": "11160.0000",
     "y": "10837.5000"
 },
 {
-    "value": 5,
+    "label": 5,
     "type": "mount",
     "x": "10455.0000",
     "y": "10320.0000"
 },
 {
-    "value": "33",
+    "label": "33",
     "type": "mount",
     "x": "10920.0000",
     "y": "11017.5000"
 },
 {
-    "value": 27,
+    "label": 27,
     "type": "mount",
     "x": "10852.5000",
     "y": "11032.5000"
 },
 {
-    "value": 13,
+    "label": 13,
     "type": "mount",
     "x": "10747.5000",
     "y": "11040.0000"
 },
 {
-    "value": 6,
+    "label": 6,
     "type": "mount",
     "x": "11062.5000",
     "y": "10215.0000"
 },
 {
-    "value": 9,
+    "label": 9,
     "type": "mount",
     "x": "10672.5000",
     "y": "11055.0000"
 },
 {
-    "value": 11,
+    "label": 11,
     "type": "mount",
     "x": "10380.0000",
     "y": "10335.0000"
 },
 {
-    "value": "34",
+    "label": "34",
     "type": "mount",
     "x": "10927.5000",
     "y": "11077.5000"
 },
 {
-    "value": "33",
+    "label": "33",
     "type": "mount",
     "x": "10987.5000",
     "y": "11062.5000"
 },
 {
-    "value": 13,
+    "label": 13,
     "type": "mount",
     "x": "11190.0000",
     "y": "10920.0000"
 },
 {
-    "value": 6,
+    "label": 6,
     "type": "mount",
     "x": "11092.5000",
     "y": "10162.5000"
 },
 {
-    "value": 28,
+    "label": 28,
     "type": "mount",
     "x": "11062.5000",
     "y": "11055.0000"
 },
 {
-    "value": 11,
+    "label": 11,
     "type": "mount",
     "x": "11250.0000",
     "y": "10890.0000"
 },
 {
-    "value": "3",
+    "label": "3",
     "type": "mount",
     "x": "11152.5000",
     "y": "10147.5000"
 },
 {
-    "value": "34",
+    "label": "34",
     "type": "mount",
     "x": "10935.0000",
     "y": "11145.0000"
 },
 {
-    "value": "33",
+    "label": "33",
     "type": "mount",
     "x": "11062.5000",
     "y": "11130.0000"
 },
 {
-    "value": 24,
+    "label": 24,
     "type": "mount",
     "x": "11152.5000",
     "y": "11077.5000"
 },
 {
-    "value": 15,
+    "label": 15,
     "type": "mount",
     "x": "11040.0000",
     "y": "10035.0000"
 },
 {
-    "value": 4,
+    "label": 4,
     "type": "mount",
     "x": "10207.5000",
     "y": "10425.0000"
 },
 {
-    "value": 6,
+    "label": 6,
     "type": "mount",
     "x": "10522.5000",
     "y": "11145.0000"
 },
 {
-    "value": 4,
+    "label": 4,
     "type": "mount",
     "x": "11212.5000",
     "y": "10117.5000"
 },
 {
-    "value": 21,
+    "label": 21,
     "type": "mount",
     "x": "10815.0000",
     "y": "11220.0000"
 },
 {
-    "value": 23,
+    "label": 23,
     "type": "mount",
     "x": "11220.0000",
     "y": "11062.5000"
 },
 {
-    "value": 27,
+    "label": 27,
     "type": "mount",
     "x": "10845.0000",
     "y": "9930.0000"
 },
 {
-    "value": "37",
+    "label": "37",
     "type": "mount",
     "x": "10950.0000",
     "y": "11235.0000"
 },
 {
-    "value": 23,
+    "label": 23,
     "type": "mount",
     "x": "10230.0000",
     "y": "10237.5000"
 },
 {
-    "value": 12,
+    "label": 12,
     "type": "mount",
     "x": "11340.0000",
     "y": "11017.5000"
 },
 {
-    "value": 25,
+    "label": 25,
     "type": "mount",
     "x": "11220.0000",
     "y": "11137.5000"
 },
 {
-    "value": "30",
+    "label": "30",
     "type": "mount",
     "x": "10792.5000",
     "y": "9900.0000"
 },
 {
-    "value": 19,
+    "label": 19,
     "type": "mount",
     "x": "10777.5000",
     "y": "11280.0000"
 },
 {
-    "value": 4,
+    "label": 4,
     "type": "mount",
     "x": "11272.5000",
     "y": "10065.0000"
 },
 {
-    "value": "39",
+    "label": "39",
     "type": "mount",
     "x": "11032.5000",
     "y": "11265.0000"
 },
 {
-    "value": "40",
+    "label": "40",
     "type": "mount",
     "x": "10965.0000",
     "y": "11295.0000"
 },
 {
-    "value": 26,
+    "label": 26,
     "type": "mount",
     "x": "10192.5000",
     "y": "10185.0000"
 },
 {
-    "value": 24,
+    "label": 24,
     "type": "mount",
     "x": "11175.0000",
     "y": "11220.0000"
 },
 {
-    "value": "36",
+    "label": "36",
     "type": "mount",
     "x": "10882.5000",
     "y": "11325.0000"
 },
 {
-    "value": "31",
+    "label": "31",
     "type": "mount",
     "x": "11100.0000",
     "y": "11287.5000"
 },
 {
-    "value": "4",
+    "label": "4",
     "type": "mount",
     "x": "11325.0000",
     "y": "10035.0000"
 },
 {
-    "value": "9",
+    "label": "9",
     "type": "mount",
     "x": "11242.5000",
     "y": "9945.0000"
 },
 {
-    "value": "40",
+    "label": "40",
     "type": "mount",
     "x": "10995.0000",
     "y": "11347.5000"
 },
 {
-    "value": "22",
+    "label": "22",
     "type": "mount",
     "x": "10785.0000",
     "y": "11377.5000"
 },
 {
-    "value": 23,
+    "label": 23,
     "type": "mount",
     "x": "11175.0000",
     "y": "11287.5000"
 },
 {
-    "value": "39",
+    "label": "39",
     "type": "mount",
     "x": "10912.5000",
     "y": "11377.5000"
 },
 {
-    "value": "3",
+    "label": "3",
     "type": "mount",
     "x": "10035.0000",
     "y": "10357.5000"
 },
 {
-    "value": "2",
+    "label": "2",
     "type": "mount",
     "x": "11407.5000",
     "y": "10027.5000"
 },
 {
-    "value": "36",
+    "label": "36",
     "type": "mount",
     "x": "11040.0000",
     "y": "11392.5000"
 },
 {
-    "value": "38",
+    "label": "38",
     "type": "mount",
     "x": "10605.0000",
     "y": "9772.5000"
 },
 {
-    "value": "36",
+    "label": "36",
     "type": "mount",
     "x": "10792.5000",
     "y": "9735.0000"
 },
 {
-    "value": "4",
+    "label": "4",
     "type": "mount",
     "x": "9967.5000",
     "y": "10402.5000"
 },
 {
-    "value": "30",
+    "label": "30",
     "type": "mount",
     "x": "10852.5000",
     "y": "11452.5000"
 },
 {
-    "value": "11",
+    "label": "11",
     "type": "mount",
     "x": "11295.0000",
     "y": "9877.5000"
 },
 {
-    "value": "14",
+    "label": "14",
     "type": "mount",
     "x": "11310.0000",
     "y": "11302.5000"
 },
 {
-    "value": "40",
+    "label": "40",
     "type": "mount",
     "x": "10852.5000",
     "y": "9712.5000"
 },
 {
-    "value": "3",
+    "label": "3",
     "type": "mount",
     "x": "11460.0000",
     "y": "10005.0000"
 },
 {
-    "value": "24",
+    "label": "24",
     "type": "mount",
     "x": "11122.5000",
     "y": "11415.0000"
 },
 {
-    "value": "41",
+    "label": "41",
     "type": "mount",
     "x": "10927.5000",
     "y": "11467.5000"
 },
 {
-    "value": "35",
+    "label": "35",
     "type": "mount",
     "x": "10920.0000",
     "y": "9705.0000"
 },
 {
-    "value": 4,
+    "label": 4,
     "type": "mount",
     "x": "9922.5000",
     "y": "10432.5000"
 },
 {
-    "value": "3",
+    "label": "3",
     "type": "mount",
     "x": "10170.0000",
     "y": "11227.5000"
 },
 {
-    "value": "21",
+    "label": "21",
     "type": "mount",
     "x": "10042.5000",
     "y": "10110.0000"
 },
 {
-    "value": "48",
+    "label": "48",
     "type": "mount",
     "x": "10545.0000",
     "y": "9712.5000"
 },
 {
-    "value": "13",
+    "label": "13",
     "type": "mount",
     "x": "11385.0000",
     "y": "11295.0000"
 },
 {
-    "value": "42",
+    "label": "42",
     "type": "mount",
     "x": "10980.0000",
     "y": "11490.0000"
 },
 {
-    "value": "5",
+    "label": "5",
     "type": "mount",
     "x": "9915.0000",
     "y": "10350.0000"
 },
 {
-    "value": "9",
+    "label": "9",
     "type": "mount",
     "x": "9952.5000",
     "y": "10237.5000"
 },
 {
-    "value": "42",
+    "label": "42",
     "type": "mount",
     "x": "10882.5000",
     "y": "9667.5000"
 },
 {
-    "value": "34",
+    "label": "34",
     "type": "mount",
     "x": "11055.0000",
     "y": "11482.5000"
 },
 {
-    "value": "5",
+    "label": "5",
     "type": "mount",
     "x": "11715.0000",
     "y": "10417.5000"
 },
 {
-    "value": "15",
+    "label": "15",
     "type": "mount",
     "x": "10605.0000",
     "y": "11505.0000"
 },
 {
-    "value": "8",
+    "label": "8",
     "type": "mount",
     "x": "9907.5000",
     "y": "10290.0000"
 },
 {
-    "value": "49",
+    "label": "49",
     "type": "mount",
     "x": "10455.0000",
     "y": "9697.5000"
 },
 {
-    "value": "11",
+    "label": "11",
     "type": "mount",
     "x": "10432.5000",
     "y": "11475.0000"
 },
 {
-    "value": "22",
+    "label": "22",
     "type": "mount",
     "x": "11205.0000",
     "y": "9712.5000"
 },
 {
-    "value": "39",
+    "label": "39",
     "type": "mount",
     "x": "10972.5000",
     "y": "11542.5000"
 },
 {
-    "value": "9",
+    "label": "9",
     "type": "mount",
     "x": "9952.5000",
     "y": "10125.0000"
 },
 {
-    "value": "13",
+    "label": "13",
     "type": "mount",
     "x": "10035.0000",
     "y": "9997.5000"
 },
 {
-    "value": "12",
+    "label": "12",
     "type": "mount",
     "x": "9990.0000",
     "y": "10050.0000"
 },
 {
-    "value": "4",
+    "label": "4",
     "type": "mount",
     "x": "9915.0000",
     "y": "10177.5000"
 },
 {
-    "value": "23",
+    "label": "23",
     "type": "mount",
     "x": "11047.5000",
     "y": "9637.5000"
 },
 {
-    "value": "5",
+    "label": "5",
     "type": "mount",
     "x": "9885.0000",
     "y": "10230.0000"
 },
 {
-    "value": "12",
+    "label": "12",
     "type": "mount",
     "x": "11520.0000",
     "y": "9915.0000"
 },
 {
-    "value": "23",
+    "label": "23",
     "type": "mount",
     "x": "11392.5000",
     "y": "11385.0000"
 },
 {
-    "value": "35",
+    "label": "35",
     "type": "mount",
     "x": "11047.5000",
     "y": "11557.5000"
 },
 {
-    "value": "12",
+    "label": "12",
     "type": "mount",
     "x": "11572.5000",
     "y": "9945.0000"
 },
 {
-    "value": "29",
+    "label": "29",
     "type": "mount",
     "x": "10980.0000",
     "y": "9600.0000"
 },
 {
-    "value": "4",
+    "label": "4",
     "type": "mount",
     "x": "11805.0000",
     "y": "10515.0000"
 },
 {
-    "value": "34",
+    "label": "34",
     "type": "mount",
     "x": "10950.0000",
     "y": "11587.5000"
 },
 {
-    "value": "53",
+    "label": "53",
     "type": "mount",
     "x": "10432.5000",
     "y": "9645.0000"
 },
 {
-    "value": "12",
+    "label": "12",
     "type": "mount",
     "x": "11782.5000",
     "y": "10327.5000"
 },
 {
-    "value": "12",
+    "label": "12",
     "type": "mount",
     "x": "10395.0000",
     "y": "11520.0000"
 },
 {
-    "value": "17",
+    "label": "17",
     "type": "mount",
     "x": "10020.0000",
     "y": "11257.5000"
 },
 {
-    "value": "19",
+    "label": "19",
     "type": "mount",
     "x": "10050.0000",
     "y": "11302.5000"
 },
 {
-    "value": "12",
+    "label": "12",
     "type": "mount",
     "x": "11647.5000",
     "y": "9990.0000"
 },
 {
-    "value": "5",
+    "label": "5",
     "type": "mount",
     "x": "9832.5000",
     "y": "10200.0000"
 },
 {
-    "value": "14",
+    "label": "14",
     "type": "mount",
     "x": "11730.0000",
     "y": "10080.0000"
 },
 {
-    "value": "10",
+    "label": "10",
     "type": "mount",
     "x": "9967.5000",
     "y": "9937.5000"
 },
 {
-    "value": "16",
+    "label": "16",
     "type": "mount",
     "x": "11760.0000",
     "y": "10132.5000"
 },
 {
-    "value": "14",
+    "label": "14",
     "type": "mount",
     "x": "11700.0000",
     "y": "10020.0000"
 },
 {
-    "value": 13,
+    "label": 13,
     "type": "mount",
     "x": "11557.5000",
     "y": "11340.0000"

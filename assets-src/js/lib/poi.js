@@ -1,16 +1,19 @@
-function Poi(map, terrainName) {
+function Poi(map) {
 
-    this.terrain = terrainName;
     this.map = map;
 
     this.ready = false;
     this.poiLayers = {};
-
-    this.setupClickHandlers();
-    this.add();
 };
 
-Map.prototype.setupClickHandlers = function() {
+Poi.prototype.setup = function(terrainName) {
+
+    this.terrain = terrainName;
+    this.setupInteractionHandlers();
+    this.add();
+}
+
+Poi.prototype.setupInteractionHandlers = function() {
 
     var self = this;
 
@@ -96,8 +99,6 @@ Poi.prototype.add = function() {
             callback();
         }, function(err) {
 
-            //console.log('All points added', err);
-
             self.ready = true;
             self.filterZoomLayers();
         });
@@ -113,8 +114,6 @@ Poi.prototype.filterZoomLayers = function() {
 
     if(!this.ready)
         return;
-
-    console.log('filtering zoom layers');
 
     var self = this;
     var zoom = self.map.handler.getZoom();

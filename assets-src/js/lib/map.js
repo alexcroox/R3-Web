@@ -1,27 +1,26 @@
-function Map(terrainName, tileSubDomains) {
+function Map(terrainName, tileSubDomains, cb) {
 
     this.terrain = terrainName;
     this.tileSubDomains = tileSubDomains;
 
-    this.init();
+    this.init(cb);
 };
 
-Map.prototype.init = function() {
+Map.prototype.init = function(cb) {
 
     var self = this;
 
     $.getJSON(webPath + '/maps/' + this.terrain + '/config.json', function(configJson) {
-        self.config = configJson;
-        self.render();
-    })
-    .fail(function() {
-        console.log("Error loading terrain config");
-    });
+            self.config = configJson;
+            self.render(cb);
+        })
+        .fail(function() {
+            console.log("Error loading terrain config");
+            cb(true);
+        });
 };
 
-Map.prototype.render = function() {
-
-    console.log(this.config);
+Map.prototype.render = function(cb) {
 
     // Create the base map using our terrain settings
     this.handler = new L.Map('map', {
@@ -29,7 +28,7 @@ Map.prototype.render = function() {
         "maxZoom": this.config.maxZoom,
         "zoom": this.config.initZoom,
         "attributionControl": false,
-        "measureControl": true
+        //"measureControl": true
     });
 
     this.currentZoomLevel = this.config.initZoom;
@@ -52,7 +51,7 @@ Map.prototype.render = function() {
     this.setView([this.config.height / 2, this.config.width / 2], this.config.initZoom);
 
     // Inject sub domain support for faster tile loading (if supported)
-    var tileUrl = (replayData.tileSubDomains)? webPath.replace("//", "//{s}.") : webPath;
+    var tileUrl = (this.tileSubDomains) ? webPath.replace("//", "//{s}.") : webPath;
 
     // Add our terrain generated tiles
     this.layer = L.tileLayer(tileUrl + '/maps/' + this.terrain + '/tiles/{z}/{x}/{y}.png', {
@@ -60,12 +59,15 @@ Map.prototype.render = function() {
         errorTileUrl: webPath + '/assets/images/map/error-tile.png'
     }).addTo(this.handler);
 
-    this.setupClickHandlers();
+    this.setupInteractionHandlers();
 
-    new Poi(this, this.terrain);
+    var poi = new Poi(this);
+    poi.setup(this.terrain);
+
+    cb(false);
 };
 
-Map.prototype.setupClickHandlers = function() {
+Map.prototype.setupInteractionHandlers = function() {
 
     var self = this;
 
@@ -94,7 +96,7 @@ Map.prototype.setView = function(pos, zoom) {
 
 Map.prototype.gamePointToMapPoint = function(x, y) {
 
-    if(this.config.doubleSize == "1") {
+    if (this.config.doubleSize == "1") {
 
         var convertedX = x * 2;
         var convertedY = Math.abs((y - (this.config.height / 2)) * 2);
@@ -117,7 +119,7 @@ Map.prototype.mapPointToGamePoint = function(x, y, grid) {
         x = x.x;
     }
 
-    if(this.config.doubleSize == "1") {
+    if (this.config.doubleSize == "1") {
 
         var convertedX = x / 2;
         var convertedY = Math.abs((y - this.config.height) / 2);
@@ -127,7 +129,7 @@ Map.prototype.mapPointToGamePoint = function(x, y, grid) {
         var convertedY = Math.abs(parseFloat(y) + parseFloat(this.config.height));
     }
 
-    if(!grid)
+    if (!grid)
         return [convertedX, convertedY];
     else
         return map.gameToGrid(convertedX, convertedY);

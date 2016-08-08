@@ -65,4 +65,48 @@ class Replays {
 
         return $query->fetch();
     }
+
+    public function isCachedVersionAvailable($replayId) {
+
+        // Don't bother with a filesystem lookup if the functionality is disabled
+        return (CACHE_EVENTS)? file_exists(APP_PATH . '/cache/events/' . $replayId . '.json') : FALSE;
+    }
+
+    public function fetchEvents($replayId) {
+
+        $query = $this->_db->prepare("
+            SELECT
+                playerId, type, value
+            FROM
+                events
+            WHERE
+                replayId = :replayId
+            ORDER BY missionTime ASC");
+        $query->execute(array('replayId' => $replayId));
+
+        $eventData = $query->fetchAll();
+
+        // Cache our events for the next person
+        if(CACHE_EVENTS)
+            $this->saveEventCache($replayId, $eventData);
+
+        return $eventData;
+    }
+
+    // Cache the result to a flat file and delete the original data to keep the table size down
+    // With 5R we saw a big reduction in CPU usage when switching to flat file caches.
+    // If your site experiences heavy traffic consider setting up nginx as a reverse proxy to apache
+    // so it can serve up these static files avoiding PHP altogether
+    private function saveEventCache($replayId, $eventData) {
+
+        $playbackCachefile = APP_PATH . '/cache/events/' . $replayId . '.json';
+
+        $fp = fopen($playbackCacheFile, 'w');
+        fwrite($fp, json_encode($playbackEvents));
+        fclose($fp);
+
+        $query = $this->_db->prepare("
+            DELETE FROM events WHERE replayId = :replayId");
+        $query->execute(array('replayId' => $replayId));
+    }
 }

@@ -1,0 +1,78 @@
+.leaflet-label
+    background-clip padding-box
+    color #000
+    display block
+    font 15px/29px "Helvetica Neue", Arial, Helvetica, sans-serif
+    font-weight bold
+    padding 0 0 0 10px
+    position absolute
+    user-select none
+    pointer-events none
+    white-space nowrap
+    z-index 6
+
+    &.faction-EAST
+        color #000
+
+    &.poi
+        padding 0
+        line-height 0px
+        font-size 14px
+        color #444
+
+        &-namelocal
+            color #71624d
+
+        &-namemarine
+            color #2471c6
+
+        &-viewpoint
+            color #c7010e
+
+        &-strongpointarea
+        &-airport
+            color #607c4f
+
+    &.poi-mount
+        opacity .5 !important
+
+    .player-marker-stat
+        display block
+        line-height 4px
+        color #888
+
+    .operation-crew
+    .operation-cargo
+        line-height 14px
+        display block
+        color #666
+        margin-top -20px
+
+    .operation-crew + .operation-cargo
+        margin-top -14px
+
+    .operation-crew + .player-marker-stat
+    .operation-cargo + .player-marker-stat
+        margin-top 5px
+
+    &.label_positions_inf
+        font-size 11px
+        letter-spacing 0.03em
+        margin 0 0 0 -12px
+
+.leaflet-label.leaflet-clickable
+    cursor pointer
+    pointer-events auto
+
+.player-iconPlane + .leaflet-label
+    font-size 14px
+    color #444
+
+.player-marker + .leaflet-label
+    font-size 12px
+
+    &.label_no_animate
+        transition none
+
+.map-tracking-marker + .leaflet-label
+    color @trackPlayerColor
