@@ -21,10 +21,10 @@ var
     paths = {};
 
 paths.dist = './dist/assets';
-paths.css = './client/css';
-paths.js = './client/js';
-paths.images = './client/images';
-paths.fonts = './client/fonts';
+paths.css = './assets-src/css';
+paths.js = './assets-src/js';
+paths.images = './assets-src/images';
+paths.fonts = './assets-src/fonts';
 
 gulp.task('js-third-party', function() {
 

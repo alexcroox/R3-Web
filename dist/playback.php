@@ -20,6 +20,8 @@ if($replayDetails->minutesSinceLastEvent < MINUTES_MISSION_END_BLOCK)
 
 $title = $replayDetails->missionName;
 
+$replayDetails->{'tileSubDomains'} = TILE_SUBDOMAINS;
+
 $view->render('playback', array(
     'title' => $title,
     'replayData' => $replayDetails,

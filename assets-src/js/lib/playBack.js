@@ -6,5 +6,5 @@ function PlayBack() {
 PlayBack.prototype.init = function(data) {
 
     this.replayData = JSON.parse(data);
-    this.map = new Map(this.replayData.map);
+    this.map = new Map(this.replayData.map, this.replayData.tileSubDomains);
 };
