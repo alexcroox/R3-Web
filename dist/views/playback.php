@@ -7,10 +7,10 @@
         </a>
 
         <a href="#" data-speed="10" class="timeline__speed">10x</a>
-        <a href="#" data-speed="30" class="timeline__speed timeline__speed--active">30x</a>
-        <a href="#" data-speed="60" class="timeline__speed">60x</a>
+        <a href="#" data-speed="30" class="timeline__speed x30 timeline__speed--active">30x</a>
+        <a href="#" data-speed="60" class="timeline__speed x60">60x</a>
 
-        <div class="timeline__slider"></div>
+        <div id="timeline__silder" class="timeline__slider"></div>
 
         <a href="#" class="timeline__share" title="Share the current time and speed">
             <i class="fa fa-share-alt"></i>

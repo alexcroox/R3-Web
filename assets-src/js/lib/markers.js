@@ -1,6 +1,7 @@
 function Markers(playBack) {
 
-    this.playBack = this.playBack;
+    this.playBack = playBack;
+    this.map = playBack.map;
     this.list = {};
     this.matchedIcons = {};
     this.eventGroups = {

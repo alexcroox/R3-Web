@@ -1,8 +1,6 @@
 function PlayBack() {
 
     this.map = {};
-    this.events = {};
-    this.timeline = {};
     this.playerList = {};
     this.playerGroups = {};
     this.players = {};
@@ -31,6 +29,7 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
     });
 
     this.markers = new Markers(this);
+    this.timeline = new Timeline(this);
     this.events = new Events(this);
 }
 
@@ -62,14 +61,12 @@ PlayBack.prototype.prepData = function(eventList) {
     // Calculate our time range and combine events with the same mission time
     _.each(eventList, function(e) {
 
-        if (typeof self.eventList[e.time] === "undefined")
-            self.eventList[e.time] = [];
+        if (typeof self.events.list[e.time] === "undefined")
+            self.events.list[e.time] = [];
 
-        self.eventList[e.time].push(e);
+        self.events.list[e.time].push(e);
     });
-
-    this.timeline = new Timeline(this);
-    this.timeline.setupScrubber(this.eventList);
+    this.timeline.setupScrubber(eventList);
     this.timeline.changeSpeed(this.timeline.speed);
 
     // Are we loading a shared playback? If so load their POV at time of sharing
@@ -82,47 +79,5 @@ PlayBack.prototype.prepData = function(eventList) {
         this.timeline.skipTime(this.sharedPresets.time);
     } else {
         this.timeline.startTimer();
-    }
-};
-
-PlayBack.prototype.showNextEvent = function() {
-
-    var self = this;
-
-    // Do we have any events for this mission time?
-    if (typeof this.events[self.timeline.timePointer] !== "undefined") {
-
-        // We might have more than one event for this mission time
-        _.each(self.eventList[self.timeline.timePointer], function(replayEvent) {
-
-            var type = replayEvent.type;
-            var eventValue = playBack.parseData(replayEvent.value);
-
-            if (eventValue)
-                self.events.actionType(type, replayEvent, eventValue);
-
-        });
-    }
-
-    self.timeline.timePointer += self.timeline.timeJump;
-};
-
-// Attempt to parse our event json
-PlayBack.prototype.parseData = function(json) {
-
-    var self = this;
-
-    try {
-        var parsedData = JSON.parse(json);
-
-        return parsedData;
-    } catch (e) {
-
-        console.error(json);
-
-        // Stop playback on bad json
-        self.timeline.stopTimer(true);
-
-        return false;
     }
 };

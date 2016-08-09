@@ -76,7 +76,7 @@ class Replays {
 
         $query = $this->_db->prepare("
             SELECT
-                playerId, type, value
+                playerId, type, value, missionTime
             FROM
                 events
             WHERE

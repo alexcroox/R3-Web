@@ -1,7 +1,7 @@
 $('document').ready(function() {
 
     var replayList = new ReplayList();
-    var playBack = new playBack();
+    var playBack = new PlayBack();
 
     if($('.playback-list').length)
         replayList.init();

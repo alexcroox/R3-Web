@@ -1,8 +1,52 @@
 function Events(playBack) {
 
     this.playBack = playBack;
-    this.markers = playBack.markers;
-    this.map = playBack.map;
+    this.markers = this.playBack.markers;
+    this.map = this.playBack.map;
+    this.timeline = this.playBack.timeline;
+    this.list = {};
+};
+
+Events.prototype.showNext = function() {
+
+    var self = this;
+
+    // Do we have any events for this mission time?
+    if (typeof this.list[self.timeline.timePointer] !== "undefined") {
+
+        // We might have more than one event for this mission time
+        _.each(self.list[self.timeline.timePointer], function(replayEvent) {
+
+            var type = replayEvent.type;
+            var eventValue = self.parseData(replayEvent.value);
+
+            if (eventValue)
+                self.actionType(type, replayEvent, eventValue);
+
+        });
+    }
+
+    self.timeline.timePointer += self.timeline.timeJump;
+};
+
+// Attempt to parse our event json
+Events.prototype.parseData = function(json) {
+
+    var self = this;
+
+    try {
+        var parsedData = JSON.parse(json);
+
+        return parsedData;
+    } catch (e) {
+
+        console.error(json);
+
+        // Stop playback on bad json
+        self.timeline.stopTimer(true);
+
+        return false;
+    }
 };
 
 Events.prototype.actionType = function(type, replayEvent, eventValue) {
@@ -87,7 +131,7 @@ Events.prototype.projectileLaunch = function(eventData) {
     var victim = eventData.victim;
     var attacker = eventData.attacker;
     var launchPos = this.map.gamePointToMapPoint(attacker.pos[0], attacker.pos[1]);
-    var victimMarker = this.list[victim.unit];
+    var victimMarker = this.markers.list[victim.unit];
 
     var targetPos = (typeof victimMarker !== "undefined") ? victimMarker.getLatLng() : false;
 

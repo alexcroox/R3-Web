@@ -30,21 +30,23 @@ Timeline.prototype.setupScrubber = function(eventList) {
 
     var self = this;
 
-    self.timeBounds.min = parseInt(eventList[0].time);
-    self.timeBounds.max = parseInt(eventList[eventList.length - 1].time);
+    console.log(eventList);
+
+    this.timeBounds.min = parseInt(eventList[0].missionTime);
+    this.timeBounds.max = parseInt(eventList[eventList.length - 1].missionTime);
 
     // Has the user shared a playback with a specific speed?
     if (typeof this.playBack.sharedPresets.speed !== "undefined")
         this.speed = this.playBack.sharedPresets.speed;
 
-    this.scrubber = $('timeline__silder').get(0);
+    this.scrubber = document.getElementById('timeline__silder');
 
     $('.timeline__silder__value').html(0);
     $('.timeline__silder').removeClass('timeline__silder--loading');
 
-    console.log('Range', playBack.timeBounds);
+    console.log('Range', this.timeBounds);
 
-    playBack.eventPointer = playBack.timeBounds.min;
+    this.timePointer = this.timeBounds.min;
 
     noUiSlider.create(this.scrubber, {
         start: this.timeBounds.min,
@@ -148,11 +150,11 @@ Timeline.prototype.skipTime = function(value) {
     this.timePointer = Math.round(value);
 
     // Clear down the map of existing markers, ready to time warp...
-    this.playBack.eventGroups.positions_vehicles.clearLayers();
-    this.playBack.eventGroups.positions_infantry.clearLayers();
-    this.playBack.markers = {};
-    this.playBack.currentIds.positions_vehicles = [];
-    this.playBack.currentIds.positions_infantry = [];
+    this.playBack.markers.eventGroups.positions_vehicles.clearLayers();
+    this.playBack.markers.eventGroups.positions_infantry.clearLayers();
+    this.playBack.markers.list = {};
+    this.playBack.markers.currentIds.positions_vehicles = [];
+    this.playBack.markers.currentIds.positions_infantry = [];
 
     if (!this.playing)
         this.startTimer();
@@ -185,7 +187,7 @@ Timeline.prototype.startTimer = function () {
 
         if (self.delta > interval) {
 
-            //console.log(self.timePointer, self.timeBounds.max);
+            console.log(self.timePointer, self.playing);
 
             self.scrubber.noUiSlider.set(self.timePointer);
 
@@ -202,7 +204,7 @@ Timeline.prototype.startTimer = function () {
             if (self.timePointer >= self.timeBounds.max)
                 self.stopTimer();
             else
-                self.playBack.showNextEvent();
+                self.playBack.events.showNext();
 
             self.then = self.now - (self.delta % interval);
         }

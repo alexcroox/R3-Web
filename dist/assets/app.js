@@ -1,9 +1,178 @@
-function Events() {
+function Events(playBack) {
 
+    this.playBack = playBack;
+    this.markers = this.playBack.markers;
+    this.map = this.playBack.map;
+    this.timeline = this.playBack.timeline;
+    this.list = {};
 };
 
-Events.prototype.init = function() {
+Events.prototype.showNext = function() {
 
+    var self = this;
+
+    // Do we have any events for this mission time?
+    if (typeof this.list[self.timeline.timePointer] !== "undefined") {
+
+        // We might have more than one event for this mission time
+        _.each(self.list[self.timeline.timePointer], function(replayEvent) {
+
+            var type = replayEvent.type;
+            var eventValue = self.parseData(replayEvent.value);
+
+            if (eventValue)
+                self.actionType(type, replayEvent, eventValue);
+
+        });
+    }
+
+    self.timeline.timePointer += self.timeline.timeJump;
+};
+
+// Attempt to parse our event json
+Events.prototype.parseData = function(json) {
+
+    var self = this;
+
+    try {
+        var parsedData = JSON.parse(json);
+
+        return parsedData;
+    } catch (e) {
+
+        console.error(json);
+
+        // Stop playback on bad json
+        self.timeline.stopTimer(true);
+
+        return false;
+    }
+};
+
+Events.prototype.actionType = function(type, replayEvent, eventValue) {
+
+    var self = this;
+
+    if (type == "positions_vehicles" || type == "positions_infantry") {
+
+        self.markers.findAndRemoveOld(replayEvent, eventValue);
+
+    } else {
+
+        switch (type) {
+
+            // If the unit gets into a vehicle we can remove their infantry icon immediately
+            case "get_in":
+
+                self.markers.removeUnit(Object.keys(eventValue)[0]);
+
+                break;
+
+            case "player_disconnected":
+
+                var playerId = eventValue[Object.keys(eventValue)[0]].id;
+                var playerInfo = self.playBack.getPlayerInfo(playerId);
+
+                //console.log('Player disconnected', playerInfo);
+
+                if (typeof playerInfo !== "undefined")
+                    self.playback.notifications.info(playerInfo.name + ' disconnected');
+
+                self.markers.removeUnit(Object.keys(eventValue)[0]);
+
+                break;
+
+            case "player_connected":
+
+                var playerId = eventValue[Object.keys(eventValue)[0]].id;
+                var playerInfo = self.playBack.getPlayerInfo(playerId);
+
+                //console.log('Player connected', playerInfo);
+
+                if (typeof playerInfo !== "undefined")
+                    self.playback.notifications.info(playerInfo.name + ' connected');
+
+                break;
+
+            case "unit_awake":
+
+                self.markers.removeUnit(Object.keys(eventValue)[0]);
+
+                break;
+
+            case "unit_unconscious":
+
+                self.attacked('downed', eventValue);
+
+                break;
+
+            case "unit_killed":
+
+                self.attacked('killed', eventValue);
+
+                break;
+
+            case "incoming_missile":
+
+                self.projectileLaunch(eventValue);
+                break;
+
+            default:
+                console.warn('Unknown event', type);
+        }
+    }
+};
+
+// Pulse a large circle around the attacker and animate a M m m towards the victim
+Events.prototype.projectileLaunch = function(eventData) {
+
+    var self = this;
+
+    var victim = eventData.victim;
+    var attacker = eventData.attacker;
+    var launchPos = this.map.gamePointToMapPoint(attacker.pos[0], attacker.pos[1]);
+    var victimMarker = this.markers.list[victim.unit];
+
+    var targetPos = (typeof victimMarker !== "undefined") ? victimMarker.getLatLng() : false;
+
+    var playerInfo = this.playBack.getPlayerInfo(victim.id);
+
+    var launchPulse = L.circle(this.map.rc.unproject([launchPos[0], launchPos[1]]), 50, {
+        weight: 1,
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        className: 'missile-launch',
+        clickable: false
+    }).addTo(map.m);
+
+    setTimeout(function() {
+        self.map.handler.removeLayer(launchPulse);
+    }, 1000);
+
+    if (targetPos) {
+
+        var projectileIcon = L.marker(this.map.rc.unproject([launchPos[0], launchPos[1]]), {
+            icon: L.icon({
+                iconUrl: webPath + '/assets/images/map/markers/' + attacker.ammoType.toLowerCase() + '.png',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+                className: 'projectile-' + attacker.ammoType.toLowerCase()
+            }),
+            clickable: false
+        }).addTo(this.map.handler);
+
+        setTimeout(function() {
+            projectileIcon.setLatLng(targetPos);
+        }, 50);
+
+        setTimeout(function() {
+            self.map.handler.removeLayer(projectileIcon);
+        }, 1000);
+    }
+
+    if (typeof playerInfo !== "undefined")
+        self.playBack.notifications.info(attacker.ammoType + ' Launch at ' + playerInfo.name);
 };
 
 function Map(terrainName, tileSubDomains, cb) {
@@ -155,7 +324,8 @@ Map.prototype.gameToGrid = function(x, y) {
 
 function Markers(playBack) {
 
-    this.playBack = this.playBack;
+    this.playBack = playBack;
+    this.map = playBack.map;
     this.list = {};
     this.matchedIcons = {};
     this.eventGroups = {
@@ -184,7 +354,7 @@ Markers.prototype.setupLayers = function() {
 }
 
 // Cleanup old units we are no longer receiving data for
-Markers.prototype.removeOld = function(replayEvent, eventValue) {
+Markers.prototype.findAndRemoveOld = function(replayEvent, eventValue) {
 
     var self = this;
 
@@ -219,11 +389,58 @@ Markers.prototype.removeOld = function(replayEvent, eventValue) {
     });
 }
 
+Markers.prototype.remove = function(id) {
+
+    if (typeof this.list[id] !== "undefined") {
+
+        playBack.eventGroups['positions_infantry'].removeLayer(this.list[id]._leaflet_id);
+        playBack.eventGroups['positions_vehicles'].removeLayer(this.list[id]._leaflet_id);
+
+        var infArrayIndex = playBack.currentIds['positions_infantry'].indexOf(id);
+        var vehArrayIndex = playBack.currentIds['positions_vehicles'].indexOf(id);
+
+        if (infArrayIndex > -1)
+            playBack.currentIds['positions_infantry'].splice(infArrayIndex, 1);
+
+        if (vehArrayIndex > -1)
+            playBack.currentIds['positions_vehicles'].splice(vehArrayIndex, 1);
+
+        delete this.list[id];
+    }
+};
+
+function Notifications() {
+
+    this.enabled = true;
+    this.minWidth = 800;
+};
+
+Notifications.prototype.setup = function() {
+
+
+    this.setupInteractionHandlers();
+};
+
+Notifications.prototype.setupInteractionHandlers = function() {
+
+    var self = this;
+
+    $(window).resize(this.checkWindowWidth);
+};
+
+Notifications.prototype.checkWindowWidth = function() {
+
+    this.enabled = ($(window).width() >= this.minWidth)? true : false;
+};
+
+Notifications.prototype.info = function(message) {
+
+    console.log(message);
+};
+
 function PlayBack() {
 
     this.map = {};
-    this.events = {};
-    this.timeline = {};
     this.playerList = {};
     this.playerGroups = {};
     this.players = {};
@@ -252,6 +469,7 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
     });
 
     this.markers = new Markers(this);
+    this.timeline = new Timeline(this);
     this.events = new Events(this);
 }
 
@@ -283,14 +501,12 @@ PlayBack.prototype.prepData = function(eventList) {
     // Calculate our time range and combine events with the same mission time
     _.each(eventList, function(e) {
 
-        if (typeof self.eventList[e.time] === "undefined")
-            self.eventList[e.time] = [];
+        if (typeof self.events.list[e.time] === "undefined")
+            self.events.list[e.time] = [];
 
-        self.eventList[e.time].push(e);
+        self.events.list[e.time].push(e);
     });
-
-    this.timeline = new Timeline(this);
-    this.timeline.setupScrubber(this.eventList);
+    this.timeline.setupScrubber(eventList);
     this.timeline.changeSpeed(this.timeline.speed);
 
     // Are we loading a shared playback? If so load their POV at time of sharing
@@ -303,48 +519,6 @@ PlayBack.prototype.prepData = function(eventList) {
         this.timeline.skipTime(this.sharedPresets.time);
     } else {
         this.timeline.startTimer();
-    }
-};
-
-PlayBack.prototype.showNextEvent = function() {
-
-    var self = this;
-
-    // Do we have any events for this mission time?
-    if (typeof this.events[self.timeline.timePointer] !== "undefined") {
-
-        // We might have more than one event for this mission time
-        _.each(self.eventList[self.timeline.timePointer], function(replayEvent) {
-
-            var type = replayEvent.type;
-            var eventValue = playBack.parseData(replayEvent.value);
-
-            if (eventValue)
-                self.events.actionType(type, replayEvent, eventValue);
-
-        });
-    }
-
-    self.timeline.timePointer += self.timeline.timeJump;
-};
-
-// Attempt to parse our event json
-PlayBack.prototype.parseData = function(json) {
-
-    var self = this;
-
-    try {
-        var parsedData = JSON.parse(json);
-
-        return parsedData;
-    } catch (e) {
-
-        console.error(json);
-
-        // Stop playback on bad json
-        self.timeline.stopTimer(true);
-
-        return false;
     }
 };
 
@@ -524,21 +698,23 @@ Timeline.prototype.setupScrubber = function(eventList) {
 
     var self = this;
 
-    self.timeBounds.min = parseInt(eventList[0].time);
-    self.timeBounds.max = parseInt(eventList[eventList.length - 1].time);
+    console.log(eventList);
+
+    this.timeBounds.min = parseInt(eventList[0].missionTime);
+    this.timeBounds.max = parseInt(eventList[eventList.length - 1].missionTime);
 
     // Has the user shared a playback with a specific speed?
     if (typeof this.playBack.sharedPresets.speed !== "undefined")
         this.speed = this.playBack.sharedPresets.speed;
 
-    this.scrubber = $('timeline__silder').get(0);
+    this.scrubber = document.getElementById('timeline__silder');
 
     $('.timeline__silder__value').html(0);
     $('.timeline__silder').removeClass('timeline__silder--loading');
 
-    console.log('Range', playBack.timeBounds);
+    console.log('Range', this.timeBounds);
 
-    playBack.eventPointer = playBack.timeBounds.min;
+    this.timePointer = this.timeBounds.min;
 
     noUiSlider.create(this.scrubber, {
         start: this.timeBounds.min,
@@ -642,11 +818,11 @@ Timeline.prototype.skipTime = function(value) {
     this.timePointer = Math.round(value);
 
     // Clear down the map of existing markers, ready to time warp...
-    this.playBack.eventGroups.positions_vehicles.clearLayers();
-    this.playBack.eventGroups.positions_infantry.clearLayers();
-    this.playBack.markers = {};
-    this.playBack.currentIds.positions_vehicles = [];
-    this.playBack.currentIds.positions_infantry = [];
+    this.playBack.markers.eventGroups.positions_vehicles.clearLayers();
+    this.playBack.markers.eventGroups.positions_infantry.clearLayers();
+    this.playBack.markers.list = {};
+    this.playBack.markers.currentIds.positions_vehicles = [];
+    this.playBack.markers.currentIds.positions_infantry = [];
 
     if (!this.playing)
         this.startTimer();
@@ -679,7 +855,7 @@ Timeline.prototype.startTimer = function () {
 
         if (self.delta > interval) {
 
-            //console.log(self.timePointer, self.timeBounds.max);
+            console.log(self.timePointer, self.playing);
 
             self.scrubber.noUiSlider.set(self.timePointer);
 
@@ -696,7 +872,7 @@ Timeline.prototype.startTimer = function () {
             if (self.timePointer >= self.timeBounds.max)
                 self.stopTimer();
             else
-                self.playBack.showNextEvent();
+                self.playBack.events.showNext();
 
             self.then = self.now - (self.delta % interval);
         }
@@ -715,7 +891,7 @@ Timeline.prototype.stopTimer = function() {
 $('document').ready(function() {
 
     var replayList = new ReplayList();
-    var playBack = new playBack();
+    var playBack = new PlayBack();
 
     if($('.playback-list').length)
         replayList.init();
