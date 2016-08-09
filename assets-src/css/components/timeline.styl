@@ -1,0 +1,74 @@
+.timeline
+    left 50%
+    right 10px
+    bottom 10px
+    height 40px
+    overflow hidden
+    display none
+
+    &--loading
+        &:after
+            content 'Loading playback...'
+            position absolute
+            left 120px
+            font-size 15px
+            color #FFF
+            top 10px
+
+    &__slider
+        position absolute
+        bottom 10px
+        left 120px
+        right 60px
+
+        &.noUi-horizontal .noUi-handle
+            padding 5px 0 0 9px
+            font-size 14px
+
+            &.left-time
+                text-indent -66px
+                color #000
+
+    &__toggle-playback
+        color #FFF
+        position absolute
+        display block
+        left 10px
+        top 7px
+
+        &:hover
+            opacity .8
+
+    &__speed
+        position absolute
+        left 33px
+        color #AAA
+        top 11px
+        display block
+        font-size 13px
+
+        &.x30
+            left 62px
+        &.x60
+            left 91px
+        &.active
+            color #FFF
+        &:hover
+            color #EEE
+
+    &__share
+    &__fullscreen
+        color #FFF
+        position absolute
+        display block
+        right 37px
+        top 7px
+
+        &:hover
+            opacity .8
+
+    &__fullscreen
+        right 10px
+
+    +below(650px)
+        left 10px

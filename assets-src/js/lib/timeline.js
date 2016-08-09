@@ -99,7 +99,7 @@ Timeline.prototype.setupInteractionHandlers = function() {
 
         self.stopTimer();
 
-        var shareUrl = ...
+        var shareUrl = webPath + '/' + self.playBack.replayDetails.id + '/' + self.playBack.replayDetails.slug + '?playback';
 
         var center = self.playBack.map.handler.getCenter();
         shareUrl += '&centerLat=' + center.lat;

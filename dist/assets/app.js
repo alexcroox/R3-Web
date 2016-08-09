@@ -1,3 +1,11 @@
+function Events() {
+
+};
+
+Events.prototype.init = function() {
+
+};
+
 function Map(terrainName, tileSubDomains, cb) {
 
     this.terrain = terrainName;
@@ -145,8 +153,11 @@ Map.prototype.gameToGrid = function(x, y) {
     return [gridX, gridY];
 };
 
-function PlayBack(replayDetails, sharedPresets, cacheAvailable) {
+function Markers(playBack) {
 
+    this.playBack = this.playBack;
+    this.list = {};
+    this.matchedIcons = {};
     this.eventGroups = {
         'positions_vehicles': {},
         'positions_infantry': {}
@@ -155,18 +166,75 @@ function PlayBack(replayDetails, sharedPresets, cacheAvailable) {
         "positions_vehicles": [],
         "positions_infantry": []
     };
+};
+
+Markers.prototype.setupLayers = function() {
+
+    // Setup seperate layers for vehicles and infantry
+    this.eventGroups.positions_vehicles = new L.LayerGroup([], {
+        makeBoundsAware: false
+    });
+
+    this.eventGroups.positions_infantry = new L.LayerGroup([], {
+        makeBoundsAware: false
+    });
+
+    this.eventGroups.positions_vehicles.addTo(this.map.handler);
+    this.eventGroups.positions_infantry.addTo(this.map.handler);
+}
+
+// Cleanup old units we are no longer receiving data for
+Markers.prototype.removeOld = function(replayEvent, eventValue) {
+
+    var self = this;
+
+    var tempIds = {
+        "positions_vehicles": [],
+        "positions_infantry": []
+    };
+
+    _.each(eventValue, function(pos, id) {
+
+        self.add(id, pos, type, replayEvent.time);
+
+        if (self.currentIds[type].indexOf(id) < 0)
+            self.currentIds[type].push(id);
+
+        tempIds[type].push(id);
+    });
+
+    var oldMarkers = _.difference(self.currentIds[type], tempIds[type]);
+
+    _.each(oldMarkers, function(id) {
+
+        if (typeof self.list[id] !== "undefined") {
+
+            // When was this unit last updated?
+            var timeDiff = replayEvent.time - self.list[id].timeUpdated;
+
+            // If we've stopped receiving data lets remove it
+            if (timeDiff > 30)
+                self.removeUnit(id);
+        }
+    });
+}
+
+function PlayBack() {
+
     this.map = {};
     this.events = {};
     this.timeline = {};
     this.playerList = {};
     this.playerGroups = {};
     this.players = {};
-    this.markers = {};
-    this.matchedIcons = {};
     this.trackTarget = false;
     this.zoomedToFirstPlayer = false;
+
     // Used to debug missing icons
     this.unknownClasses = [];
+};
+
+PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable) {
 
     var self = this;
 
@@ -182,7 +250,10 @@ function PlayBack(replayDetails, sharedPresets, cacheAvailable) {
         // Fetch our event data from the server
         self.fetch(cacheAvailable);
     });
-};
+
+    this.markers = new Markers(this);
+    this.events = new Events(this);
+}
 
 PlayBack.prototype.fetch = function(cacheAvailable) {
 
@@ -207,17 +278,7 @@ PlayBack.prototype.prepData = function(eventList) {
 
     var self = this;
 
-    // Setup seperate layers for vehicles and infantry
-    this.eventGroups.positions_vehicles = new L.LayerGroup([], {
-        makeBoundsAware: false
-    });
-
-    this.eventGroups.positions_infantry = new L.LayerGroup([], {
-        makeBoundsAware: false
-    });
-
-    this.eventGroups.positions_vehicles.addTo(this.map.handler);
-    this.eventGroups.positions_infantry.addTo(this.map.handler);
+    this.markers.setupLayers();
 
     // Calculate our time range and combine events with the same mission time
     _.each(eventList, function(e) {
@@ -245,13 +306,48 @@ PlayBack.prototype.prepData = function(eventList) {
     }
 };
 
-function PlayBackList() {
+PlayBack.prototype.showNextEvent = function() {
 
+    var self = this;
+
+    // Do we have any events for this mission time?
+    if (typeof this.events[self.timeline.timePointer] !== "undefined") {
+
+        // We might have more than one event for this mission time
+        _.each(self.eventList[self.timeline.timePointer], function(replayEvent) {
+
+            var type = replayEvent.type;
+            var eventValue = playBack.parseData(replayEvent.value);
+
+            if (eventValue)
+                self.events.actionType(type, replayEvent, eventValue);
+
+        });
+    }
+
+    self.timeline.timePointer += self.timeline.timeJump;
 };
 
-PlayBackList.prototype.init = function() {
+// Attempt to parse our event json
+PlayBack.prototype.parseData = function(json) {
 
+    var self = this;
+
+    try {
+        var parsedData = JSON.parse(json);
+
+        return parsedData;
+    } catch (e) {
+
+        console.error(json);
+
+        // Stop playback on bad json
+        self.timeline.stopTimer(true);
+
+        return false;
+    }
 };
+
 function Poi(map) {
 
     this.map = map;
@@ -388,6 +484,14 @@ Poi.prototype.filterZoomLayers = function() {
     });
 };
 
+function ReplayList() {
+
+};
+
+ReplayList.prototype.init = function() {
+
+};
+
 // Let's show events as fast as the browser can render them to avoid choking
 // Especially useful on mobile / weaker CPUs
 window.requestAnimFrame = (function() {
@@ -453,11 +557,67 @@ Timeline.prototype.setupScrubber = function(eventList) {
 
 Timeline.prototype.setupInteractionHandlers = function() {
 
+    var self = this;
+
     this.scrubber.noUiSlider.on('slide', function(value) {
 
         console.log('Sliding', Math.round(value[0]));
 
-        this.skipTime(value[0]);
+        self.skipTime(value[0]);
+    });
+
+    $('body').on('click', '.timeline__toggle-playback', function(e) {
+        e.preventDefault();
+
+        if (!self.playing) {
+
+            $('.timeline__toggle-playback .fa').removeClass('fa-play').addClass('fa-pause');
+            self.startTimer();
+
+        } else {
+
+            $('.timeline__toggle-playback .fa').removeClass('fa-pause').addClass('fa-play');
+            self.stopTimer();
+        }
+    });
+
+    $('body').on('click', '.timeline__speed', function(e) {
+
+        e.preventDefault();
+
+        self.changeSpeed($(this).data('speed'));
+    });
+
+    $('body').on('click', '.timeline__share', function(e) {
+        e.preventDefault();
+
+        self.stopTimer();
+
+        var shareUrl = webPath + '/' + self.playBack.replayDetails.id + '/' + self.playBack.replayDetails.slug + '?playback';
+
+        var center = self.playBack.map.handler.getCenter();
+        shareUrl += '&centerLat=' + center.lat;
+        shareUrl += '&centerLng=' + center.lng;
+
+        shareUrl += '&zoom=' + self.playBack.map.handler.getZoom();
+        shareUrl += '&time=' + self.timePointer;
+        shareUrl += '&speed=' + self.speed;
+
+        if (self.playBack.trackTarget)
+            shareUrl += '&track=' + self.playBack.trackTarget
+
+        $('.timeline__share__details input').val(shareUrl);
+
+        // Show modal here
+    });
+
+    $('body').on('click', '.timeline__fullscreen', function(e) {
+
+        e.preventDefault();
+
+        if (screenfull.enabled) {
+            screenfull.toggle();
+        }
     });
 }
 
@@ -554,11 +714,12 @@ Timeline.prototype.stopTimer = function() {
 
 $('document').ready(function() {
 
-    var playBackList = new PlayBackList();
+    var replayList = new ReplayList();
+    var playBack = new playBack();
 
     if($('.playback-list').length)
-        playBackList.init();
+        replayList.init();
 
     if(typeof replayDetails !== "undefined")
-        new PlayBack(replayDetails, sharedPresets, cacheAvailable);
+        playBack.init(replayDetails, sharedPresets, cacheAvailable);
 });
