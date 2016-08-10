@@ -1,12 +1,10 @@
-function Poi(map) {
-
-    this.map = map;
+function Poi() {
 
     this.ready = false;
     this.poiLayers = {};
 };
 
-Poi.prototype.setup = function(terrainName) {
+Poi.prototype.init = function(terrainName) {
 
     this.terrain = terrainName;
     this.setupInteractionHandlers();
@@ -18,7 +16,7 @@ Poi.prototype.setupInteractionHandlers = function() {
     var self = this;
 
     // When we zoom we need to filter our POIs from view to avoid clutter
-    this.map.handler.on('zoomend', function(e) {
+    map.handler.on('zoomend', function(e) {
 
         self.filterZoomLayers();
     });
@@ -41,7 +39,7 @@ Poi.prototype.add = function() {
 
                     lg = new L.featureGroup();
 
-                    lg.addTo(self.map.handler);
+                    lg.addTo(map.handler);
                 } else {
 
                     lg = new L.LayerGroup([], {
@@ -83,9 +81,9 @@ Poi.prototype.add = function() {
                 className: 'poi-image--' + poi.type
             });
 
-            var pos = self.map.gamePointToMapPoint(poi.x, poi.y);
+            var pos = map.gamePointToMapPoint(poi.x, poi.y);
 
-            var poiLabel = L.marker(self.map.rc.unproject([pos[0], pos[1]]), {
+            var poiLabel = L.marker(map.rc.unproject([pos[0], pos[1]]), {
                 icon: poiIcon,
                 clickable: false
             }).bindLabel(poi.label, {
@@ -116,20 +114,20 @@ Poi.prototype.filterZoomLayers = function() {
         return;
 
     var self = this;
-    var zoom = self.map.handler.getZoom();
+    var zoom = map.handler.getZoom();
 
     _.each(this.poiLayers, function(layer, type) {
 
         if(zoom < 4 && (type != 'namecitycapital' && type != 'namecity' && type != 'mount'))
-            self.map.handler.removeLayer(self.poiLayers[type]);
+            map.handler.removeLayer(self.poiLayers[type]);
 
         if(zoom > 3 && type != 'mount')
-            self.poiLayers[type].addTo(self.map.handler);
+            self.poiLayers[type].addTo(map.handler);
 
         if(zoom > 5 && type == 'mount')
-            self.poiLayers[type].addTo(self.map.handler);
+            self.poiLayers[type].addTo(map.handler);
 
         if(zoom < 6 && type == 'mount')
-            self.map.handler.removeLayer(self.poiLayers[type]);
+            map.handler.removeLayer(self.poiLayers[type]);
     });
 };

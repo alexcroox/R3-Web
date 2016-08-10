@@ -1,9 +1,5 @@
-function Events(playBack) {
+function Events() {
 
-    this.playBack = playBack;
-    this.markers = this.playBack.markers;
-    this.map = this.playBack.map;
-    this.timeline = this.playBack.timeline;
     this.list = {};
 };
 
@@ -12,10 +8,10 @@ Events.prototype.showNext = function() {
     var self = this;
 
     // Do we have any events for this mission time?
-    if (typeof this.list[self.timeline.timePointer] !== "undefined") {
+    if (typeof this.list[timeline.timePointer] !== "undefined") {
 
         // We might have more than one event for this mission time
-        _.each(self.list[self.timeline.timePointer], function(replayEvent) {
+        _.each(self.list[timeline.timePointer], function(replayEvent) {
 
             var type = replayEvent.type;
             var eventValue = self.parseData(replayEvent.value);
@@ -26,7 +22,7 @@ Events.prototype.showNext = function() {
         });
     }
 
-    self.timeline.timePointer += self.timeline.timeJump;
+    timeline.timePointer += timeline.timeJump;
 };
 
 // Attempt to parse our event json
@@ -43,7 +39,7 @@ Events.prototype.parseData = function(json) {
         console.error(json);
 
         // Stop playback on bad json
-        self.timeline.stopTimer(true);
+        timeline.stopTimer(true);
 
         return false;
     }
@@ -55,7 +51,7 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 
     if (type == "positions_vehicles" || type == "positions_infantry") {
 
-        self.markers.findAndRemoveOld(replayEvent, eventValue);
+        markers.process(replayEvent, eventValue, type);
 
     } else {
 
@@ -64,51 +60,51 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
             // If the unit gets into a vehicle we can remove their infantry icon immediately
             case "get_in":
 
-                self.markers.removeUnit(Object.keys(eventValue)[0]);
+                markers.removeUnit(Object.keys(eventValue)[0]);
 
                 break;
 
             case "player_disconnected":
 
                 var playerId = eventValue[Object.keys(eventValue)[0]].id;
-                var playerInfo = self.playBack.getPlayerInfo(playerId);
+                var playerInfo = players.getInfo(playerId);
 
                 //console.log('Player disconnected', playerInfo);
 
                 if (typeof playerInfo !== "undefined")
-                    self.playback.notifications.info(playerInfo.name + ' disconnected');
+                    notifications.info(playerInfo.name + ' disconnected');
 
-                self.markers.removeUnit(Object.keys(eventValue)[0]);
+                markers.removeUnit(Object.keys(eventValue)[0]);
 
                 break;
 
             case "player_connected":
 
                 var playerId = eventValue[Object.keys(eventValue)[0]].id;
-                var playerInfo = self.playBack.getPlayerInfo(playerId);
+                var playerInfo = players.getInfo(playerId);
 
                 //console.log('Player connected', playerInfo);
 
                 if (typeof playerInfo !== "undefined")
-                    self.playback.notifications.info(playerInfo.name + ' connected');
+                    notifications.info(playerInfo.name + ' connected');
 
                 break;
 
             case "unit_awake":
 
-                self.markers.removeUnit(Object.keys(eventValue)[0]);
+                markers.removeUnit(Object.keys(eventValue)[0]);
 
                 break;
 
             case "unit_unconscious":
 
-                self.attacked('downed', eventValue);
+                //self.attacked('downed', eventValue);
 
                 break;
 
             case "unit_killed":
 
-                self.attacked('killed', eventValue);
+                //self.attacked('killed', eventValue);
 
                 break;
 
@@ -130,14 +126,14 @@ Events.prototype.projectileLaunch = function(eventData) {
 
     var victim = eventData.victim;
     var attacker = eventData.attacker;
-    var launchPos = this.map.gamePointToMapPoint(attacker.pos[0], attacker.pos[1]);
+    var launchPos = map.gamePointToMapPoint(attacker.pos[0], attacker.pos[1]);
     var victimMarker = this.markers.list[victim.unit];
 
     var targetPos = (typeof victimMarker !== "undefined") ? victimMarker.getLatLng() : false;
 
-    var playerInfo = this.playBack.getPlayerInfo(victim.id);
+    var playerInfo = players.getInfo(victim.id);
 
-    var launchPulse = L.circle(this.map.rc.unproject([launchPos[0], launchPos[1]]), 50, {
+    var launchPulse = L.circle(map.rc.unproject([launchPos[0], launchPos[1]]), 50, {
         weight: 1,
         color: 'red',
         fillColor: '#f03',
@@ -147,12 +143,12 @@ Events.prototype.projectileLaunch = function(eventData) {
     }).addTo(map.m);
 
     setTimeout(function() {
-        self.map.handler.removeLayer(launchPulse);
+        map.handler.removeLayer(launchPulse);
     }, 1000);
 
     if (targetPos) {
 
-        var projectileIcon = L.marker(this.map.rc.unproject([launchPos[0], launchPos[1]]), {
+        var projectileIcon = L.marker(map.rc.unproject([launchPos[0], launchPos[1]]), {
             icon: L.icon({
                 iconUrl: webPath + '/assets/images/map/markers/' + attacker.ammoType.toLowerCase() + '.png',
                 iconSize: [30, 30],
@@ -160,17 +156,17 @@ Events.prototype.projectileLaunch = function(eventData) {
                 className: 'projectile-' + attacker.ammoType.toLowerCase()
             }),
             clickable: false
-        }).addTo(this.map.handler);
+        }).addTo(map.handler);
 
         setTimeout(function() {
             projectileIcon.setLatLng(targetPos);
         }, 50);
 
         setTimeout(function() {
-            self.map.handler.removeLayer(projectileIcon);
+            map.handler.removeLayer(projectileIcon);
         }, 1000);
     }
 
     if (typeof playerInfo !== "undefined")
-        self.playBack.notifications.info(attacker.ammoType + ' Launch at ' + playerInfo.name);
+        notifications.info(attacker.ammoType + ' Launch at ' + playerInfo.name);
 };

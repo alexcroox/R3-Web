@@ -1,9 +1,5 @@
-function Events(playBack) {
+function Events() {
 
-    this.playBack = playBack;
-    this.markers = this.playBack.markers;
-    this.map = this.playBack.map;
-    this.timeline = this.playBack.timeline;
     this.list = {};
 };
 
@@ -12,10 +8,10 @@ Events.prototype.showNext = function() {
     var self = this;
 
     // Do we have any events for this mission time?
-    if (typeof this.list[self.timeline.timePointer] !== "undefined") {
+    if (typeof this.list[timeline.timePointer] !== "undefined") {
 
         // We might have more than one event for this mission time
-        _.each(self.list[self.timeline.timePointer], function(replayEvent) {
+        _.each(self.list[timeline.timePointer], function(replayEvent) {
 
             var type = replayEvent.type;
             var eventValue = self.parseData(replayEvent.value);
@@ -26,7 +22,7 @@ Events.prototype.showNext = function() {
         });
     }
 
-    self.timeline.timePointer += self.timeline.timeJump;
+    timeline.timePointer += timeline.timeJump;
 };
 
 // Attempt to parse our event json
@@ -43,7 +39,7 @@ Events.prototype.parseData = function(json) {
         console.error(json);
 
         // Stop playback on bad json
-        self.timeline.stopTimer(true);
+        timeline.stopTimer(true);
 
         return false;
     }
@@ -55,7 +51,7 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 
     if (type == "positions_vehicles" || type == "positions_infantry") {
 
-        self.markers.findAndRemoveOld(replayEvent, eventValue);
+        markers.process(replayEvent, eventValue, type);
 
     } else {
 
@@ -64,51 +60,51 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
             // If the unit gets into a vehicle we can remove their infantry icon immediately
             case "get_in":
 
-                self.markers.removeUnit(Object.keys(eventValue)[0]);
+                markers.removeUnit(Object.keys(eventValue)[0]);
 
                 break;
 
             case "player_disconnected":
 
                 var playerId = eventValue[Object.keys(eventValue)[0]].id;
-                var playerInfo = self.playBack.getPlayerInfo(playerId);
+                var playerInfo = players.getInfo(playerId);
 
                 //console.log('Player disconnected', playerInfo);
 
                 if (typeof playerInfo !== "undefined")
-                    self.playback.notifications.info(playerInfo.name + ' disconnected');
+                    notifications.info(playerInfo.name + ' disconnected');
 
-                self.markers.removeUnit(Object.keys(eventValue)[0]);
+                markers.removeUnit(Object.keys(eventValue)[0]);
 
                 break;
 
             case "player_connected":
 
                 var playerId = eventValue[Object.keys(eventValue)[0]].id;
-                var playerInfo = self.playBack.getPlayerInfo(playerId);
+                var playerInfo = players.getInfo(playerId);
 
                 //console.log('Player connected', playerInfo);
 
                 if (typeof playerInfo !== "undefined")
-                    self.playback.notifications.info(playerInfo.name + ' connected');
+                    notifications.info(playerInfo.name + ' connected');
 
                 break;
 
             case "unit_awake":
 
-                self.markers.removeUnit(Object.keys(eventValue)[0]);
+                markers.removeUnit(Object.keys(eventValue)[0]);
 
                 break;
 
             case "unit_unconscious":
 
-                self.attacked('downed', eventValue);
+                //self.attacked('downed', eventValue);
 
                 break;
 
             case "unit_killed":
 
-                self.attacked('killed', eventValue);
+                //self.attacked('killed', eventValue);
 
                 break;
 
@@ -130,14 +126,14 @@ Events.prototype.projectileLaunch = function(eventData) {
 
     var victim = eventData.victim;
     var attacker = eventData.attacker;
-    var launchPos = this.map.gamePointToMapPoint(attacker.pos[0], attacker.pos[1]);
+    var launchPos = map.gamePointToMapPoint(attacker.pos[0], attacker.pos[1]);
     var victimMarker = this.markers.list[victim.unit];
 
     var targetPos = (typeof victimMarker !== "undefined") ? victimMarker.getLatLng() : false;
 
-    var playerInfo = this.playBack.getPlayerInfo(victim.id);
+    var playerInfo = players.getInfo(victim.id);
 
-    var launchPulse = L.circle(this.map.rc.unproject([launchPos[0], launchPos[1]]), 50, {
+    var launchPulse = L.circle(map.rc.unproject([launchPos[0], launchPos[1]]), 50, {
         weight: 1,
         color: 'red',
         fillColor: '#f03',
@@ -147,12 +143,12 @@ Events.prototype.projectileLaunch = function(eventData) {
     }).addTo(map.m);
 
     setTimeout(function() {
-        self.map.handler.removeLayer(launchPulse);
+        map.handler.removeLayer(launchPulse);
     }, 1000);
 
     if (targetPos) {
 
-        var projectileIcon = L.marker(this.map.rc.unproject([launchPos[0], launchPos[1]]), {
+        var projectileIcon = L.marker(map.rc.unproject([launchPos[0], launchPos[1]]), {
             icon: L.icon({
                 iconUrl: webPath + '/assets/images/map/markers/' + attacker.ammoType.toLowerCase() + '.png',
                 iconSize: [30, 30],
@@ -160,41 +156,42 @@ Events.prototype.projectileLaunch = function(eventData) {
                 className: 'projectile-' + attacker.ammoType.toLowerCase()
             }),
             clickable: false
-        }).addTo(this.map.handler);
+        }).addTo(map.handler);
 
         setTimeout(function() {
             projectileIcon.setLatLng(targetPos);
         }, 50);
 
         setTimeout(function() {
-            self.map.handler.removeLayer(projectileIcon);
+            map.handler.removeLayer(projectileIcon);
         }, 1000);
     }
 
     if (typeof playerInfo !== "undefined")
-        self.playBack.notifications.info(attacker.ammoType + ' Launch at ' + playerInfo.name);
+        notifications.info(attacker.ammoType + ' Launch at ' + playerInfo.name);
 };
 
-function Map(terrainName, tileSubDomains, cb) {
+function Map() {
+
+    this.terrain;
+    this.tileSubDomains = false;
+};
+
+Map.prototype.init = function(terrainName, tileSubDomains, cb) {
+
+    var self = this;
 
     this.terrain = terrainName;
     this.tileSubDomains = tileSubDomains;
 
-    this.init(cb);
-};
-
-Map.prototype.init = function(cb) {
-
-    var self = this;
-
     $.getJSON(webPath + '/maps/' + this.terrain + '/config.json', function(configJson) {
-            self.config = configJson;
-            self.render(cb);
-        })
-        .fail(function() {
-            console.log("Error loading terrain config");
-            cb(true);
-        });
+        self.config = configJson;
+        self.render(cb);
+    })
+    .fail(function() {
+        console.log("Error loading terrain config");
+        cb(true);
+    });
 };
 
 Map.prototype.render = function(cb) {
@@ -238,8 +235,7 @@ Map.prototype.render = function(cb) {
 
     this.setupInteractionHandlers();
 
-    var poi = new Poi(this);
-    poi.setup(this.terrain);
+    poi.init(this.terrain);
 
     cb(false);
 };
@@ -322,12 +318,12 @@ Map.prototype.gameToGrid = function(x, y) {
     return [gridX, gridY];
 };
 
-function Markers(playBack) {
+function Markers() {
 
-    this.playBack = playBack;
-    this.map = playBack.map;
     this.list = {};
     this.matchedIcons = {};
+    this.icons = {};
+    this.maxZoomLevelForIndividualPlayerLabels = 7;
     this.eventGroups = {
         'positions_vehicles': {},
         'positions_infantry': {}
@@ -336,6 +332,9 @@ function Markers(playBack) {
         "positions_vehicles": [],
         "positions_infantry": []
     };
+
+    // Used to debug missing icons
+    this.unknownClasses = [];
 };
 
 Markers.prototype.setupLayers = function() {
@@ -349,23 +348,27 @@ Markers.prototype.setupLayers = function() {
         makeBoundsAware: false
     });
 
-    this.eventGroups.positions_vehicles.addTo(this.map.handler);
-    this.eventGroups.positions_infantry.addTo(this.map.handler);
+    this.eventGroups.positions_vehicles.addTo(map.handler);
+    this.eventGroups.positions_infantry.addTo(map.handler);
 }
 
-// Cleanup old units we are no longer receiving data for
-Markers.prototype.findAndRemoveOld = function(replayEvent, eventValue) {
+// Cleanup old units we are no longer receiving data for and add update others
+Markers.prototype.process = function(replayEvent, eventValue, type) {
 
     var self = this;
+
+    console.log('process');
 
     var tempIds = {
         "positions_vehicles": [],
         "positions_infantry": []
     };
 
+    // Loop through all events, process them and keep a list of which we've seen
     _.each(eventValue, function(pos, id) {
 
-        self.add(id, pos, type, replayEvent.time);
+        // Add a new marker
+        self.add(id, pos, type, replayEvent.missionTime);
 
         if (self.currentIds[type].indexOf(id) < 0)
             self.currentIds[type].push(id);
@@ -373,14 +376,16 @@ Markers.prototype.findAndRemoveOld = function(replayEvent, eventValue) {
         tempIds[type].push(id);
     });
 
+    // Work out which markers we previous had but no longer have
     var oldMarkers = _.difference(self.currentIds[type], tempIds[type]);
 
+    // Loop through markers we no longer have and work out if it's time to remove them yet
     _.each(oldMarkers, function(id) {
 
         if (typeof self.list[id] !== "undefined") {
 
             // When was this unit last updated?
-            var timeDiff = replayEvent.time - self.list[id].timeUpdated;
+            var timeDiff = replayEvent.missionTime - self.list[id].timeUpdated;
 
             // If we've stopped receiving data lets remove it
             if (timeDiff > 30)
@@ -393,8 +398,8 @@ Markers.prototype.remove = function(id) {
 
     if (typeof this.list[id] !== "undefined") {
 
-        playBack.eventGroups['positions_infantry'].removeLayer(this.list[id]._leaflet_id);
-        playBack.eventGroups['positions_vehicles'].removeLayer(this.list[id]._leaflet_id);
+        this.eventGroups['positions_infantry'].removeLayer(this.list[id]._leaflet_id);
+        this.eventGroups['positions_vehicles'].removeLayer(this.list[id]._leaflet_id);
 
         var infArrayIndex = playBack.currentIds['positions_infantry'].indexOf(id);
         var vehArrayIndex = playBack.currentIds['positions_vehicles'].indexOf(id);
@@ -407,6 +412,305 @@ Markers.prototype.remove = function(id) {
 
         delete this.list[id];
     }
+};
+
+Markers.prototype.convertFactionIdToSide = function(factionId) {
+
+    var factionName = 'unknown';
+
+    switch (factionId) {
+
+        case 0:
+
+            factionName = 'east';
+            break;
+
+        case 1:
+
+            factionName = 'west';
+            break;
+
+        case 2:
+
+            factionName = 'independant';
+            break;
+
+        case 3:
+            factionName = 'civilian';
+            break;
+    }
+
+    return factionName;
+}
+
+Markers.prototype.add = function(id, data, type, timeUpdated) {
+
+    //console.log('Adding marker', data);
+
+    // Lets extract the horrible abbreviated data and make sense of it
+    var icon = data.ico;
+
+    if (icon == "iconLogic" || icon == "iconVirtual")
+        return;
+
+    var isInfantry = (type == "positions_infantry");
+    var isVehicle = (type == "positions_vehicles");
+    var iconType = (isVehicle)? 'vehicles' : 'infantry';
+    var iconClass = data.cls;
+    var group = data.grp;
+    var crew = data.crw;
+    var cargo = data.cgo;
+    var direction = data.dir;
+    var isLeader = data.ldr;
+    var position = map.gamePointToMapPoint(data.pos[0], data.pos[1]);
+    var faction = this.convertFactionIdToSide(data.fac);
+
+    console.log(data);
+
+    var label = '';
+    var isPlayer = false;
+    var emptyVehicle = false;
+
+    // Is this AI?
+    if(data.id != "") {
+
+        isPlayer = true;
+
+        label = players.getNameFromId(data.id);
+
+        // Is this the first time we are seeing this player in the data?
+        if (typeof players.list[data.id] === "undefined")
+            players.add(data.id, label, group);
+    }
+
+    // Show height markers on AI aircraft, but we need a name for it to display nicely
+    if (icon == "iconPlane" && !isPlayer)
+        label = 'Jet';
+
+    if (isVehicle)
+        icon = this.matchClassToIcon(iconClass, icon);
+
+    // If this is a vehicle and we have crew lets add them to the label
+    if (isVehicle && crew.length && crew.length > 1)
+        label += this.addCrewCargoToLabel('crew', crew, data.id);
+
+    // If this is a vehicle and we have crew lets add them to the label
+    if (isVehicle && cargo.length && cargo.length > 1)
+        label += this.addCrewCargoToLabel('cargo', cargo, data.id);
+
+    // Only show individual player names if zoomed in far enough, otherwise show group label next to leader
+    if (isInfantry && isPlayer && map.currentZoomLevel < this.maxZoomLevelForIndividualPlayerLabels)
+        label = (!isLeader) ? ' ' : group.toUpperCase();
+
+    var iconMarkerDefaults = {
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+        className: 'unit-marker unit-marker--' + icon + ' unit-marker__id--' + data.id,
+        iconUrl: webPath + '/assets/images/map/markers/' + iconType + '/'
+    };
+
+    // This marker isn't on the map yet
+    if (typeof this.list[id] === "undefined") {
+
+        var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
+            iconUrl: iconMarkerDefaults.iconUrl + faction + '-' + icon + '.png'
+        }));
+
+        this.list[id] = L.marker(map.rc.unproject([position[0], position[1]]), {
+            icon: mapIcon,
+            clickable: false,
+            iconAngle: direction
+        }).bindLabel(label, {
+            noHide: true,
+            className: 'unit-marker__label unit-marker__label--' + type
+        });
+
+        // Save some data to reference later
+        this.list[id].posType = type;
+        this.list[id].originalLabel = label;
+        this.list[id].faction = faction;
+
+        this.eventGroups[type].addLayer(this.list[id]);
+
+        this.list[id].showLabel();
+
+        // Lets zoom to the first player on playback initialisation
+        if (isPlayer && !playBack.zoomedToFirstPlayer && isInfantry) {
+
+            map.m.setView(map.rc.unproject([position[0], position[1]]), 6);
+            playBack.zoomedToFirstPlayer = true;
+        }
+
+    // The marker already exists, let's update it
+    } else {
+
+        this.list[id].setLatLng(map.rc.unproject([position[0], position[1]]));
+
+        var markerDomElement = $('.unit-marker__id--' + data.id);
+
+        // Lets rotate the marker to it's latest heading
+        if (markerDomElement.length) {
+
+            var smoothAngle = this.calcShortestRotationAdjustment(this.getRotation(markerDomElement.get(0)), direction);
+            this.list[id].setIconAngle(smoothAngle);
+        }
+
+        if (typeof this.list[id].unconscious !== "undefined" && this.list[id].unconscious) {
+
+            var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
+                iconUrl: iconMarkerDefaults.iconUrl + '/unconscious.png',
+                className: iconMarkerDefaults.className + ' unit-marker__label--unconscious'
+            }));
+
+            this.list[id].setIcon(mapIcon);
+
+        // Has the type changed?
+        } else if (this.list[id].posType != type && !emptyVehicle) {
+
+            var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
+                iconUrl: iconMarkerDefaults.iconUrl + faction + '-' + icon + '.png'
+            }));
+
+            this.list[id].setIcon(mapIcon);
+            this.list[id].posType = type;
+        }
+
+        this.list[id].originalLabel = label;
+
+        this.list[id].label.setContent(label);
+
+        // If we are flying (air vehicle or parachute (or otherwise!)) lets show height label
+        if (position[2] > 10) {
+            this.list[id].label.setContent(this.list[id].originalLabel + '<span class="player-marker-stat">' + String(Math.round(position[2])) + 'm</span>');
+        }
+    }
+
+    // Store that we've just seen this unit so we don't delete it on the next cleanup
+    this.list[id].timeUpdated = timeUpdated;
+
+    // Are we tracking this unit? Let's highlight it!
+    if (playBack.trackTarget && playBack.trackTarget == data.id) {
+
+        // Highlight
+        this.list[id].setZIndexOffset(9999);
+        $('.unit-marker--tracking').removeClass('unit-marker--tracking');
+        markerDomElement.addClass('unit-marker--tracking');
+
+        // Has the map view moved away from the tracked player? Lets bring it back into view
+        var point = map.m.latLngToLayerPoint(this.list[id].getLatLng());
+        var distance = point.distanceTo(map.m.latLngToLayerPoint(map.m.getCenter()));
+
+        if (distance > 200)
+            map.m.panTo(map.rc.unproject([position[0], position[1]]));
+    }
+};
+
+Markers.prototype.addCrewCargoToLabel = function(type, data, unitId) {
+
+    var label = '<span class="operation-' + type + '">';
+
+    _.each(data, function(c) {
+
+        // We don't want to include the driver
+        if (c != unitId) {
+
+            var playerInfo = players.getInfo(c);
+
+            if (typeof playerInfo !== "undefined")
+                label += '<br>' + playerInfo.name;
+        }
+    });
+
+    label += '</span>';
+
+    return label;
+}
+
+Markers.prototype.matchClassToIcon = function(className, fallBackIcon) {
+
+    var self = this;
+
+    // We keep a list of already matched icons for speedier recuring lookups
+    if (typeof this.matchedIcons[className] === "undefined") {
+
+        var matchedIcon = fallBackIcon;
+        var found = false;
+
+        _.each(this.icons, function(i) {
+
+            if (className.indexOf(i.name) > -1) {
+                matchedIcon = i.icon;
+                self.matchedIcons[className] = i.icon;
+                found = true;
+            }
+        });
+
+        if (!found) {
+
+            if (self.unknownClasses.indexOf(className) == -1) {
+                console.warn(className, fallBackIcon);
+
+                self.unknownClasses.push(className);
+            }
+        }
+
+        return matchedIcon;
+
+    } else {
+        return self.matchedIcons[className];
+    }
+};
+
+// Get the current rotation value from dom element
+Markers.prototype.getRotation = function(el) {
+
+    var st = window.getComputedStyle(el, null);
+    var tr = st.getPropertyValue("-webkit-transform") ||
+        st.getPropertyValue("-moz-transform") ||
+        st.getPropertyValue("-ms-transform") ||
+        st.getPropertyValue("-o-transform") ||
+        st.getPropertyValue("transform") ||
+        "fail...";
+
+    if (tr !== "none") {
+
+        var values = tr.split('(')[1];
+        values = values.split(')')[0];
+        values = values.split(',');
+        var a = values[0];
+        var b = values[1];
+        var c = values[2];
+        var d = values[3];
+
+        var scale = Math.sqrt(a * a + b * b);
+
+        var radians = Math.atan2(b, a);
+        var angle = Math.round(radians * (180 / Math.PI));
+
+    } else {
+        var angle = 0;
+    }
+
+    return angle;
+}
+
+// Find out which way we should re-rotate so it takes the shortest path instead of doing a spinning dance every time
+Markers.prototype.calcShortestRotationAdjustment = function(previousRot, requiredRot) {
+
+    var previousRot, apparentRot;
+    previousRot = previousRot || 0;
+    apparentRot = previousRot % 360;
+    if (apparentRot < 0) {
+        apparentRot += 360;
+    }
+    if (apparentRot < 180 && (requiredRot > (apparentRot + 180))) {
+        previousRot -= 360;
+    }
+    if (apparentRot >= 180 && (requiredRot <= (apparentRot - 180))) {
+        previousRot += 360;
+    }
+    previousRot += (requiredRot - apparentRot);
+    return previousRot;
 };
 
 function Notifications() {
@@ -440,15 +744,8 @@ Notifications.prototype.info = function(message) {
 
 function PlayBack() {
 
-    this.map = {};
-    this.playerList = {};
-    this.playerGroups = {};
-    this.players = {};
     this.trackTarget = false;
     this.zoomedToFirstPlayer = false;
-
-    // Used to debug missing icons
-    this.unknownClasses = [];
 };
 
 PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable) {
@@ -459,7 +756,7 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
     this.sharedPresets = JSON.parse(sharedPresets);
 
     // Setup map with our chosen terrain
-    this.map = new Map(this.replayDetails.map, this.replayDetails.tileSubDomains, function(error) {
+    map.init(this.replayDetails.map, this.replayDetails.tileSubDomains, function(error) {
 
         if (error)
             return;
@@ -467,10 +764,6 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
         // Fetch our event data from the server
         self.fetch(cacheAvailable);
     });
-
-    this.markers = new Markers(this);
-    this.timeline = new Timeline(this);
-    this.events = new Events(this);
 }
 
 PlayBack.prototype.fetch = function(cacheAvailable) {
@@ -496,41 +789,86 @@ PlayBack.prototype.prepData = function(eventList) {
 
     var self = this;
 
-    this.markers.setupLayers();
+    markers.setupLayers();
 
     // Calculate our time range and combine events with the same mission time
     _.each(eventList, function(e) {
 
-        if (typeof self.events.list[e.time] === "undefined")
-            self.events.list[e.time] = [];
+        if (typeof events.list[e.missionTime] === "undefined")
+            events.list[e.missionTime] = [];
 
-        self.events.list[e.time].push(e);
+        events.list[e.missionTime].push(e);
     });
-    this.timeline.setupScrubber(eventList);
-    this.timeline.changeSpeed(this.timeline.speed);
+
+    timeline.setupScrubber(eventList);
+    timeline.changeSpeed(timeline.speed);
 
     // Are we loading a shared playback? If so load their POV at time of sharing
     if (this.sharedPresets.centerLat) {
 
-        this.map.handler.setView([this.sharedPresets.centerLat, this.sharedPresets.centerLng], this.sharedPresets.zoom);
+        map.handler.setView([this.sharedPresets.centerLat, this.sharedPresets.centerLng], this.sharedPresets.zoom);
 
-        this.timeline.timePointer = this.sharedPresets.time;
+        timeline.timePointer = this.sharedPresets.time;
 
-        this.timeline.skipTime(this.sharedPresets.time);
+        timeline.skipTime(this.sharedPresets.time);
     } else {
-        this.timeline.startTimer();
+        timeline.startTimer();
     }
 };
 
-function Poi(map) {
+function Players() {
 
-    this.map = map;
+    this.list = {};
+    this.groups = {};
+};
+
+Players.prototype.init = function() {
+
+};
+
+Players.prototype.add = function(id, name, group) {
+
+    this.list[id] = {
+        "name": name
+    };
+
+    // Does this player's group exist yet?
+    if (typeof this.groups[group] === "undefined")
+        this.groups[group] = [];
+
+    // Add them to the group
+    this.groups[group].push(id);
+
+    // Update our sidebar list
+    this.updateList();
+}
+
+Players.prototype.getInfo = function(id) {
+
+    return _.find(this.list, function(player) {
+        return player.id == id;
+    });
+};
+
+Players.prototype.getNameFromId = function(id) {
+
+    var playerInfo = this.getInfo(id);
+
+    return (typeof playerInfo === "undefined")? "Unknown" : playerInfo.name;
+};
+
+// Update the sidebar player list
+Players.prototype.updateList = function() {
+
+};
+
+function Poi() {
 
     this.ready = false;
     this.poiLayers = {};
 };
 
-Poi.prototype.setup = function(terrainName) {
+Poi.prototype.init = function(terrainName) {
 
     this.terrain = terrainName;
     this.setupInteractionHandlers();
@@ -542,7 +880,7 @@ Poi.prototype.setupInteractionHandlers = function() {
     var self = this;
 
     // When we zoom we need to filter our POIs from view to avoid clutter
-    this.map.handler.on('zoomend', function(e) {
+    map.handler.on('zoomend', function(e) {
 
         self.filterZoomLayers();
     });
@@ -565,7 +903,7 @@ Poi.prototype.add = function() {
 
                     lg = new L.featureGroup();
 
-                    lg.addTo(self.map.handler);
+                    lg.addTo(map.handler);
                 } else {
 
                     lg = new L.LayerGroup([], {
@@ -607,9 +945,9 @@ Poi.prototype.add = function() {
                 className: 'poi-image--' + poi.type
             });
 
-            var pos = self.map.gamePointToMapPoint(poi.x, poi.y);
+            var pos = map.gamePointToMapPoint(poi.x, poi.y);
 
-            var poiLabel = L.marker(self.map.rc.unproject([pos[0], pos[1]]), {
+            var poiLabel = L.marker(map.rc.unproject([pos[0], pos[1]]), {
                 icon: poiIcon,
                 clickable: false
             }).bindLabel(poi.label, {
@@ -640,21 +978,21 @@ Poi.prototype.filterZoomLayers = function() {
         return;
 
     var self = this;
-    var zoom = self.map.handler.getZoom();
+    var zoom = map.handler.getZoom();
 
     _.each(this.poiLayers, function(layer, type) {
 
         if(zoom < 4 && (type != 'namecitycapital' && type != 'namecity' && type != 'mount'))
-            self.map.handler.removeLayer(self.poiLayers[type]);
+            map.handler.removeLayer(self.poiLayers[type]);
 
         if(zoom > 3 && type != 'mount')
-            self.poiLayers[type].addTo(self.map.handler);
+            self.poiLayers[type].addTo(map.handler);
 
         if(zoom > 5 && type == 'mount')
-            self.poiLayers[type].addTo(self.map.handler);
+            self.poiLayers[type].addTo(map.handler);
 
         if(zoom < 6 && type == 'mount')
-            self.map.handler.removeLayer(self.poiLayers[type]);
+            map.handler.removeLayer(self.poiLayers[type]);
     });
 };
 
@@ -677,10 +1015,9 @@ window.requestAnimFrame = (function() {
         };
 })();
 
-function Timeline(playBack) {
+function Timeline() {
 
     this.scrubber = null;
-    this.playBack = playBack;
     this.speed = 30;
     this.timeJump = 1;
     this.timePointer = 0;
@@ -698,21 +1035,17 @@ Timeline.prototype.setupScrubber = function(eventList) {
 
     var self = this;
 
-    console.log(eventList);
-
     this.timeBounds.min = parseInt(eventList[0].missionTime);
     this.timeBounds.max = parseInt(eventList[eventList.length - 1].missionTime);
 
     // Has the user shared a playback with a specific speed?
-    if (typeof this.playBack.sharedPresets.speed !== "undefined")
-        this.speed = this.playBack.sharedPresets.speed;
+    if (typeof playBack.sharedPresets.speed !== "undefined")
+        this.speed = playBack.sharedPresets.speed;
 
     this.scrubber = document.getElementById('timeline__silder');
 
     $('.timeline__silder__value').html(0);
     $('.timeline__silder').removeClass('timeline__silder--loading');
-
-    console.log('Range', this.timeBounds);
 
     this.timePointer = this.timeBounds.min;
 
@@ -769,18 +1102,18 @@ Timeline.prototype.setupInteractionHandlers = function() {
 
         self.stopTimer();
 
-        var shareUrl = webPath + '/' + self.playBack.replayDetails.id + '/' + self.playBack.replayDetails.slug + '?playback';
+        var shareUrl = webPath + '/' + playBack.replayDetails.id + '/' + playBack.replayDetails.slug + '?playback';
 
-        var center = self.playBack.map.handler.getCenter();
+        var center = playBack.map.handler.getCenter();
         shareUrl += '&centerLat=' + center.lat;
         shareUrl += '&centerLng=' + center.lng;
 
-        shareUrl += '&zoom=' + self.playBack.map.handler.getZoom();
+        shareUrl += '&zoom=' + playBack.map.handler.getZoom();
         shareUrl += '&time=' + self.timePointer;
         shareUrl += '&speed=' + self.speed;
 
-        if (self.playBack.trackTarget)
-            shareUrl += '&track=' + self.playBack.trackTarget
+        if (playBack.trackTarget)
+            shareUrl += '&track=' + playBack.trackTarget
 
         $('.timeline__share__details input').val(shareUrl);
 
@@ -818,11 +1151,11 @@ Timeline.prototype.skipTime = function(value) {
     this.timePointer = Math.round(value);
 
     // Clear down the map of existing markers, ready to time warp...
-    this.playBack.markers.eventGroups.positions_vehicles.clearLayers();
-    this.playBack.markers.eventGroups.positions_infantry.clearLayers();
-    this.playBack.markers.list = {};
-    this.playBack.markers.currentIds.positions_vehicles = [];
-    this.playBack.markers.currentIds.positions_infantry = [];
+    markers.eventGroups.positions_vehicles.clearLayers();
+    markers.eventGroups.positions_infantry.clearLayers();
+    markers.list = {};
+    markers.currentIds.positions_vehicles = [];
+    markers.currentIds.positions_infantry = [];
 
     if (!this.playing)
         this.startTimer();
@@ -838,8 +1171,8 @@ Timeline.prototype.startTimer = function () {
 
     $('.timeline__toggle-playback .fa').removeClass('fa-play').addClass('fa-pause');
 
-    if (this.playBack.sharedPresets.trackPlayer)
-        playBack.trackTarget = this.playBack.sharedPresets.trackPlayer;
+    if (playBack.sharedPresets.trackPlayer)
+        playBack.trackTarget = playBack.sharedPresets.trackPlayer;
 
     (function animloop() {
 
@@ -872,7 +1205,7 @@ Timeline.prototype.startTimer = function () {
             if (self.timePointer >= self.timeBounds.max)
                 self.stopTimer();
             else
-                self.playBack.events.showNext();
+                events.showNext();
 
             self.then = self.now - (self.delta % interval);
         }
@@ -888,10 +1221,17 @@ Timeline.prototype.stopTimer = function() {
     $('.timeline__toggle-playback .fa').removeClass('fa-pause').addClass('fa-play');
 };
 
-$('document').ready(function() {
+var replayList = new ReplayList(),
+    playBack = new PlayBack(),
+    events = new Events(),
+    players = new Players(),
+    markers = new Markers(),
+    poi = new Poi(),
+    map = new Map(),
+    timeline = new Timeline(),
+    notifications = new Notifications();
 
-    var replayList = new ReplayList();
-    var playBack = new PlayBack();
+$('document').ready(function() {
 
     if($('.playback-list').length)
         replayList.init();

@@ -1,14 +1,7 @@
 function PlayBack() {
 
-    this.map = {};
-    this.playerList = {};
-    this.playerGroups = {};
-    this.players = {};
     this.trackTarget = false;
     this.zoomedToFirstPlayer = false;
-
-    // Used to debug missing icons
-    this.unknownClasses = [];
 };
 
 PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable) {
@@ -19,7 +12,7 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
     this.sharedPresets = JSON.parse(sharedPresets);
 
     // Setup map with our chosen terrain
-    this.map = new Map(this.replayDetails.map, this.replayDetails.tileSubDomains, function(error) {
+    map.init(this.replayDetails.map, this.replayDetails.tileSubDomains, function(error) {
 
         if (error)
             return;
@@ -27,10 +20,6 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
         // Fetch our event data from the server
         self.fetch(cacheAvailable);
     });
-
-    this.markers = new Markers(this);
-    this.timeline = new Timeline(this);
-    this.events = new Events(this);
 }
 
 PlayBack.prototype.fetch = function(cacheAvailable) {
@@ -56,28 +45,29 @@ PlayBack.prototype.prepData = function(eventList) {
 
     var self = this;
 
-    this.markers.setupLayers();
+    markers.setupLayers();
 
     // Calculate our time range and combine events with the same mission time
     _.each(eventList, function(e) {
 
-        if (typeof self.events.list[e.time] === "undefined")
-            self.events.list[e.time] = [];
+        if (typeof events.list[e.missionTime] === "undefined")
+            events.list[e.missionTime] = [];
 
-        self.events.list[e.time].push(e);
+        events.list[e.missionTime].push(e);
     });
-    this.timeline.setupScrubber(eventList);
-    this.timeline.changeSpeed(this.timeline.speed);
+
+    timeline.setupScrubber(eventList);
+    timeline.changeSpeed(timeline.speed);
 
     // Are we loading a shared playback? If so load their POV at time of sharing
     if (this.sharedPresets.centerLat) {
 
-        this.map.handler.setView([this.sharedPresets.centerLat, this.sharedPresets.centerLng], this.sharedPresets.zoom);
+        map.handler.setView([this.sharedPresets.centerLat, this.sharedPresets.centerLng], this.sharedPresets.zoom);
 
-        this.timeline.timePointer = this.sharedPresets.time;
+        timeline.timePointer = this.sharedPresets.time;
 
-        this.timeline.skipTime(this.sharedPresets.time);
+        timeline.skipTime(this.sharedPresets.time);
     } else {
-        this.timeline.startTimer();
+        timeline.startTimer();
     }
 };

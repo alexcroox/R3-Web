@@ -9,10 +9,9 @@ window.requestAnimFrame = (function() {
         };
 })();
 
-function Timeline(playBack) {
+function Timeline() {
 
     this.scrubber = null;
-    this.playBack = playBack;
     this.speed = 30;
     this.timeJump = 1;
     this.timePointer = 0;
@@ -30,21 +29,17 @@ Timeline.prototype.setupScrubber = function(eventList) {
 
     var self = this;
 
-    console.log(eventList);
-
     this.timeBounds.min = parseInt(eventList[0].missionTime);
     this.timeBounds.max = parseInt(eventList[eventList.length - 1].missionTime);
 
     // Has the user shared a playback with a specific speed?
-    if (typeof this.playBack.sharedPresets.speed !== "undefined")
-        this.speed = this.playBack.sharedPresets.speed;
+    if (typeof playBack.sharedPresets.speed !== "undefined")
+        this.speed = playBack.sharedPresets.speed;
 
     this.scrubber = document.getElementById('timeline__silder');
 
     $('.timeline__silder__value').html(0);
     $('.timeline__silder').removeClass('timeline__silder--loading');
-
-    console.log('Range', this.timeBounds);
 
     this.timePointer = this.timeBounds.min;
 
@@ -101,18 +96,18 @@ Timeline.prototype.setupInteractionHandlers = function() {
 
         self.stopTimer();
 
-        var shareUrl = webPath + '/' + self.playBack.replayDetails.id + '/' + self.playBack.replayDetails.slug + '?playback';
+        var shareUrl = webPath + '/' + playBack.replayDetails.id + '/' + playBack.replayDetails.slug + '?playback';
 
-        var center = self.playBack.map.handler.getCenter();
+        var center = playBack.map.handler.getCenter();
         shareUrl += '&centerLat=' + center.lat;
         shareUrl += '&centerLng=' + center.lng;
 
-        shareUrl += '&zoom=' + self.playBack.map.handler.getZoom();
+        shareUrl += '&zoom=' + playBack.map.handler.getZoom();
         shareUrl += '&time=' + self.timePointer;
         shareUrl += '&speed=' + self.speed;
 
-        if (self.playBack.trackTarget)
-            shareUrl += '&track=' + self.playBack.trackTarget
+        if (playBack.trackTarget)
+            shareUrl += '&track=' + playBack.trackTarget
 
         $('.timeline__share__details input').val(shareUrl);
 
@@ -150,11 +145,11 @@ Timeline.prototype.skipTime = function(value) {
     this.timePointer = Math.round(value);
 
     // Clear down the map of existing markers, ready to time warp...
-    this.playBack.markers.eventGroups.positions_vehicles.clearLayers();
-    this.playBack.markers.eventGroups.positions_infantry.clearLayers();
-    this.playBack.markers.list = {};
-    this.playBack.markers.currentIds.positions_vehicles = [];
-    this.playBack.markers.currentIds.positions_infantry = [];
+    markers.eventGroups.positions_vehicles.clearLayers();
+    markers.eventGroups.positions_infantry.clearLayers();
+    markers.list = {};
+    markers.currentIds.positions_vehicles = [];
+    markers.currentIds.positions_infantry = [];
 
     if (!this.playing)
         this.startTimer();
@@ -170,8 +165,8 @@ Timeline.prototype.startTimer = function () {
 
     $('.timeline__toggle-playback .fa').removeClass('fa-play').addClass('fa-pause');
 
-    if (this.playBack.sharedPresets.trackPlayer)
-        playBack.trackTarget = this.playBack.sharedPresets.trackPlayer;
+    if (playBack.sharedPresets.trackPlayer)
+        playBack.trackTarget = playBack.sharedPresets.trackPlayer;
 
     (function animloop() {
 
@@ -204,7 +199,7 @@ Timeline.prototype.startTimer = function () {
             if (self.timePointer >= self.timeBounds.max)
                 self.stopTimer();
             else
-                self.playBack.events.showNext();
+                events.showNext();
 
             self.then = self.now - (self.delta % interval);
         }

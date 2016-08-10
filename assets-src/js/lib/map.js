@@ -1,23 +1,24 @@
-function Map(terrainName, tileSubDomains, cb) {
+function Map() {
+
+    this.terrain;
+    this.tileSubDomains = false;
+};
+
+Map.prototype.init = function(terrainName, tileSubDomains, cb) {
+
+    var self = this;
 
     this.terrain = terrainName;
     this.tileSubDomains = tileSubDomains;
 
-    this.init(cb);
-};
-
-Map.prototype.init = function(cb) {
-
-    var self = this;
-
     $.getJSON(webPath + '/maps/' + this.terrain + '/config.json', function(configJson) {
-            self.config = configJson;
-            self.render(cb);
-        })
-        .fail(function() {
-            console.log("Error loading terrain config");
-            cb(true);
-        });
+        self.config = configJson;
+        self.render(cb);
+    })
+    .fail(function() {
+        console.log("Error loading terrain config");
+        cb(true);
+    });
 };
 
 Map.prototype.render = function(cb) {
@@ -61,8 +62,7 @@ Map.prototype.render = function(cb) {
 
     this.setupInteractionHandlers();
 
-    var poi = new Poi(this);
-    poi.setup(this.terrain);
+    poi.init(this.terrain);
 
     cb(false);
 };

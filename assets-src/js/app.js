@@ -1,7 +1,14 @@
-$('document').ready(function() {
+var replayList = new ReplayList(),
+    playBack = new PlayBack(),
+    events = new Events(),
+    players = new Players(),
+    markers = new Markers(),
+    poi = new Poi(),
+    map = new Map(),
+    timeline = new Timeline(),
+    notifications = new Notifications();
 
-    var replayList = new ReplayList();
-    var playBack = new PlayBack();
+$('document').ready(function() {
 
     if($('.playback-list').length)
         replayList.init();
