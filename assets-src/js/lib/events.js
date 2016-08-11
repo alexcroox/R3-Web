@@ -51,7 +51,7 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 
     if (type == "positions_vehicles" || type == "positions_infantry") {
 
-        markers.process(replayEvent, eventValue, type);
+        markers.processPositionalUpdate(replayEvent, eventValue, type);
 
     } else {
 
@@ -60,28 +60,26 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
             // If the unit gets into a vehicle we can remove their infantry icon immediately
             case "get_in":
 
-                markers.removeUnit(Object.keys(eventValue)[0]);
+                markers.removeUnit(eventValue.unit);
 
                 break;
 
             case "player_disconnected":
 
-                var playerId = eventValue[Object.keys(eventValue)[0]].id;
-                var playerInfo = players.getInfo(playerId);
+                var playerInfo = players.getInfo(eventValue.id);
 
                 //console.log('Player disconnected', playerInfo);
 
                 if (typeof playerInfo !== "undefined")
                     notifications.info(playerInfo.name + ' disconnected');
 
-                markers.removeUnit(Object.keys(eventValue)[0]);
+                markers.removeUnit(eventValue.unit);
 
                 break;
 
             case "player_connected":
 
-                var playerId = eventValue[Object.keys(eventValue)[0]].id;
-                var playerInfo = players.getInfo(playerId);
+                var playerInfo = players.getInfo(eventValue.id);
 
                 //console.log('Player connected', playerInfo);
 
@@ -92,19 +90,19 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 
             case "unit_awake":
 
-                markers.removeUnit(Object.keys(eventValue)[0]);
+                markers.removeUnit(eventValue.unit);
 
                 break;
 
             case "unit_unconscious":
 
-                //self.attacked('downed', eventValue);
+                self.hit('downed', eventValue);
 
                 break;
 
             case "unit_killed":
 
-                //self.attacked('killed', eventValue);
+                self.hit('killed', eventValue);
 
                 break;
 
@@ -116,6 +114,66 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
             default:
                 console.warn('Unknown event', type);
         }
+    }
+};
+
+// Killed or unconscious
+Events.prototype.hit = function(hitType, data) {
+
+    var victim = eventData.victim;
+    var attacker = eventData.attacker;
+    var attackerKnown = (typeof attacker !== "undefined")? true : false;
+
+    var playerInfo = playBack.getPlayerInfo(victim.id);
+
+    // Did this hit/killed/unconscious event have an attacker we can draw a connection from?
+    if (attackerKnown) {
+
+        // Are both units on the map currently?
+        if (typeof markers.list[victim.unit] !== "undefined" && typeof markers.list[attacker.unit] !== "undefined") {
+
+            var unitsPos = [markers.list[victim.unit].getLatLng(), markers.list[attacker.unit].getLatLng()];
+            var lineColor = '#ED5C66';
+
+            // Work out our attacker faction's line color
+            var factionData = convertFactionIdToFactionData(attacker.faction);
+            lineColor = factionData.color;
+
+            // Draw a line between attacker and victim
+            var killLine = L.polyline(unitsPos, {
+                color: lineColor,
+                weight: 1,
+                clickable: false
+            }).addTo(map.m);
+
+            setTimeout(function() {
+                map.m.removeLayer(killLine);
+            }, 1000);
+        }
+
+    }
+
+    // If this is a player lets show a notification
+    if (typeof playerInfo !== "undefined") {
+
+        var message = '';
+
+        if (!attackerKnown) {
+
+            message = playerInfo.name + ' ' + hitType + ' himself!';
+        } else {
+
+            if (attacker.weapon != "")
+                message = playerInfo.name + ' was ' + hitType + ' by ' + attacker.weapon;
+            else
+                message = playerInfo.name + ' was ' + hitType;
+        }
+
+        notifications.warning(message);
+
+        // Lets mark the unit as unconscious so we can change the colour of their icon
+        if (typeof markers.list[victim.unit] !== "undefined")
+            markers.list[victim.unit].unconscious = true;
     }
 };
 

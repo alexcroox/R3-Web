@@ -51,7 +51,7 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 
     if (type == "positions_vehicles" || type == "positions_infantry") {
 
-        markers.process(replayEvent, eventValue, type);
+        markers.processPositionalUpdate(replayEvent, eventValue, type);
 
     } else {
 
@@ -60,28 +60,26 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
             // If the unit gets into a vehicle we can remove their infantry icon immediately
             case "get_in":
 
-                markers.removeUnit(Object.keys(eventValue)[0]);
+                markers.removeUnit(eventValue.unit);
 
                 break;
 
             case "player_disconnected":
 
-                var playerId = eventValue[Object.keys(eventValue)[0]].id;
-                var playerInfo = players.getInfo(playerId);
+                var playerInfo = players.getInfo(eventValue.id);
 
                 //console.log('Player disconnected', playerInfo);
 
                 if (typeof playerInfo !== "undefined")
                     notifications.info(playerInfo.name + ' disconnected');
 
-                markers.removeUnit(Object.keys(eventValue)[0]);
+                markers.removeUnit(eventValue.unit);
 
                 break;
 
             case "player_connected":
 
-                var playerId = eventValue[Object.keys(eventValue)[0]].id;
-                var playerInfo = players.getInfo(playerId);
+                var playerInfo = players.getInfo(eventValue.id);
 
                 //console.log('Player connected', playerInfo);
 
@@ -92,19 +90,19 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 
             case "unit_awake":
 
-                markers.removeUnit(Object.keys(eventValue)[0]);
+                markers.removeUnit(eventValue.unit);
 
                 break;
 
             case "unit_unconscious":
 
-                //self.attacked('downed', eventValue);
+                self.hit('downed', eventValue);
 
                 break;
 
             case "unit_killed":
 
-                //self.attacked('killed', eventValue);
+                self.hit('killed', eventValue);
 
                 break;
 
@@ -116,6 +114,66 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
             default:
                 console.warn('Unknown event', type);
         }
+    }
+};
+
+// Killed or unconscious
+Events.prototype.hit = function(hitType, data) {
+
+    var victim = eventData.victim;
+    var attacker = eventData.attacker;
+    var attackerKnown = (typeof attacker !== "undefined")? true : false;
+
+    var playerInfo = playBack.getPlayerInfo(victim.id);
+
+    // Did this hit/killed/unconscious event have an attacker we can draw a connection from?
+    if (attackerKnown) {
+
+        // Are both units on the map currently?
+        if (typeof markers.list[victim.unit] !== "undefined" && typeof markers.list[attacker.unit] !== "undefined") {
+
+            var unitsPos = [markers.list[victim.unit].getLatLng(), markers.list[attacker.unit].getLatLng()];
+            var lineColor = '#ED5C66';
+
+            // Work out our attacker faction's line color
+            var factionData = convertFactionIdToFactionData(attacker.faction);
+            lineColor = factionData.color;
+
+            // Draw a line between attacker and victim
+            var killLine = L.polyline(unitsPos, {
+                color: lineColor,
+                weight: 1,
+                clickable: false
+            }).addTo(map.m);
+
+            setTimeout(function() {
+                map.m.removeLayer(killLine);
+            }, 1000);
+        }
+
+    }
+
+    // If this is a player lets show a notification
+    if (typeof playerInfo !== "undefined") {
+
+        var message = '';
+
+        if (!attackerKnown) {
+
+            message = playerInfo.name + ' ' + hitType + ' himself!';
+        } else {
+
+            if (attacker.weapon != "")
+                message = playerInfo.name + ' was ' + hitType + ' by ' + attacker.weapon;
+            else
+                message = playerInfo.name + ' was ' + hitType;
+        }
+
+        notifications.warning(message);
+
+        // Lets mark the unit as unconscious so we can change the colour of their icon
+        if (typeof markers.list[victim.unit] !== "undefined")
+            markers.list[victim.unit].unconscious = true;
     }
 };
 
@@ -328,7 +386,7 @@ function Markers() {
         'positions_vehicles': {},
         'positions_infantry': {}
     };
-    this.currentIds = {
+    this.currentUnits = {
         "positions_vehicles": [],
         "positions_infantry": []
     };
@@ -353,11 +411,11 @@ Markers.prototype.setupLayers = function() {
 }
 
 // Cleanup old units we are no longer receiving data for and add update others
-Markers.prototype.process = function(replayEvent, eventValue, type) {
+Markers.prototype.processPositionalUpdate = function(replayEvent, eventValue, type) {
 
     var self = this;
 
-    console.log('process');
+    console.log('process', eventValue);
 
     var tempIds = {
         "positions_vehicles": [],
@@ -365,85 +423,92 @@ Markers.prototype.process = function(replayEvent, eventValue, type) {
     };
 
     // Loop through all events, process them and keep a list of which we've seen
-    _.each(eventValue, function(pos, id) {
+    _.each(eventValue, function(unitData) {
 
         // Add a new marker
-        self.add(id, pos, type, replayEvent.missionTime);
+        self.add(unitData.unit, unitData, type, replayEvent.missionTime);
 
-        if (self.currentIds[type].indexOf(id) < 0)
-            self.currentIds[type].push(id);
+        if (self.currentUnits[type].indexOf(unitData.unit) < 0)
+            self.currentUnits[type].push(unitData.unit);
 
-        tempIds[type].push(id);
+        tempIds[type].push(unitData.unit);
     });
 
     // Work out which markers we previous had but no longer have
-    var oldMarkers = _.difference(self.currentIds[type], tempIds[type]);
+    var oldMarkers = _.difference(self.currentUnits[type], tempIds[type]);
 
     // Loop through markers we no longer have and work out if it's time to remove them yet
-    _.each(oldMarkers, function(id) {
+    _.each(oldMarkers, function(unit) {
 
-        if (typeof self.list[id] !== "undefined") {
+        if (typeof self.list[unit] !== "undefined") {
 
             // When was this unit last updated?
-            var timeDiff = replayEvent.missionTime - self.list[id].timeUpdated;
+            var timeDiff = replayEvent.missionTime - self.list[unit].timeUpdated;
 
             // If we've stopped receiving data lets remove it
             if (timeDiff > 30)
-                self.removeUnit(id);
+                self.removeUnit(unit);
         }
     });
 }
 
-Markers.prototype.remove = function(id) {
+Markers.prototype.remove = function(unit) {
 
-    if (typeof this.list[id] !== "undefined") {
+    if (typeof this.list[unit] !== "undefined") {
 
-        this.eventGroups['positions_infantry'].removeLayer(this.list[id]._leaflet_id);
-        this.eventGroups['positions_vehicles'].removeLayer(this.list[id]._leaflet_id);
+        this.eventGroups['positions_infantry'].removeLayer(this.list[unit]._leaflet_id);
+        this.eventGroups['positions_vehicles'].removeLayer(this.list[unit]._leaflet_id);
 
-        var infArrayIndex = playBack.currentIds['positions_infantry'].indexOf(id);
-        var vehArrayIndex = playBack.currentIds['positions_vehicles'].indexOf(id);
+        var infArrayIndex = this.currentUnits['positions_infantry'].indexOf(unit);
+        var vehArrayIndex = this.currentUnits['positions_vehicles'].indexOf(unit);
 
         if (infArrayIndex > -1)
-            playBack.currentIds['positions_infantry'].splice(infArrayIndex, 1);
+            this.currentUnits['positions_infantry'].splice(infArrayIndex, 1);
 
         if (vehArrayIndex > -1)
-            playBack.currentIds['positions_vehicles'].splice(vehArrayIndex, 1);
+            this.currentUnits['positions_vehicles'].splice(vehArrayIndex, 1);
 
-        delete this.list[id];
+        delete this.list[unit];
     }
 };
 
-Markers.prototype.convertFactionIdToSide = function(factionId) {
+Markers.prototype.convertFactionIdToFactionData = function(factionId) {
 
-    var factionName = 'unknown';
+    var factionData = {
+        "name": "unknown",
+        "color": '#CCCCCC'
+    };
 
     switch (factionId) {
 
         case 0:
 
-            factionName = 'east';
+            factionData.name = 'east';
+            factionData.color = '#ED5C66';
             break;
 
         case 1:
 
-            factionName = 'west';
+            factionData.name = 'west';
+            factionData.color = '#2848E9';
             break;
 
         case 2:
 
-            factionName = 'independant';
+            factionData.name = 'independant';
+            factionData.color = '#00FF00';
             break;
 
         case 3:
-            factionName = 'civilian';
+            factionData.name = 'civilian';
+            factionData.color = '#7D26CD';
             break;
     }
 
-    return factionName;
+    return factionData;
 }
 
-Markers.prototype.add = function(id, data, type, timeUpdated) {
+Markers.prototype.add = function(unit, data, type, timeUpdated) {
 
     //console.log('Adding marker', data);
 
@@ -463,7 +528,7 @@ Markers.prototype.add = function(id, data, type, timeUpdated) {
     var direction = data.dir;
     var isLeader = data.ldr;
     var position = map.gamePointToMapPoint(data.pos[0], data.pos[1]);
-    var faction = this.convertFactionIdToSide(data.fac);
+    var faction = this.convertFactionIdToFactionData(data.fac);
 
     console.log(data);
 
@@ -510,13 +575,13 @@ Markers.prototype.add = function(id, data, type, timeUpdated) {
     };
 
     // This marker isn't on the map yet
-    if (typeof this.list[id] === "undefined") {
+    if (typeof this.list[unit] === "undefined") {
 
         var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
-            iconUrl: iconMarkerDefaults.iconUrl + faction + '-' + icon + '.png'
+            iconUrl: iconMarkerDefaults.iconUrl + faction.name + '-' + icon + '.png'
         }));
 
-        this.list[id] = L.marker(map.rc.unproject([position[0], position[1]]), {
+        this.list[unit] = L.marker(map.rc.unproject([position[0], position[1]]), {
             icon: mapIcon,
             clickable: false,
             iconAngle: direction
@@ -526,13 +591,13 @@ Markers.prototype.add = function(id, data, type, timeUpdated) {
         });
 
         // Save some data to reference later
-        this.list[id].posType = type;
-        this.list[id].originalLabel = label;
-        this.list[id].faction = faction;
+        this.list[unit].posType = type;
+        this.list[unit].originalLabel = label;
+        this.list[unit].faction = faction.name;
 
-        this.eventGroups[type].addLayer(this.list[id]);
+        this.eventGroups[type].addLayer(this.list[unit]);
 
-        this.list[id].showLabel();
+        this.list[unit].showLabel();
 
         // Lets zoom to the first player on playback initialisation
         if (isPlayer && !playBack.zoomedToFirstPlayer && isInfantry) {
@@ -544,7 +609,7 @@ Markers.prototype.add = function(id, data, type, timeUpdated) {
     // The marker already exists, let's update it
     } else {
 
-        this.list[id].setLatLng(map.rc.unproject([position[0], position[1]]));
+        this.list[unit].setLatLng(map.rc.unproject([position[0], position[1]]));
 
         var markerDomElement = $('.unit-marker__id--' + data.id);
 
@@ -552,52 +617,52 @@ Markers.prototype.add = function(id, data, type, timeUpdated) {
         if (markerDomElement.length) {
 
             var smoothAngle = this.calcShortestRotationAdjustment(this.getRotation(markerDomElement.get(0)), direction);
-            this.list[id].setIconAngle(smoothAngle);
+            this.list[unit].setIconAngle(smoothAngle);
         }
 
-        if (typeof this.list[id].unconscious !== "undefined" && this.list[id].unconscious) {
+        if (typeof this.list[unit].unconscious !== "undefined" && this.list[unit].unconscious) {
 
             var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
                 iconUrl: iconMarkerDefaults.iconUrl + '/unconscious.png',
                 className: iconMarkerDefaults.className + ' unit-marker__label--unconscious'
             }));
 
-            this.list[id].setIcon(mapIcon);
+            this.list[unit].setIcon(mapIcon);
 
         // Has the type changed?
-        } else if (this.list[id].posType != type && !emptyVehicle) {
+        } else if (this.list[unit].posType != type && !emptyVehicle) {
 
             var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
-                iconUrl: iconMarkerDefaults.iconUrl + faction + '-' + icon + '.png'
+                iconUrl: iconMarkerDefaults.iconUrl + faction.name + '-' + icon + '.png'
             }));
 
-            this.list[id].setIcon(mapIcon);
-            this.list[id].posType = type;
+            this.list[unit].setIcon(mapIcon);
+            this.list[unit].posType = type;
         }
 
-        this.list[id].originalLabel = label;
+        this.list[unit].originalLabel = label;
 
-        this.list[id].label.setContent(label);
+        this.list[unit].label.setContent(label);
 
         // If we are flying (air vehicle or parachute (or otherwise!)) lets show height label
         if (position[2] > 10) {
-            this.list[id].label.setContent(this.list[id].originalLabel + '<span class="player-marker-stat">' + String(Math.round(position[2])) + 'm</span>');
+            this.list[unit].label.setContent(this.list[unit].originalLabel + '<span class="player-marker-stat">' + String(Math.round(position[2])) + 'm</span>');
         }
     }
 
     // Store that we've just seen this unit so we don't delete it on the next cleanup
-    this.list[id].timeUpdated = timeUpdated;
+    this.list[unit].timeUpdated = timeUpdated;
 
     // Are we tracking this unit? Let's highlight it!
     if (playBack.trackTarget && playBack.trackTarget == data.id) {
 
         // Highlight
-        this.list[id].setZIndexOffset(9999);
+        this.list[unit].setZIndexOffset(9999);
         $('.unit-marker--tracking').removeClass('unit-marker--tracking');
         markerDomElement.addClass('unit-marker--tracking');
 
         // Has the map view moved away from the tracked player? Lets bring it back into view
-        var point = map.m.latLngToLayerPoint(this.list[id].getLatLng());
+        var point = map.m.latLngToLayerPoint(this.list[unit].getLatLng());
         var distance = point.distanceTo(map.m.latLngToLayerPoint(map.m.getCenter()));
 
         if (distance > 200)
