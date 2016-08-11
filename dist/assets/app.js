@@ -60,7 +60,7 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
             // If the unit gets into a vehicle we can remove their infantry icon immediately
             case "get_in":
 
-                markers.removeUnit(eventValue.unit);
+                markers.remove(eventValue.unit);
 
                 break;
 
@@ -73,7 +73,7 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
                 if (typeof playerInfo !== "undefined")
                     notifications.info(playerInfo.name + ' disconnected');
 
-                markers.removeUnit(eventValue.unit);
+                markers.remove(eventValue.unit);
 
                 break;
 
@@ -90,7 +90,7 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 
             case "unit_awake":
 
-                markers.removeUnit(eventValue.unit);
+                markers.remove(eventValue.unit);
 
                 break;
 
@@ -118,13 +118,13 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 };
 
 // Killed or unconscious
-Events.prototype.hit = function(hitType, data) {
+Events.prototype.hit = function(hitType, eventData) {
 
     var victim = eventData.victim;
     var attacker = eventData.attacker;
     var attackerKnown = (typeof attacker !== "undefined")? true : false;
 
-    var playerInfo = playBack.getPlayerInfo(victim.id);
+    var playerInfo = players.getInfo(victim.id);
 
     // Did this hit/killed/unconscious event have an attacker we can draw a connection from?
     if (attackerKnown) {
@@ -136,7 +136,7 @@ Events.prototype.hit = function(hitType, data) {
             var lineColor = '#ED5C66';
 
             // Work out our attacker faction's line color
-            var factionData = convertFactionIdToFactionData(attacker.faction);
+            var factionData = markers.convertFactionIdToFactionData(attacker.faction);
             lineColor = factionData.color;
 
             // Draw a line between attacker and victim
@@ -144,10 +144,10 @@ Events.prototype.hit = function(hitType, data) {
                 color: lineColor,
                 weight: 1,
                 clickable: false
-            }).addTo(map.m);
+            }).addTo(map.handler);
 
             setTimeout(function() {
-                map.m.removeLayer(killLine);
+                map.handler.removeLayer(killLine);
             }, 1000);
         }
 
@@ -185,7 +185,7 @@ Events.prototype.projectileLaunch = function(eventData) {
     var victim = eventData.victim;
     var attacker = eventData.attacker;
     var launchPos = map.gamePointToMapPoint(attacker.pos[0], attacker.pos[1]);
-    var victimMarker = this.markers.list[victim.unit];
+    var victimMarker = markers.list[victim.unit];
 
     var targetPos = (typeof victimMarker !== "undefined") ? victimMarker.getLatLng() : false;
 
@@ -198,7 +198,7 @@ Events.prototype.projectileLaunch = function(eventData) {
         fillOpacity: 0.5,
         className: 'missile-launch',
         clickable: false
-    }).addTo(map.m);
+    }).addTo(map.handler);
 
     setTimeout(function() {
         map.handler.removeLayer(launchPulse);
@@ -415,8 +415,6 @@ Markers.prototype.processPositionalUpdate = function(replayEvent, eventValue, ty
 
     var self = this;
 
-    console.log('process', eventValue);
-
     var tempIds = {
         "positions_vehicles": [],
         "positions_infantry": []
@@ -447,7 +445,7 @@ Markers.prototype.processPositionalUpdate = function(replayEvent, eventValue, ty
 
             // If we've stopped receiving data lets remove it
             if (timeDiff > 30)
-                self.removeUnit(unit);
+                self.remove(unit);
         }
     });
 }
@@ -472,42 +470,6 @@ Markers.prototype.remove = function(unit) {
     }
 };
 
-Markers.prototype.convertFactionIdToFactionData = function(factionId) {
-
-    var factionData = {
-        "name": "unknown",
-        "color": '#CCCCCC'
-    };
-
-    switch (factionId) {
-
-        case 0:
-
-            factionData.name = 'east';
-            factionData.color = '#ED5C66';
-            break;
-
-        case 1:
-
-            factionData.name = 'west';
-            factionData.color = '#2848E9';
-            break;
-
-        case 2:
-
-            factionData.name = 'independant';
-            factionData.color = '#00FF00';
-            break;
-
-        case 3:
-            factionData.name = 'civilian';
-            factionData.color = '#7D26CD';
-            break;
-    }
-
-    return factionData;
-}
-
 Markers.prototype.add = function(unit, data, type, timeUpdated) {
 
     //console.log('Adding marker', data);
@@ -529,8 +491,6 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     var isLeader = data.ldr;
     var position = map.gamePointToMapPoint(data.pos[0], data.pos[1]);
     var faction = this.convertFactionIdToFactionData(data.fac);
-
-    console.log(data);
 
     var label = '';
     var isPlayer = false;
@@ -602,7 +562,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         // Lets zoom to the first player on playback initialisation
         if (isPlayer && !playBack.zoomedToFirstPlayer && isInfantry) {
 
-            map.m.setView(map.rc.unproject([position[0], position[1]]), 6);
+            map.handler.setView(map.rc.unproject([position[0], position[1]]), 6);
             playBack.zoomedToFirstPlayer = true;
         }
 
@@ -662,11 +622,11 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         markerDomElement.addClass('unit-marker--tracking');
 
         // Has the map view moved away from the tracked player? Lets bring it back into view
-        var point = map.m.latLngToLayerPoint(this.list[unit].getLatLng());
-        var distance = point.distanceTo(map.m.latLngToLayerPoint(map.m.getCenter()));
+        var point = map.handler.latLngToLayerPoint(this.list[unit].getLatLng());
+        var distance = point.distanceTo(map.handler.latLngToLayerPoint(map.handler.getCenter()));
 
         if (distance > 200)
-            map.m.panTo(map.rc.unproject([position[0], position[1]]));
+            map.handler.panTo(map.rc.unproject([position[0], position[1]]));
     }
 };
 
@@ -689,6 +649,42 @@ Markers.prototype.addCrewCargoToLabel = function(type, data, unitId) {
     label += '</span>';
 
     return label;
+}
+
+Markers.prototype.convertFactionIdToFactionData = function(factionId) {
+
+    var factionData = {
+        "name": "unknown",
+        "color": '#CCCCCC'
+    };
+
+    switch (factionId) {
+
+        case 0:
+
+            factionData.name = 'east';
+            factionData.color = '#ED5C66';
+            break;
+
+        case 1:
+
+            factionData.name = 'west';
+            factionData.color = '#2848E9';
+            break;
+
+        case 2:
+
+            factionData.name = 'independant';
+            factionData.color = '#00FF00';
+            break;
+
+        case 3:
+            factionData.name = 'civilian';
+            factionData.color = '#7D26CD';
+            break;
+    }
+
+    return factionData;
 }
 
 Markers.prototype.matchClassToIcon = function(className, fallBackIcon) {
@@ -1219,8 +1215,8 @@ Timeline.prototype.skipTime = function(value) {
     markers.eventGroups.positions_vehicles.clearLayers();
     markers.eventGroups.positions_infantry.clearLayers();
     markers.list = {};
-    markers.currentIds.positions_vehicles = [];
-    markers.currentIds.positions_infantry = [];
+    markers.currentUnits.positions_vehicles = [];
+    markers.currentUnits.positions_infantry = [];
 
     if (!this.playing)
         this.startTimer();
@@ -1253,7 +1249,7 @@ Timeline.prototype.startTimer = function () {
 
         if (self.delta > interval) {
 
-            console.log(self.timePointer, self.playing);
+            //console.log(self.timePointer, self.playing);
 
             self.scrubber.noUiSlider.set(self.timePointer);
 

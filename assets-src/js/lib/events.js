@@ -60,7 +60,7 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
             // If the unit gets into a vehicle we can remove their infantry icon immediately
             case "get_in":
 
-                markers.removeUnit(eventValue.unit);
+                markers.remove(eventValue.unit);
 
                 break;
 
@@ -73,7 +73,7 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
                 if (typeof playerInfo !== "undefined")
                     notifications.info(playerInfo.name + ' disconnected');
 
-                markers.removeUnit(eventValue.unit);
+                markers.remove(eventValue.unit);
 
                 break;
 
@@ -90,7 +90,7 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 
             case "unit_awake":
 
-                markers.removeUnit(eventValue.unit);
+                markers.remove(eventValue.unit);
 
                 break;
 
@@ -118,13 +118,13 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 };
 
 // Killed or unconscious
-Events.prototype.hit = function(hitType, data) {
+Events.prototype.hit = function(hitType, eventData) {
 
     var victim = eventData.victim;
     var attacker = eventData.attacker;
     var attackerKnown = (typeof attacker !== "undefined")? true : false;
 
-    var playerInfo = playBack.getPlayerInfo(victim.id);
+    var playerInfo = players.getInfo(victim.id);
 
     // Did this hit/killed/unconscious event have an attacker we can draw a connection from?
     if (attackerKnown) {
@@ -136,7 +136,7 @@ Events.prototype.hit = function(hitType, data) {
             var lineColor = '#ED5C66';
 
             // Work out our attacker faction's line color
-            var factionData = convertFactionIdToFactionData(attacker.faction);
+            var factionData = markers.convertFactionIdToFactionData(attacker.faction);
             lineColor = factionData.color;
 
             // Draw a line between attacker and victim
@@ -144,10 +144,10 @@ Events.prototype.hit = function(hitType, data) {
                 color: lineColor,
                 weight: 1,
                 clickable: false
-            }).addTo(map.m);
+            }).addTo(map.handler);
 
             setTimeout(function() {
-                map.m.removeLayer(killLine);
+                map.handler.removeLayer(killLine);
             }, 1000);
         }
 
@@ -185,7 +185,7 @@ Events.prototype.projectileLaunch = function(eventData) {
     var victim = eventData.victim;
     var attacker = eventData.attacker;
     var launchPos = map.gamePointToMapPoint(attacker.pos[0], attacker.pos[1]);
-    var victimMarker = this.markers.list[victim.unit];
+    var victimMarker = markers.list[victim.unit];
 
     var targetPos = (typeof victimMarker !== "undefined") ? victimMarker.getLatLng() : false;
 
@@ -198,7 +198,7 @@ Events.prototype.projectileLaunch = function(eventData) {
         fillOpacity: 0.5,
         className: 'missile-launch',
         clickable: false
-    }).addTo(map.m);
+    }).addTo(map.handler);
 
     setTimeout(function() {
         map.handler.removeLayer(launchPulse);

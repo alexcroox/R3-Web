@@ -148,8 +148,8 @@ Timeline.prototype.skipTime = function(value) {
     markers.eventGroups.positions_vehicles.clearLayers();
     markers.eventGroups.positions_infantry.clearLayers();
     markers.list = {};
-    markers.currentIds.positions_vehicles = [];
-    markers.currentIds.positions_infantry = [];
+    markers.currentUnits.positions_vehicles = [];
+    markers.currentUnits.positions_infantry = [];
 
     if (!this.playing)
         this.startTimer();
@@ -182,7 +182,7 @@ Timeline.prototype.startTimer = function () {
 
         if (self.delta > interval) {
 
-            console.log(self.timePointer, self.playing);
+            //console.log(self.timePointer, self.playing);
 
             self.scrubber.noUiSlider.set(self.timePointer);
 
