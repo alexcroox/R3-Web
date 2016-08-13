@@ -381,6 +381,7 @@ function Markers() {
     this.list = {};
     this.matchedIcons = {};
     this.icons = {};
+    this.vehicleIcons = {};
     this.maxZoomLevelForIndividualPlayerLabels = 7;
     this.eventGroups = {
         'positions_vehicles': {},
@@ -408,7 +409,28 @@ Markers.prototype.setupLayers = function() {
 
     this.eventGroups.positions_vehicles.addTo(map.handler);
     this.eventGroups.positions_infantry.addTo(map.handler);
+
+    this.fetchVehicleIcons();
 }
+
+Markers.prototype.fetchVehicleIcons = function() {
+
+    var self = this;
+
+    $.ajax({
+        url: webPath + '/fetch-vehicle-icons',
+        type: 'GET',
+        dataType: 'json',
+        success: function(responseData) {
+            self.vehicleIcons = responseData;
+
+            console.log(self.vehicleIcons);
+        },
+        error: function(jq, status, message) {
+            console.log('Error fetching playback data - Status: ' + status + ' - Message: ' + message);
+        }
+    });
+};
 
 // Cleanup old units we are no longer receiving data for and add update others
 Markers.prototype.processPositionalUpdate = function(replayEvent, eventValue, type) {
@@ -484,6 +506,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     var isVehicle = (type == "positions_vehicles");
     var iconType = (isVehicle)? 'vehicles' : 'infantry';
     var iconClass = data.cls;
+    var iconPath = data.icp;
     var group = data.grp;
     var crew = data.crw;
     var cargo = data.cgo;
@@ -537,8 +560,10 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     // This marker isn't on the map yet
     if (typeof this.list[unit] === "undefined") {
 
+        var vehicleIcon = (isVehicle && typeof this.vehicleIcons[iconPath] !== "undefined")? iconMarkerDefaults.iconUrl + this.vehicleIcons[iconPath] : iconMarkerDefaults.iconUrl + icon + '.png';
+
         var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
-            iconUrl: iconMarkerDefaults.iconUrl + faction.name + '-' + icon + '.png'
+            iconUrl: vehicleIcon
         }));
 
         this.list[unit] = L.marker(map.rc.unproject([position[0], position[1]]), {
@@ -593,7 +618,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         } else if (this.list[unit].posType != type && !emptyVehicle) {
 
             var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
-                iconUrl: iconMarkerDefaults.iconUrl + faction.name + '-' + icon + '.png'
+                iconUrl: iconMarkerDefaults.iconUrl + icon + '.png'
             }));
 
             this.list[unit].setIcon(mapIcon);
@@ -660,25 +685,25 @@ Markers.prototype.convertFactionIdToFactionData = function(factionId) {
 
     switch (factionId) {
 
-        case 0:
+        case "0":
 
             factionData.name = 'east';
             factionData.color = '#ED5C66';
             break;
 
-        case 1:
+        case "1":
 
             factionData.name = 'west';
             factionData.color = '#2848E9';
             break;
 
-        case 2:
+        case "2":
 
             factionData.name = 'independant';
             factionData.color = '#00FF00';
             break;
 
-        case 3:
+        case "3":
             factionData.name = 'civilian';
             factionData.color = '#7D26CD';
             break;
@@ -829,7 +854,7 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
 
 PlayBack.prototype.fetch = function(cacheAvailable) {
 
-    var eventSourceUrl = (!cacheAvailable) ? webPath + '/fetch-data' : webPath + '/cache/events/' + this.replayDetails.id + '.json';
+    var eventSourceUrl = (!cacheAvailable) ? webPath + '/fetch-events' : webPath + '/cache/events/' + this.replayDetails.id + '.json';
     var fetchType = (!cacheAvailable) ? 'POST' : 'GET';
 
     var self = this;

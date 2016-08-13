@@ -97,7 +97,7 @@ gulp.task('clean', function() {
     return del(path.join(paths.dist, '*'));
 });
 
-gulp.task('all', sequence('clean', ['css', 'js', 'js-third-party', 'images', 'fonts']));
+gulp.task('all', sequence('clean', ['css', 'js', 'js-third-party', 'fonts', 'images']));
 
 // Run everything but watch it after too
 gulp.task('default', ['all'], function() {
@@ -110,7 +110,7 @@ gulp.task('default', ['all'], function() {
 
 // This is the same as the default task but it doesn't have any watchers
 // which means it correctly exits when complete (used on deployment)
-gulp.task('build', ['css', 'js', 'js-third-party', 'images', 'fonts'], function() {
+gulp.task('build', ['css', 'js', 'js-third-party', 'fonts', 'images'], function() {
 
     console.log('All built!');
 });

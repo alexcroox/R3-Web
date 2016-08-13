@@ -93,6 +93,27 @@ class Replays {
         return $eventData;
     }
 
+    // Hardcode available mod icon packs for testing...
+    public function compileVehicleIcons() {
+
+        return array_merge($this->scanModDirectory('rhs'), $this->scanModDirectory('cup'));
+    }
+
+    private function scanModDirectory($modName) {
+
+        $icons = array();
+
+        $dh  = opendir(APP_PATH . '/assets/images/map/markers/vehicles/' . $modName);
+
+        while (false !== ($fileName = readdir($dh))) {
+
+            if($fileName != "." && $fileName != "..")
+                $icons[basename($fileName, ".png")] = '/' . $modName . '/' . $fileName;
+        }
+
+        return $icons;
+    }
+
     // Cache the result to a flat file and delete the original data to keep the table size down
     // With 5R we saw a big reduction in CPU usage when switching to flat file caches.
     // If your site experiences heavy traffic consider setting up nginx as a reverse proxy to apache

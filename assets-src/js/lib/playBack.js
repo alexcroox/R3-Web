@@ -24,7 +24,7 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
 
 PlayBack.prototype.fetch = function(cacheAvailable) {
 
-    var eventSourceUrl = (!cacheAvailable) ? webPath + '/fetch-data' : webPath + '/cache/events/' + this.replayDetails.id + '.json';
+    var eventSourceUrl = (!cacheAvailable) ? webPath + '/fetch-events' : webPath + '/cache/events/' + this.replayDetails.id + '.json';
     var fetchType = (!cacheAvailable) ? 'POST' : 'GET';
 
     var self = this;

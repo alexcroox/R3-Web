@@ -7,11 +7,11 @@ define('UNIT_NAME', 'Example Unit Name');
     to appear in the missions list. This prevents
     test missions from cluttering the list
 */
-define('MIN_MISSION_TIME', 50);
+define('MIN_MISSION_TIME', 10);
 
 /*
     Minutes after last event received before playback can be viewed.
     This is designed to stop players watching playback mid game to see
     the enemy unit positions
 */
-define('MINUTES_MISSION_END_BLOCK', 1);
+define('MINUTES_MISSION_END_BLOCK', 0);
