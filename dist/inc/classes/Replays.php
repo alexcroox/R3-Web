@@ -103,9 +103,14 @@ class Replays {
 
         $icons = array();
 
-        $dh  = opendir(APP_PATH . '/assets/images/map/markers/vehicles/' . $modName);
+        $dh  = opendir(APP_PATH . '/assets/images/map/markers/vehicles/mod-specific/' . $modName);
 
         while (false !== ($fileName = readdir($dh))) {
+
+            $fileName = str_replace("-east", "", $fileName);
+            $fileName = str_replace("-west", "", $fileName);
+            $fileName = str_replace("-independant", "", $fileName);
+            $fileName = str_replace("-civilian", "", $fileName);
 
             if($fileName != "." && $fileName != "..")
                 $icons[basename($fileName, ".png")] = '/' . $modName . '/' . $fileName;

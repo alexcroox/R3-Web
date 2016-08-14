@@ -116,7 +116,7 @@ Markers.prototype.remove = function(unit) {
 
 Markers.prototype.add = function(unit, data, type, timeUpdated) {
 
-    //console.log('Adding marker', data);
+    var self = this;
 
     // Lets extract the horrible abbreviated data and make sense of it
     var icon = data.ico;
@@ -157,9 +157,6 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     if (icon == "iconPlane" && !isPlayer)
         label = 'Jet';
 
-    if (isVehicle)
-        icon = this.matchClassToIcon(iconClass, icon);
-
     // If this is a vehicle and we have crew lets add them to the label
     if (isVehicle && crew.length && crew.length > 1)
         label += this.addCrewCargoToLabel('crew', crew, data.id);
@@ -175,17 +172,15 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     var iconMarkerDefaults = {
         iconSize: [30, 30],
         iconAnchor: [15, 15],
-        className: 'unit-marker unit-marker--' + icon + ' unit-marker__id--' + data.id,
+        className: 'unit-marker unit-marker__class--' + iconClass + ' unit-marker--' + icon + ' unit-marker__id--' + data.id,
         iconUrl: webPath + '/assets/images/map/markers/' + iconType + '/'
     };
 
     // This marker isn't on the map yet
     if (typeof this.list[unit] === "undefined") {
 
-        var vehicleIcon = (isVehicle && typeof this.vehicleIcons[iconPath] !== "undefined")? iconMarkerDefaults.iconUrl + this.vehicleIcons[iconPath] : iconMarkerDefaults.iconUrl + icon + '.png';
-
         var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
-            iconUrl: vehicleIcon
+            iconUrl: iconMarkerDefaults.iconUrl + self.getIconWithFaction(isVehicle, iconPath, icon, faction)
         }));
 
         this.list[unit] = L.marker(map.rc.unproject([position[0], position[1]]), {
@@ -230,7 +225,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         if (typeof this.list[unit].unconscious !== "undefined" && this.list[unit].unconscious) {
 
             var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
-                iconUrl: iconMarkerDefaults.iconUrl + '/unconscious.png',
+                iconUrl: iconMarkerDefaults.iconUrl + '/iconMan-unconcious.png',
                 className: iconMarkerDefaults.className + ' unit-marker__label--unconscious'
             }));
 
@@ -240,7 +235,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         } else if (this.list[unit].posType != type && !emptyVehicle) {
 
             var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
-                iconUrl: iconMarkerDefaults.iconUrl + icon + '.png'
+                iconUrl: iconMarkerDefaults.iconUrl + self.getIconWithFaction(isVehicle, iconPath, icon, faction)
             }));
 
             this.list[unit].setIcon(mapIcon);
@@ -276,6 +271,17 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
             map.handler.panTo(map.rc.unproject([position[0], position[1]]));
     }
 };
+
+Markers.prototype.getIconWithFaction = function(isVehicle, iconPath, defaultIcon, faction) {
+
+    var icon = defaultIcon + '.png';
+
+    if (isVehicle && typeof this.vehicleIcons[iconPath] !== "undefined")
+        icon = 'mod-specific' + this.vehicleIcons[iconPath];
+
+    // Add our faction to the icon name so we get a colour specific version
+    return icon.replace(".png", "-" + faction.name + ".png");
+}
 
 Markers.prototype.addCrewCargoToLabel = function(type, data, unitId) {
 
@@ -332,41 +338,6 @@ Markers.prototype.convertFactionIdToFactionData = function(factionId) {
     }
 
     return factionData;
-}
-
-Markers.prototype.matchClassToIcon = function(className, fallBackIcon) {
-
-    var self = this;
-
-    // We keep a list of already matched icons for speedier recuring lookups
-    if (typeof this.matchedIcons[className] === "undefined") {
-
-        var matchedIcon = fallBackIcon;
-        var found = false;
-
-        _.each(this.icons, function(i) {
-
-            if (className.indexOf(i.name) > -1) {
-                matchedIcon = i.icon;
-                self.matchedIcons[className] = i.icon;
-                found = true;
-            }
-        });
-
-        if (!found) {
-
-            if (self.unknownClasses.indexOf(className) == -1) {
-                console.warn(className, fallBackIcon);
-
-                self.unknownClasses.push(className);
-            }
-        }
-
-        return matchedIcon;
-
-    } else {
-        return self.matchedIcons[className];
-    }
 };
 
 // Get the current rotation value from dom element
