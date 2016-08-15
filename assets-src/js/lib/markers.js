@@ -88,7 +88,7 @@ Markers.prototype.processPositionalUpdate = function(replayEvent, eventValue, ty
             var timeDiff = replayEvent.missionTime - self.list[unit].timeUpdated;
 
             // If we've stopped receiving data lets remove it
-            if (timeDiff > 30)
+            if (timeDiff > 100)
                 self.remove(unit);
         }
     });
@@ -141,6 +141,8 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     var isPlayer = false;
     var emptyVehicle = false;
 
+    var markerId = (isPlayer)? data.id : this.cleanUnitName(unit);
+
     // Is this AI?
     if(data.id != "") {
 
@@ -172,7 +174,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     var iconMarkerDefaults = {
         iconSize: [30, 30],
         iconAnchor: [15, 15],
-        className: 'unit-marker unit-marker__class--' + iconClass + ' unit-marker--' + icon + ' unit-marker__id--' + data.id,
+        className: 'unit-marker unit-marker__class--' + iconClass + ' unit-marker--' + icon + ' unit-marker__id--' + markerId,
         iconUrl: webPath + '/assets/images/map/markers/' + iconType + '/'
     };
 
@@ -213,7 +215,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
 
         this.list[unit].setLatLng(map.rc.unproject([position[0], position[1]]));
 
-        var markerDomElement = $('.unit-marker__id--' + data.id);
+        var markerDomElement = $('.unit-marker__id--' + markerId);
 
         // Lets rotate the marker to it's latest heading
         if (markerDomElement.length) {
@@ -339,6 +341,11 @@ Markers.prototype.convertFactionIdToFactionData = function(factionId) {
 
     return factionData;
 };
+
+Markers.prototype.cleanUnitName = function(name) {
+
+    return slug(name);
+}
 
 // Get the current rotation value from dom element
 Markers.prototype.getRotation = function(el) {
