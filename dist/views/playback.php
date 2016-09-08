@@ -26,5 +26,4 @@
     var replayDetails = '<?php echo json_encode($replayDetails); ?>';
     var sharedPresets = '<?php echo strip_tags(json_encode($sharedPresets)); ?>';
     var cacheAvailable = <?php echo json_encode($cacheAvailable); ?>;
-    var configDefaults = { speed: <?php echo DEFAULT_PLAYBACK_SPEED; ?> };
 </script>
