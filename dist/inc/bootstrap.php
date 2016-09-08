@@ -16,6 +16,7 @@ $matchingConfigs = array_map(function($id) {
 $matchingConfig;
 
 foreach($matchingConfigs as $config) {
+
     if(realpath($config)) {
         $matchingConfig = $config;
         break;
@@ -23,11 +24,10 @@ foreach($matchingConfigs as $config) {
 }
 
 // Can our host specific config be found?
-if($matchingConfig) {
+if($matchingConfig)
     require_once($matchingConfig);
-} else {
+else
     throw new Exception('Could not load environment config');
-}
 
 require_once(APP_PATH . '/config/default.php');
 

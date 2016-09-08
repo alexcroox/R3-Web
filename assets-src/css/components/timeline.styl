@@ -2,7 +2,7 @@
     left 50%
     right 10px
     bottom 10px
-    height 40px
+    height 36px
     overflow hidden
     position absolute
     background rgba(0,0,0,.5)
@@ -15,28 +15,21 @@
             left 120px
             font-size 15px
             color #FFF
-            top 10px
+            top 7px
 
     &__slider
         position absolute
-        bottom 10px
+        top 9px
         left 120px
         right 60px
 
-        &.noUi-horizontal .noUi-handle
-            padding 5px 0 0 9px
-            font-size 14px
-
-            &.left-time
-                text-indent -66px
-                color #000
 
     &__toggle-playback
         color #FFF
         position absolute
         display block
         left 10px
-        top 7px
+        top 9px
 
         &:hover
             opacity .8
@@ -45,7 +38,7 @@
         position absolute
         left 33px
         color #AAA
-        top 11px
+        top 9px
         display block
         font-size 13px
 
@@ -53,7 +46,7 @@
             left 62px
         &.x60
             left 91px
-        &.active
+        &--active
             color #FFF
         &:hover
             color #EEE
@@ -64,7 +57,7 @@
         position absolute
         display block
         right 37px
-        top 7px
+        top 9px
 
         &:hover
             opacity .8
@@ -74,3 +67,45 @@
 
     +below(650px)
         left 10px
+
+    .fa
+        font-size 19px
+
+&.noUi-horizontal .noUi-handle
+    padding 6px 0 0 9px
+    font-size 13px
+
+    &.left-time
+        text-indent -62px
+        color #000
+
+.noUi-horizontal .noUi-handle
+    box-shadow none
+    border none
+    background none
+    border-radius 0
+    width 8px
+    left -4px
+
+    &:hover
+        cursor col-resize
+
+    &:before
+        display none
+
+    &:after
+        width 2px
+        background #FFF
+        height 22px
+        top 4px
+        left 3px
+
+.noUi-origin
+.noUi-target
+    border none
+    border-radius 0px
+    background #030303
+    box-shadow none !important
+
+.noUi-connect
+    background #FFF

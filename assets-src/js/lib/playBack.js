@@ -19,6 +19,7 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
 
         // Fetch our event data from the server
         self.fetch(cacheAvailable);
+        players.fetch(self.replayDetails.id);
     });
 }
 

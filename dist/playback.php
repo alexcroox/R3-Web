@@ -19,15 +19,15 @@ if($replayDetails->minutesSinceLastEvent < MINUTES_MISSION_END_BLOCK)
     $util->redirect301(WEB_PATH . '?not-finished');
 
 $title = $replayDetails->missionName;
+$page = 'playback';
 
 $replayDetails->{'tileSubDomains'} = TILE_SUBDOMAINS;
+
+$sharedPresets = $_GET;
 
 // Do we have a cached version of this playback?
 $cacheAvailable = $replays->isCachedVersionAvailable($replayDetails->id);
 
-$view->render('playback', array(
-    'title' => $title,
-    'replayDetails' => $replayDetails,
-    'sharedPresets' => $_GET,
-    'cacheAvailable' => $cacheAvailable
-));
+require_once(APP_PATH . '/views/templates/header.php');
+require_once(APP_PATH . '/views/' . $page . '.php');
+require_once(APP_PATH . '/views/templates/footer.php');

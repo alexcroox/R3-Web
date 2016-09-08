@@ -15,4 +15,6 @@ $('document').ready(function() {
 
     if(typeof replayDetails !== "undefined")
         playBack.init(replayDetails, sharedPresets, cacheAvailable);
+
+    $('.button-collapse').sideNav();
 });

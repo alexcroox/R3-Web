@@ -188,7 +188,8 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         this.list[unit] = L.marker(map.rc.unproject([position[0], position[1]]), {
             icon: mapIcon,
             clickable: false,
-            iconAngle: direction
+            rotationAngle: direction,
+            rotationOrigin: '50% 50%'
         }).bindLabel(label, {
             noHide: true,
             className: 'unit-marker__label unit-marker__label--' + type
@@ -221,7 +222,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         if (markerDomElement.length) {
 
             var smoothAngle = this.calcShortestRotationAdjustment(this.getRotation(markerDomElement.get(0)), direction);
-            this.list[unit].setIconAngle(smoothAngle);
+            this.list[unit].setRotationAngle(smoothAngle);
         }
 
         if (typeof this.list[unit].unconscious !== "undefined" && this.list[unit].unconscious) {
@@ -249,9 +250,8 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         this.list[unit].label.setContent(label);
 
         // If we are flying (air vehicle or parachute (or otherwise!)) lets show height label
-        if (position[2] > 10) {
+        if (position[2] > 10)
             this.list[unit].label.setContent(this.list[unit].originalLabel + '<span class="player-marker-stat">' + String(Math.round(position[2])) + 'm</span>');
-        }
     }
 
     // Store that we've just seen this unit so we don't delete it on the next cleanup

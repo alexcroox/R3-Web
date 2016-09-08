@@ -2,7 +2,7 @@
     background-clip padding-box
     color #000
     display block
-    font 15px/29px "Helvetica Neue", Arial, Helvetica, sans-serif
+    font 11px/29px "Helvetica Neue", Arial, Helvetica, sans-serif
     font-weight bold
     padding 0 0 0 10px
     position absolute
@@ -17,7 +17,7 @@
     &.poi
         padding 0
         line-height 0px
-        font-size 14px
+        font-size 11px
         color #444
 
         &-namelocal
@@ -65,14 +65,33 @@
     pointer-events auto
 
 .player-iconPlane + .leaflet-label
-    font-size 14px
+    font-size 11px
     color #444
 
 .player-marker + .leaflet-label
-    font-size 12px
+    font-size 11px
 
     &.label_no_animate
         transition none
 
 .map-tracking-marker + .leaflet-label
-    color @trackPlayerColor
+    color $trackPlayerColor
+    font-size 14px
+
+.missile-launch
+    visibility hidden
+    animation missileLaunch 1s
+    animation-timing-function ease-in-out
+    transform-origin 50% 50%
+
+@keyframes missileLaunch
+    0%
+        visibility visible
+        transform scale(0)
+    50%
+        transform scale(20)
+    100%
+        transform scale(0)
+
+.missile-m
+    transition all 0.7s

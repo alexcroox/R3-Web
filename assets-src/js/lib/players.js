@@ -8,6 +8,32 @@ Players.prototype.init = function() {
 
 };
 
+Players.prototype.fetch = function(replayId) {
+
+    var self = this;
+
+    $.ajax({
+        url: webPath + '/fetch-players',
+        type: 'POST',
+        dataType: 'json',
+        data: { "id": replayId },
+        success: this.prepData.bind(self),
+        error: function(jq, status, message) {
+            console.log('Error fetching player data - Status: ' + status + ' - Message: ' + message);
+        }
+    });
+};
+
+Players.prototype.prepData = function(players) {
+
+    var self = this;
+
+    _.each(players, function(p) {
+
+        self.list[p.id] = p;
+    });
+}
+
 Players.prototype.add = function(id, name, group) {
 
     this.list[id] = {

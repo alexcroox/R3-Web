@@ -12,7 +12,7 @@ window.requestAnimFrame = (function() {
 function Timeline() {
 
     this.scrubber = null;
-    this.speed = 30;
+    this.speed = configDefaults.speed;
     this.timeJump = 1;
     this.timePointer = 0;
     this.playing = false;
@@ -39,7 +39,7 @@ Timeline.prototype.setupScrubber = function(eventList) {
     this.scrubber = document.getElementById('timeline__silder');
 
     $('.timeline__silder__value').html(0);
-    $('.timeline__silder').removeClass('timeline__silder--loading');
+    $('.timeline').removeClass('timeline--loading');
 
     this.timePointer = this.timeBounds.min;
 
@@ -126,7 +126,7 @@ Timeline.prototype.setupInteractionHandlers = function() {
 
 Timeline.prototype.changeSpeed = function(speed) {
 
-    $('.timeline__speed.active').removeClass('timeline__speed--active');
+    $('.timeline__speed--active').removeClass('timeline__speed--active');
 
     $('.timeline__speed[data-speed="' + speed + '"]').addClass('timeline__speed--active');
 

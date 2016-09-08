@@ -11,9 +11,9 @@ class View {
 
         static $inst = null;
 
-        if ($inst === null) {
+        if ($inst === null)
             $inst = new View();
-        }
+
         return $inst;
     }
 

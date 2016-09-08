@@ -82,15 +82,35 @@ class Replays {
             WHERE
                 replayId = :replayId
             ORDER BY missionTime ASC");
+
         $query->execute(array('replayId' => $replayId));
 
-        $eventData = $query->fetchAll();
+        $data = $query->fetchAll();
 
         // Cache our events for the next person
         if(CACHE_EVENTS)
-            $this->saveEventCache($replayId, $eventData);
+            $this->saveEventCache($replayId, $data);
 
-        return $eventData;
+        return $data;
+    }
+
+    public function fetchReplayPlayers($replayId) {
+
+        $query = $this->_db->prepare("
+            SELECT
+                DISTINCT p.id, p.name
+            FROM
+                players p
+            LEFT JOIN
+                events e
+            ON
+                e.value LIKE CONCAT('%', p.id, '%')
+            WHERE
+                e.replayId = :replayId");
+
+        $query->execute(array('replayId' => $replayId));
+
+        return $query->fetchAll();
     }
 
     // Hardcode available mod icon packs for testing...
