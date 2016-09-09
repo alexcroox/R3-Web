@@ -1,5 +1,6 @@
 node_modules
 tiles
+*nogrid.png
 .zip
 dist/assets
 dist/config/r3.local.php

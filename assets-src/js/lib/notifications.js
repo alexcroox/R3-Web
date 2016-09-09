@@ -26,3 +26,8 @@ Notifications.prototype.info = function(message) {
 
     console.log(message);
 };
+
+Notifications.prototype.warning = function(message) {
+
+    console.log(message);
+};

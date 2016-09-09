@@ -31,12 +31,13 @@ Events.prototype.parseData = function(json) {
     var self = this;
 
     try {
+
         var parsedData = JSON.parse(json);
 
         return parsedData;
     } catch (e) {
 
-        console.error(json);
+        console.error(e, json);
 
         // Stop playback on bad json
         timeline.stopTimer(true);

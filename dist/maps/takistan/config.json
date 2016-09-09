@@ -1,0 +1,10 @@
+{
+    "name": "takistan",
+    "width": 12801,
+    "height": 12803,
+    "bgColor": "#FFFFFF",
+    "maxZoom": 7,
+    "minZoom": 3,
+    "initZoom": 4,
+    "doubleSize": 0
+}
