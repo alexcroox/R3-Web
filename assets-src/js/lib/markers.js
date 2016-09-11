@@ -96,7 +96,11 @@ Markers.prototype.processPositionalUpdate = function(replayEvent, eventValue, ty
 
 Markers.prototype.remove = function(unit) {
 
+    console.log('removing', unit);
+
     if (typeof this.list[unit] !== "undefined") {
+
+        console.log('removed', unit);
 
         this.eventGroups['positions_infantry'].removeLayer(this.list[unit]._leaflet_id);
         this.eventGroups['positions_vehicles'].removeLayer(this.list[unit]._leaflet_id);
@@ -228,7 +232,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         if (typeof this.list[unit].unconscious !== "undefined" && this.list[unit].unconscious) {
 
             var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
-                iconUrl: iconMarkerDefaults.iconUrl + '/iconMan-unconcious.png',
+                iconUrl: webPath + '/assets/images/map/markers/' + iconType + '/iconMan-unconcious.png',
                 className: iconMarkerDefaults.className + ' unit-marker__label--unconscious'
             }));
 
@@ -313,27 +317,29 @@ Markers.prototype.convertFactionIdToFactionData = function(factionId) {
         "color": '#CCCCCC'
     };
 
+    factionId = parseInt(factionId);
+
     switch (factionId) {
 
-        case "0":
+        case 0:
 
             factionData.name = 'east';
             factionData.color = '#ED5C66';
             break;
 
-        case "1":
+        case 1:
 
             factionData.name = 'west';
             factionData.color = '#2848E9';
             break;
 
-        case "2":
+        case 2:
 
             factionData.name = 'independant';
             factionData.color = '#00FF00';
             break;
 
-        case "3":
+        case 3:
             factionData.name = 'civilian';
             factionData.color = '#7D26CD';
             break;

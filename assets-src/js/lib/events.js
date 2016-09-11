@@ -10,6 +10,8 @@ Events.prototype.showNext = function() {
     // Do we have any events for this mission time?
     if (typeof this.list[timeline.timePointer] !== "undefined") {
 
+        console.log(timeline.timePointer);
+
         // We might have more than one event for this mission time
         _.each(self.list[timeline.timePointer], function(replayEvent) {
 
@@ -151,8 +153,14 @@ Events.prototype.hit = function(hitType, eventData) {
                 map.handler.removeLayer(killLine);
             }, 1000);
         }
-
     }
+
+    // Lets mark the unit as unconscious so we can change the colour of their icon
+    if(typeof markers.list[victim.unit] !== "undefined")
+        if(hitType == "unconscious")
+            markers.list[victim.unit].unconscious = true;
+        else
+            markers.list[victim.unit].setOpacity(0.4);
 
     // If this is a player lets show a notification
     if (typeof playerInfo !== "undefined") {
@@ -171,10 +179,6 @@ Events.prototype.hit = function(hitType, eventData) {
         }
 
         notifications.warning(message);
-
-        // Lets mark the unit as unconscious so we can change the colour of their icon
-        if (typeof markers.list[victim.unit] !== "undefined")
-            markers.list[victim.unit].unconscious = true;
     }
 };
 

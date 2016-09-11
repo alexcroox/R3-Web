@@ -1,0 +1,10 @@
+{
+    "name": "chernarus",
+    "width": 30722,
+    "height": 30722,
+    "bgColor": "#C7E6FC",
+    "maxZoom": 7,
+    "minZoom": 3,
+    "initZoom": 4,
+    "doubleSize": 1
+}

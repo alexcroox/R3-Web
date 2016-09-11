@@ -11,6 +11,9 @@ Map.prototype.init = function(terrainName, tileSubDomains, cb) {
     this.terrain = terrainName.toLowerCase();
     this.tileSubDomains = tileSubDomains;
 
+    if(typeof mappingConfig[this.terrain] !== "undefined")
+        this.terrain = mappingConfig[this.terrain];
+
     $.getJSON(webPath + '/maps/' + this.terrain + '/config.json', function(configJson) {
         self.config = configJson;
         self.render(cb);

@@ -23,6 +23,8 @@ $page = 'playback';
 
 $replayDetails->{'tileSubDomains'} = TILE_SUBDOMAINS;
 
+$mappingConfig = file_get_contents(APP_PATH . '/maps/config.json');
+
 $sharedPresets = $_GET;
 
 // Do we have a cached version of this playback?

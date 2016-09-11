@@ -32,6 +32,9 @@ Poi.prototype.add = function() {
 
             var lg;
 
+            if(poi.type == "mount")
+                return;
+
             // Setup layer group for POI so we can toggle it based on zoom levels
             if (typeof self.poiLayers[poi.type] === "undefined") {
 
