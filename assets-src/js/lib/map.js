@@ -8,7 +8,7 @@ Map.prototype.init = function(terrainName, tileSubDomains, cb) {
 
     var self = this;
 
-    this.terrain = terrainName;
+    this.terrain = terrainName.toLowerCase();
     this.tileSubDomains = tileSubDomains;
 
     $.getJSON(webPath + '/maps/' + this.terrain + '/config.json', function(configJson) {

@@ -1,0 +1,10 @@
+{
+    "name": "zargabad",
+    "width": 8193,
+    "height": 8196,
+    "bgColor": "#FFFFFF",
+    "maxZoom": 7,
+    "minZoom": 3,
+    "initZoom": 4,
+    "doubleSize": 0
+}
