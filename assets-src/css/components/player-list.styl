@@ -1,0 +1,39 @@
+.player-list
+    top 20px
+    left 0px
+    padding 10px
+    bottom 0px
+    overflow-x hidden
+    overflow-y auto
+    position absolute
+    background rgba(0,0,0,.5)
+    color #FFF
+    max-width 146px
+    z-index 2
+
+    ul
+        list-style none
+
+    a
+        color #FFF
+        font-size 13px
+        display block
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
+        min-width 146px
+
+        &.tracking
+            padding-left 20px
+            position relative
+            color #FC6EEE
+
+            &::after
+                position absolute
+                left 0
+                top 2px
+                content "\f06e"
+                font-family FontAwesome
+
+    @media (max-width 650px)
+        display none !important

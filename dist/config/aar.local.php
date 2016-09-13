@@ -22,6 +22,9 @@ define('WEB_PATH', 'http://aar.local');
     3 x subdomains pointing to your main website.
     a.yourunitname.com b.yourunitname.com c.yourunitname.com
     If you have set this up change the below to TRUE
+
+    NOTE if you enable HTTP/2 on your server you do not need
+    this legacy HTTP/1 speed workaround
  */
 define('TILE_SUBDOMAINS', FALSE);
 

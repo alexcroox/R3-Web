@@ -147,6 +147,7 @@ Timeline.prototype.skipTime = function(value) {
     // Clear down the map of existing markers, ready to time warp...
     markers.eventGroups.positions_vehicles.clearLayers();
     markers.eventGroups.positions_infantry.clearLayers();
+    markers.currentList = {};
     markers.list = {};
     markers.currentUnits.positions_vehicles = [];
     markers.currentUnits.positions_infantry = [];

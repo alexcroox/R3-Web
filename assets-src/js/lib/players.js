@@ -1,6 +1,7 @@
 function Players() {
 
-    this.list = {};
+    this.masterList = {};
+    this.currentList = {};
     this.groups = {};
 };
 
@@ -24,19 +25,25 @@ Players.prototype.fetch = function(replayId) {
     });
 };
 
-Players.prototype.prepData = function(players) {
+Players.prototype.prepData = function(allPlayers) {
+
+    console.log('Prepping master list');
 
     var self = this;
 
-    _.each(players, function(p) {
+    _.each(allPlayers, function(p) {
 
-        self.list[p.id] = p;
+        self.masterList[p.id] = p;
     });
+
+    this.updateList();
 }
 
 Players.prototype.add = function(id, name, group) {
 
-    this.list[id] = {
+    console.log('Adding player', name);
+
+    this.currentList[id] = {
         "name": name
     };
 
@@ -53,7 +60,7 @@ Players.prototype.add = function(id, name, group) {
 
 Players.prototype.getInfo = function(id) {
 
-    return _.find(this.list, function(player) {
+    return _.find(this.masterList, function(player) {
         return player.id == id;
     });
 };
@@ -68,4 +75,39 @@ Players.prototype.getNameFromId = function(id) {
 // Update the sidebar player list
 Players.prototype.updateList = function() {
 
+    console.log('Updating player list', this.groups);
+
+    var self = this;
+
+    $('.player-list').html('');
+
+    var playerListHtml = '';
+
+    var sortedGroups = this.sortGroups(this.groups);
+
+    _.each(sortedGroups, function(groupData, groupName) {
+
+        playerListHtml += '<ul><li>' + groupName + '</li><ul>';
+
+        _.each(groupData, function(groupMember) {
+
+            var playerName = self.getNameFromId(groupMember);
+
+            playerListHtml += '<li>' + playerName + '</li>';
+        });
+
+        playerListHtml += '</ul></ul>';
+    });
+
+    $('.player-list').html(playerListHtml);
+};
+
+Players.prototype.sortGroups = function(map) {
+
+    var keys = _.sortBy(_.keys(map), function(a) { return a; });
+    var newmap = {};
+    _.each(keys, function(k) {
+        newmap[k] = map[k];
+    });
+    return newmap;
 };

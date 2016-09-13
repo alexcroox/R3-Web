@@ -1,6 +1,8 @@
 <div class="playback-container">
     <div class="playback-container__map" id="map"></div>
 
+    <div class="player-list"></div>
+
     <div class="timeline timeline--loading">
         <a href="#" class="timeline__toggle-playback">
             <i class="fa fa-pause"></i>
@@ -19,7 +21,7 @@
         <a href="#" class="timeline__fullscreen" title="Go Fullscreen">
             <i class="fa fa-arrows-alt"></i>
         </a>
-    </div>
+    </div><!--/timeline-->
 </div><!--/playback-container-->
 
 <script>

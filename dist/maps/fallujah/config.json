@@ -1,0 +1,10 @@
+{
+    "name": "fallujah",
+    "width": 10249,
+    "height": 10251,
+    "bgColor": "#FFFFFF",
+    "maxZoom": 7,
+    "minZoom": 3,
+    "initZoom": 4,
+    "doubleSize": 0
+}

@@ -96,11 +96,11 @@ Markers.prototype.processPositionalUpdate = function(replayEvent, eventValue, ty
 
 Markers.prototype.remove = function(unit) {
 
-    console.log('removing', unit);
+    //console.log('removing', unit);
 
     if (typeof this.list[unit] !== "undefined") {
 
-        console.log('removed', unit);
+        //console.log('removed', unit);
 
         this.eventGroups['positions_infantry'].removeLayer(this.list[unit]._leaflet_id);
         this.eventGroups['positions_vehicles'].removeLayer(this.list[unit]._leaflet_id);
@@ -137,7 +137,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     var crew = data.crw;
     var cargo = data.cgo;
     var direction = data.dir;
-    var isLeader = data.ldr;
+    var isLeader = (typeof data.ldr !== "undefined")? (data.ldr.toLowerCase() === 'true') : false;
     var position = map.gamePointToMapPoint(data.pos[0], data.pos[1]);
     var faction = this.convertFactionIdToFactionData(data.fac);
 
@@ -145,19 +145,19 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     var isPlayer = false;
     var emptyVehicle = false;
 
-    var markerId = (isPlayer)? data.id : this.cleanUnitName(unit);
-
     // Is this AI?
     if(data.id != "") {
 
         isPlayer = true;
 
-        label = players.getNameFromId(data.id);
-
         // Is this the first time we are seeing this player in the data?
-        if (typeof players.list[data.id] === "undefined")
+        if (typeof players.currentList[data.id] === "undefined")
             players.add(data.id, label, group);
+
+        label = players.getNameFromId(data.id);
     }
+
+    var markerId = (isPlayer)? data.id : this.cleanUnitName(unit);
 
     // Show height markers on AI aircraft, but we need a name for it to display nicely
     if (icon == "iconPlane" && !isPlayer)
@@ -239,7 +239,12 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
             this.list[unit].setIcon(mapIcon);
 
         // Has the type changed?
-        } else if (this.list[unit].posType != type && !emptyVehicle) {
+        } else if ((this.list[unit].posType != type && !emptyVehicle) || typeof this.list[unit].killed !== "undefined") {
+
+            if(typeof this.list[unit].killed !== "undefined") {
+                delete this.list[unit].killed;
+                this.list[unit].setOpacity(1);
+            }
 
             var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
                 iconUrl: iconMarkerDefaults.iconUrl + self.getIconWithFaction(isVehicle, iconPath, icon, faction)

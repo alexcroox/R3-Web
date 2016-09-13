@@ -29,11 +29,14 @@ Map.prototype.render = function(cb) {
     // Create the base map using our terrain settings
     this.handler = new L.Map('map', {
         "minZoom": this.config.minZoom,
-        "maxZoom": this.config.maxZoom,
+        "maxNativeZoom": this.config.maxZoom,
+        "maxZoom": 10,
         "zoom": this.config.initZoom,
         "attributionControl": false,
         //"measureControl": true
     });
+
+    console.log((this.config.maxZoom + 4));
 
     this.currentZoomLevel = this.config.initZoom;
 
@@ -60,6 +63,8 @@ Map.prototype.render = function(cb) {
     // Add our terrain generated tiles
     this.layer = L.tileLayer(tileUrl + '/maps/' + this.terrain + '/tiles/{z}/{x}/{y}.png', {
         noWrap: true,
+        "maxNativeZoom": this.config.maxZoom,
+        "maxZoom": 10,
         errorTileUrl: webPath + '/assets/images/map/error-tile.png'
     }).addTo(this.handler);
 
