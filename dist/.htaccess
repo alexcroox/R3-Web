@@ -1,12 +1,10 @@
 RewriteEngine on
 
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)/$ /$1 [L,R=301]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
 
 RewriteRule ^([0-9]+)/?([^/]*)$ playback.php?replayId=$1 [L,QSA]
 
 ErrorDocument 404 /error
 ErrorDocument 403 /error
-
-RewriteCond %{SCRIPT_FILENAME} !-d
-RewriteRule ^([^.]+)$ $1.php [NC,L]

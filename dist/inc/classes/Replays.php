@@ -144,14 +144,16 @@ class Replays {
     // so it can serve up these static files avoiding PHP altogether
     private function saveEventCache($replayId, $eventData) {
 
-        $playbackCachefile = APP_PATH . '/cache/events/' . $replayId . '.json';
+        $playbackCacheFile = APP_PATH . '/cache/events/' . $replayId . '.json';
 
         $fp = fopen($playbackCacheFile, 'w');
-        fwrite($fp, json_encode($playbackEvents));
+        fwrite($fp, json_encode($eventData));
         fclose($fp);
 
+        /*
         $query = $this->_db->prepare("
             DELETE FROM events WHERE replayId = :replayId");
         $query->execute(array('replayId' => $replayId));
+        */
     }
 }
