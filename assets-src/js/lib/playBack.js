@@ -8,8 +8,12 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
 
     var self = this;
 
-    this.replayDetails = JSON.parse(replayDetails);
-    this.sharedPresets = JSON.parse(sharedPresets);
+    this.replayDetails = replayDetails;
+    this.sharedPresets = sharedPresets;
+
+    // If we are loading a shared POV then we don't want to shift the view to the first player we see
+    if(typeof this.sharedPresets.centerLat !== "undefined")
+        this.zoomedToFirstPlayer = true;
 
     // Setup map with our chosen terrain
     map.init(this.replayDetails.map, this.replayDetails.tileSubDomains, function(error) {
@@ -19,7 +23,7 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
 
         // Fetch our event data from the server
         self.fetch(cacheAvailable);
-        players.fetch(self.replayDetails.id);
+        players.init();
     });
 }
 

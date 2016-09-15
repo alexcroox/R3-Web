@@ -100,7 +100,7 @@ Markers.prototype.remove = function(unit) {
 
     if (typeof this.list[unit] !== "undefined") {
 
-        //console.log('removed', unit);
+        console.log('removed', unit);
 
         this.eventGroups['positions_infantry'].removeLayer(this.list[unit]._leaflet_id);
         this.eventGroups['positions_vehicles'].removeLayer(this.list[unit]._leaflet_id);
@@ -201,6 +201,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
 
         // Save some data to reference later
         this.list[unit].posType = type;
+        this.list[unit].angle = direction;
         this.list[unit].originalLabel = label;
         this.list[unit].faction = faction.name;
 
@@ -225,7 +226,8 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         // Lets rotate the marker to it's latest heading
         if (markerDomElement.length) {
 
-            var smoothAngle = this.calcShortestRotationAdjustment(this.getRotation(markerDomElement.get(0)), direction);
+            var smoothAngle = this.calcShortestRotationAdjustment(this.list[unit].angle, direction);
+            this.list[unit].angle = smoothAngle;
             this.list[unit].setRotationAngle(smoothAngle);
         }
 

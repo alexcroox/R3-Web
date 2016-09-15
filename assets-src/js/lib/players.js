@@ -7,22 +7,7 @@ function Players() {
 
 Players.prototype.init = function() {
 
-};
-
-Players.prototype.fetch = function(replayId) {
-
-    var self = this;
-
-    $.ajax({
-        url: webPath + '/fetch-players',
-        type: 'POST',
-        dataType: 'json',
-        data: { "id": replayId },
-        success: this.prepData.bind(self),
-        error: function(jq, status, message) {
-            console.log('Error fetching player data - Status: ' + status + ' - Message: ' + message);
-        }
-    });
+    this.prepData(playerList);
 };
 
 Players.prototype.prepData = function(allPlayers) {

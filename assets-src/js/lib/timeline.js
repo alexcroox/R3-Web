@@ -98,16 +98,18 @@ Timeline.prototype.setupInteractionHandlers = function() {
 
         var shareUrl = webPath + '/' + playBack.replayDetails.id + '/' + playBack.replayDetails.slug + '?playback';
 
-        var center = playBack.map.handler.getCenter();
+        var center = map.handler.getCenter();
         shareUrl += '&centerLat=' + center.lat;
         shareUrl += '&centerLng=' + center.lng;
 
-        shareUrl += '&zoom=' + playBack.map.handler.getZoom();
+        shareUrl += '&zoom=' + map.handler.getZoom();
         shareUrl += '&time=' + self.timePointer;
         shareUrl += '&speed=' + self.speed;
 
         if (playBack.trackTarget)
             shareUrl += '&track=' + playBack.trackTarget
+
+        console.log(shareUrl);
 
         $('.timeline__share__details input').val(shareUrl);
 

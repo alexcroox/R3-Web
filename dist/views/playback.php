@@ -25,8 +25,9 @@
 </div><!--/playback-container-->
 
 <script>
-    var replayDetails = '<?php echo json_encode($replayDetails); ?>';
-    var sharedPresets = '<?php echo strip_tags(json_encode($sharedPresets)); ?>';
+    var replayDetails = <?php echo json_encode($replayDetails); ?>;
+    var sharedPresets = <?php echo strip_tags(json_encode($sharedPresets)); ?>;
+    var playerList = <?php echo strip_tags(json_encode($playerList)); ?>;
     var cacheAvailable = <?php echo json_encode($cacheAvailable); ?>;
     var mappingConfig = <?php echo $mappingConfig; ?>;
 </script>
