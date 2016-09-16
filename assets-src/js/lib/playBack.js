@@ -1,6 +1,5 @@
 function PlayBack() {
 
-    this.trackTarget = false;
     this.zoomedToFirstPlayer = false;
 };
 
@@ -75,4 +74,7 @@ PlayBack.prototype.prepData = function(eventList) {
     } else {
         timeline.startTimer();
     }
+
+    // Slightly extended fadeout time on first load
+    players.startInactiveListTimer(5);
 };

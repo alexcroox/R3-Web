@@ -152,7 +152,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
 
         // Is this the first time we are seeing this player in the data?
         if (typeof players.currentList[data.id] === "undefined")
-            players.add(data.id, label, group);
+            players.add(data.id, label, group, faction, unit);
 
         label = players.getNameFromId(data.id);
     }
@@ -185,8 +185,10 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     // This marker isn't on the map yet
     if (typeof this.list[unit] === "undefined") {
 
+        var iconUrl = iconMarkerDefaults.iconUrl + self.getIconWithFaction(isVehicle, iconPath, icon, faction);
+
         var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
-            iconUrl: iconMarkerDefaults.iconUrl + self.getIconWithFaction(isVehicle, iconPath, icon, faction)
+            iconUrl: iconUrl
         }));
 
         this.list[unit] = L.marker(map.rc.unproject([position[0], position[1]]), {
@@ -196,7 +198,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
             rotationOrigin: '50% 50%'
         }).bindLabel(label, {
             noHide: true,
-            className: 'unit-marker__label unit-marker__label--' + type
+            className: 'unit-marker__label unit-marker__label--' + type + ' unit-marker__label--' + data.id
         });
 
         // Save some data to reference later
@@ -204,6 +206,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         this.list[unit].angle = direction;
         this.list[unit].originalLabel = label;
         this.list[unit].faction = faction.name;
+        this.list[unit].iconUrl = iconUrl;
 
         this.eventGroups[type].addLayer(this.list[unit]);
 
@@ -212,9 +215,13 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         // Lets zoom to the first player on playback initialisation
         if (isPlayer && !playBack.zoomedToFirstPlayer && isInfantry) {
 
-            map.handler.setView(map.rc.unproject([position[0], position[1]]), 6);
+            map.handler.setView(map.rc.unproject([position[0], position[1]]), 4);
             playBack.zoomedToFirstPlayer = true;
         }
+
+        // We need to update the list with current icons
+        if(isPlayer)
+            players.updateList();
 
     // The marker already exists, let's update it
     } else {
@@ -269,12 +276,18 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     this.list[unit].timeUpdated = timeUpdated;
 
     // Are we tracking this unit? Let's highlight it!
-    if (playBack.trackTarget && playBack.trackTarget == data.id) {
+    if (players.trackTarget && players.trackTarget == data.id) {
 
         // Highlight
         this.list[unit].setZIndexOffset(9999);
         $('.unit-marker--tracking').removeClass('unit-marker--tracking');
         markerDomElement.addClass('unit-marker--tracking');
+
+        $('.unit-marker__label--tracking').removeClass('unit-marker__label--tracking');
+        $('.unit-marker__label--' + data.id).addClass('unit-marker__label--tracking').css('z-index', 99999);
+
+        if(label == " ")
+            this.list[unit].label.setContent(players.getNameFromId(data.id));
 
         // Has the map view moved away from the tracked player? Lets bring it back into view
         var point = map.handler.latLngToLayerPoint(this.list[unit].getLatLng());

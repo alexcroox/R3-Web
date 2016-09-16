@@ -2,6 +2,7 @@ function Map() {
 
     this.terrain;
     this.tileSubDomains = false;
+    this.zooming = false;
 };
 
 Map.prototype.init = function(terrainName, tileSubDomains, cb) {
@@ -28,11 +29,14 @@ Map.prototype.render = function(cb) {
 
     // Create the base map using our terrain settings
     this.handler = new L.Map('map', {
-        "minZoom": this.config.minZoom,
-        "maxNativeZoom": this.config.maxZoom,
-        "maxZoom": 10,
-        "zoom": this.config.initZoom,
-        "attributionControl": false,
+        minZoom: this.config.minZoom,
+        maxNativeZoom: this.config.maxZoom,
+        maxZoom: 10,
+        zoom: this.config.initZoom,
+        attributionControl: false,
+        zoomControl: false,
+        zoomAnimation: true,
+        fadeAnimation: true,
         //"measureControl": true
     });
 
@@ -63,8 +67,8 @@ Map.prototype.render = function(cb) {
     // Add our terrain generated tiles
     this.layer = L.tileLayer(tileUrl + '/maps/' + this.terrain + '/tiles/{z}/{x}/{y}.png', {
         noWrap: true,
-        "maxNativeZoom": this.config.maxZoom,
-        "maxZoom": 10,
+        maxNativeZoom: this.config.maxZoom,
+        maxZoom: 10,
         errorTileUrl: webPath + '/assets/images/map/error-tile.png'
     }).addTo(this.handler);
 
@@ -87,6 +91,11 @@ Map.prototype.setupInteractionHandlers = function() {
         console.log('Zoom changed', self.currentZoomLevel);
     });
 
+    this.handler.on('dragstart', function(e) {
+
+        players.stopTracking();
+    });
+
     // We need to store our current map center for sharing playback positions
     this.handler.on('dragend', function(e) {
 
@@ -94,6 +103,16 @@ Map.prototype.setupInteractionHandlers = function() {
         var currentZoom = self.handler.getZoom();
 
         console.log(currentCenter, currentZoom);
+    });
+
+    this.handler.on('zoomstart', function() {
+
+        self.zooming = true;
+    });
+
+    this.handler.on('zoomend', function() {
+
+        self.zooming = false;
     });
 };
 

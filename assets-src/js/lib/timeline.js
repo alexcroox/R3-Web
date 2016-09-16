@@ -154,7 +154,7 @@ Timeline.prototype.skipTime = function(value) {
     markers.currentUnits.positions_vehicles = [];
     markers.currentUnits.positions_infantry = [];
 
-    if (!this.playing)
+    if (!this.playing && 1==2)
         this.startTimer();
 };
 
@@ -183,7 +183,7 @@ Timeline.prototype.startTimer = function () {
 
         var interval = 1000 / self.speed;
 
-        if (self.delta > interval) {
+        if (self.delta > interval && !map.zooming) {
 
             //console.log(self.timePointer, self.playing);
 

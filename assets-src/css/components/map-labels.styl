@@ -2,8 +2,9 @@
     background-clip padding-box
     color #000
     display block
-    font 11px/29px "Helvetica Neue", Arial, Helvetica, sans-serif
+    font 11px/22px "Helvetica Neue", Arial, Helvetica, sans-serif
     font-weight bold
+    margin-top 4px
     padding 0 0 0 10px
     position absolute
     user-select none
@@ -74,9 +75,13 @@
     &.label_no_animate
         transition none
 
-.map-tracking-marker + .leaflet-label
-    color $trackPlayerColor
-    font-size 14px
+.unit-marker__label
+    letter-spacing 0.04em
+
+.unit-marker__label--tracking
+    color #FFF
+    background rgba(0,0,0,.5)
+    padding 0 6px
 
 .missile-launch
     visibility hidden

@@ -123,6 +123,8 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 // Killed or unconscious
 Events.prototype.hit = function(hitType, eventData) {
 
+    console.log(hitType, eventData.victim);
+
     var victim = eventData.victim;
     var attacker = eventData.attacker;
     var attackerKnown = (typeof attacker !== "undefined")? true : false;
