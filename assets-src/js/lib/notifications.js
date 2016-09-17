@@ -25,9 +25,17 @@ Notifications.prototype.checkWindowWidth = function() {
 Notifications.prototype.info = function(message) {
 
     console.log(message);
+    this.showMessage(message, 'info');
 };
 
 Notifications.prototype.warning = function(message) {
 
     console.log(message);
+
+    this.showMessage(message, 'warning');
+};
+
+Notifications.prototype.showMessage = function(message, type) {
+
+    Materialize.toast('<span class="notification notification--' + type + '">' + message + '</span>', 4000);
 };

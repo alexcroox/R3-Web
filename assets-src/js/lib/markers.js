@@ -228,10 +228,8 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
 
         this.list[unit].setLatLng(map.rc.unproject([position[0], position[1]]));
 
-        var markerDomElement = $('.unit-marker__id--' + markerId);
-
         // Lets rotate the marker to it's latest heading
-        if (markerDomElement.length) {
+        if(direction != this.list[unit].angle) {
 
             var smoothAngle = this.calcShortestRotationAdjustment(this.list[unit].angle, direction);
             this.list[unit].angle = smoothAngle;
@@ -281,7 +279,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         // Highlight
         this.list[unit].setZIndexOffset(9999);
         $('.unit-marker--tracking').removeClass('unit-marker--tracking');
-        markerDomElement.addClass('unit-marker--tracking');
+        //markerDomElement.addClass('unit-marker--tracking');
 
         $('.unit-marker__label--tracking').removeClass('unit-marker__label--tracking');
         $('.unit-marker__label--' + data.id).addClass('unit-marker__label--tracking').css('z-index', 99999);

@@ -40,7 +40,7 @@ Poi.prototype.add = function() {
 
                 if (poi.type != "mount") {
 
-                    lg = new L.featureGroup();
+                    lg = new L.featureGroup([]);
 
                     lg.addTo(map.handler);
                 } else {

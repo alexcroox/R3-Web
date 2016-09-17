@@ -1,6 +1,7 @@
 function PlayBack() {
 
     this.zoomedToFirstPlayer = false;
+    this.sharedPresets = {};
 };
 
 PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable) {
@@ -49,6 +50,8 @@ PlayBack.prototype.prepData = function(eventList) {
 
     var self = this;
 
+    $('#timeline__silder .progress').remove();
+
     markers.setupLayers();
 
     // Calculate our time range and combine events with the same mission time
@@ -66,11 +69,11 @@ PlayBack.prototype.prepData = function(eventList) {
     // Are we loading a shared playback? If so load their POV at time of sharing
     if (this.sharedPresets.centerLat) {
 
+        console.log('This is a shared playback', this.sharedPresets);
+
         map.handler.setView([this.sharedPresets.centerLat, this.sharedPresets.centerLng], this.sharedPresets.zoom);
 
-        timeline.timePointer = this.sharedPresets.time;
-
-        timeline.skipTime(this.sharedPresets.time);
+        timeline.skipTime(parseInt(this.sharedPresets.time));
     } else {
         timeline.startTimer();
     }

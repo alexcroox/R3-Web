@@ -8,21 +8,11 @@
     background rgba(0,0,0,.5)
     z-index 2
 
-    &--loading
-        &:after
-            content 'Loading playback...'
-            position absolute
-            left 120px
-            font-size 15px
-            color #FFF
-            top 7px
-
     &__slider
         position absolute
         top 9px
         left 120px
         right 60px
-
 
     &__toggle-playback
         color #FFF
@@ -71,6 +61,19 @@
     .fa
         font-size 19px
 
+.timeline--loading .timeline__slider
+    padding-right 5px
+
+.timeline__slider .progress
+    position absolute
+    left 0
+    right 0
+    z-index 1
+    transform translateZ(0)
+
+.timeline__slider .noUi-base
+    z-index 2
+
 &.noUi-horizontal .noUi-handle
     padding 6px 0 0 9px
     font-size 13px
@@ -80,6 +83,7 @@
         color #000
 
 .noUi-horizontal .noUi-handle
+    transform translateZ(0)
     box-shadow none
     border none
     background none
@@ -103,6 +107,7 @@
 
 .noUi-origin
 .noUi-target
+    transform translateZ(0)
     border none
     border-radius 0px
     background #030303

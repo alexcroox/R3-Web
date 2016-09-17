@@ -91,12 +91,13 @@ Timeline.prototype.setupInteractionHandlers = function() {
         self.changeSpeed($(this).data('speed'));
     });
 
+    // Share button
     $('body').on('click', '.timeline__share', function(e) {
         e.preventDefault();
 
         self.stopTimer();
 
-        var shareUrl = webPath + '/' + playBack.replayDetails.id + '/' + playBack.replayDetails.slug + '?playback';
+        var shareUrl = webPath + '/' + playBack.replayDetails.id + '/' + playBack.replayDetails.slug + '?share';
 
         var center = map.handler.getCenter();
         shareUrl += '&centerLat=' + center.lat;
@@ -111,9 +112,18 @@ Timeline.prototype.setupInteractionHandlers = function() {
 
         console.log(shareUrl);
 
-        $('.timeline__share__details input').val(shareUrl);
+        $('#modal__share .share__url').val(shareUrl);
 
-        // Show modal here
+        $('#modal__share').openModal();
+
+        if(typeof window.history.pushState !== "undefined")
+            window.history.pushState({}, null, shareUrl);
+    });
+
+    // Highlight input on click for easier copy/paste
+    $('body').on('click', '.share__url', function(e) {
+
+        $(this).select();
     });
 
     $('body').on('click', '.timeline__fullscreen', function(e) {
@@ -146,6 +156,8 @@ Timeline.prototype.skipTime = function(value) {
 
     this.timePointer = Math.round(value);
 
+    console.log('Skipping time', this.timePointer);
+
     // Clear down the map of existing markers, ready to time warp...
     markers.eventGroups.positions_vehicles.clearLayers();
     markers.eventGroups.positions_infantry.clearLayers();
@@ -154,7 +166,7 @@ Timeline.prototype.skipTime = function(value) {
     markers.currentUnits.positions_vehicles = [];
     markers.currentUnits.positions_infantry = [];
 
-    if (!this.playing && 1==2)
+    if (!this.playing)
         this.startTimer();
 };
 
