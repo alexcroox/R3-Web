@@ -10,7 +10,7 @@ var replayList = new ReplayList(),
 
 $('document').ready(function() {
 
-    if($('.playback-list').length)
+    if($('#replay-list').length)
         replayList.init();
 
     if(typeof replayDetails !== "undefined")

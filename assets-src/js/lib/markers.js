@@ -100,8 +100,6 @@ Markers.prototype.remove = function(unit) {
 
     if (typeof this.list[unit] !== "undefined") {
 
-        console.log('removed', unit);
-
         this.eventGroups['positions_infantry'].removeLayer(this.list[unit]._leaflet_id);
         this.eventGroups['positions_vehicles'].removeLayer(this.list[unit]._leaflet_id);
 
