@@ -29,7 +29,7 @@
     </div><!--/timeline-->
 </div><!--/playback-container-->
 
-<?php require_once('views/templates/modals/share.php'); ?>
+<?php require_once(APP_PATH . '/views/templates/modals/share.php'); ?>
 
 <script>
     var replayDetails = <?php echo json_encode($replayDetails); ?>;
