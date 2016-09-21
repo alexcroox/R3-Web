@@ -24,4 +24,11 @@ ReplayList.prototype.init = function() {
 
 ReplayList.prototype.setupInteractionHandlers = function() {
 
+    $('body').on('click', '.mission-list__sort', function(e) {
+
+        if($(this).hasClass('mission-list__sort--asc'))
+            $(this).removeClass('mission-list__sort--asc').addClass('mission-list__sort--desc');
+        else
+            $(this).removeClass('mission-list__sort--desc').addClass('mission-list__sort--asc');
+    });
 };

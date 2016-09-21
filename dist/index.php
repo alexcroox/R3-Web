@@ -8,6 +8,7 @@ $util = Util::Instance();
 $title = 'Mission replay list';
 $page = 'missions-list';
 
+$replays->updateMeta();
 $replayList = $replays->fetchAll();
 
 require_once(APP_PATH . '/views/templates/header.php');

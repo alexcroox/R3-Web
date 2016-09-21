@@ -1,7 +1,13 @@
 <div class="row">
     <div class="mission-list" id="replay-list">
         <div class="col s12">
-            <input class="mission-list__search" placeholder="Search missions" />
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">search</i>
+                    <input id="mission-search" class="mission-list__search" type="text" />
+                    <label for="mission-search">Search missions</label>
+                </div>
+            </div>
 
             <?php if(isset($_GET['not-found'])): ?>
                 <div class="card-panel red darken-1 grey-text text-lighten-5">
@@ -12,10 +18,10 @@
             <table class="bordered">
                 <thead>
                     <tr>
-                        <th class="mission-list__sort" data-sort="mission-list__item__name">Mission Name</th>
-                        <th class="mission-list__sort" data-sort="mission-list__item__map">Map</th>
-                        <th class="mission-list__sort" data-sort="mission-list__item__length">Length</th>
-                        <th class="mission-list__sort" data-sort="mission-list__item__date">Date Played</th>
+                        <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__name">Mission Name</th>
+                        <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__map">Map</th>
+                        <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__length">Length</th>
+                        <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__date">Date Played</th>
                     </tr>
                 </thead>
 
@@ -35,14 +41,13 @@
                         </td>
 
                         <td>
-                            <span class="mission-list__item__length"><?php echo (strtotime($replay->lastEventTime) - strtotime($replay->dateStarted)); ?></span>
-                            <?php echo $util->humanTimeDifference(strtotime($replay->lastEventTime), strtotime($replay->dateStarted)); ?>
+                            <span class="mission-list__item__length mission-list--hide"><?php echo (strtotime($replay->lastEventMissionTime) - strtotime($replay->dateStarted)); ?></span>
+                            <?php echo $util->humanTimeDifference(strtotime($replay->lastEventMissionTime), strtotime($replay->dateStarted)); ?>
                         </td>
 
-                        <td class="mission-list__item__date">
-                            <?php
-                            $dateFormat = (US_DATE_FORMAT)? 'm/d/Y' : 'jS F Y';
-                            echo date($dateFormat, strtotime($replay->dateStarted)); ?>
+                        <td>
+                            <span class="mission-list__item__date mission-list--hide"><?php echo strtotime($replay->dateStarted); ?></span>
+                            <?php echo $util->humanRelativeTimeDifference(strtotime($replay->dateStarted)); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

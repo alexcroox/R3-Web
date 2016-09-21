@@ -28,7 +28,7 @@ define('MIN_MISSION_TIME', 10);
     This is designed to stop players watching playback mid game to see
     the enemy unit positions
  */
-define('MINUTES_MISSION_END_BLOCK', 0);
+define('MINUTES_MISSION_END_BLOCK', 5);
 
 // Locale settings
 date_default_timezone_set('Europe/London');

@@ -132,7 +132,8 @@ Players.prototype.updateList = function() {
 
     var self = this;
 
-    var $playerList = $('.player-list');
+    var $playerListContainer = $('.player-list');
+    var $playerList = $('.player-list__content');
     $playerList.html('');
 
     var sortedGroups = this.sortGroups(this.groups);
@@ -170,7 +171,7 @@ Players.prototype.updateList = function() {
         });
     });
 
-    $playerList.show();
+    $playerListContainer.show();
 };
 
 Players.prototype.stopTracking = function() {

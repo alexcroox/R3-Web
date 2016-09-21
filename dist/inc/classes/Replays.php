@@ -28,8 +28,7 @@ class Replays {
 
         $query = $this->_db->prepare("
             SELECT
-                r.*,
-                (SELECT added FROM events WHERE replayId = r.id ORDER BY added DESC LIMIT 1) as lastEventTime
+                r.*
             FROM
                 replays r
             WHERE
@@ -47,13 +46,10 @@ class Replays {
 
         $query = $this->_db->prepare("
             SELECT
-                r.id,
-                r.missionName,
-                r.map,
-                r.dateStarted,
-                (SELECT TIMESTAMPDIFF(MINUTE, added, NOW()) FROM events WHERE replayId = r.id ORDER BY added DESC LIMIT 1) as minutesSinceLastEvent
+                *,
+                TIMESTAMPDIFF(MINUTE, lastEventMissionTime, NOW()) as minutesSinceLastEvent
             FROM
-                replays r
+                replays
             WHERE
                 hidden = 0 AND
                 id = :replayId
@@ -63,6 +59,54 @@ class Replays {
         $query->execute(array('replayId' => $replayId));
 
         return $query->fetch();
+    }
+
+    public function updateMeta() {
+
+        $util = Util::Instance();
+
+        // Get all our replays that need meta saving/updating
+        $query = $this->_db->prepare("
+            SELECT
+                r.*,
+                (SELECT added FROM events WHERE replayId = r.id ORDER BY added DESC LIMIT 1) as lastEventTime
+            FROM
+                replays r
+            WHERE
+                hidden = 0 AND
+                (
+                    r.lastEventMissionTime IS NULL OR
+                    r.slug IS NULL
+                )
+        ");
+
+        $query->execute();
+
+        $result = $query->fetchAll();
+
+        // Work out our slug and save back mission time and slug
+        // Hide missions without any events
+        foreach($result as $data) {
+
+            $updateQuery = $this->_db->prepare("
+                UPDATE
+                    replays
+                SET
+                    slug = :slug,
+                    lastEventMissionTime = :lastEventMissionTime,
+                    hidden = :hidden
+                WHERE
+                    id = :replayId
+                LIMIT 1
+            ");
+
+            $updateQuery->execute(array(
+                'replayId' => $data->id,
+                'slug' => $util->slugify($data->missionName),
+                'lastEventMissionTime' => $data->lastEventTime,
+                'hidden' => (!$data->lastEventTime && (strtotime($data->dateStarted) < strtotime("-3 minutes")))? 1 : 0
+            ));
+        }
     }
 
     public function isCachedVersionAvailable($replayId) {
