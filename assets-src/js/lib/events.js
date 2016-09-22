@@ -65,6 +65,8 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 
                 markers.remove(eventValue.unit);
 
+                setTimeout(players.updateList, 500);
+
                 break;
 
             case "player_disconnected":

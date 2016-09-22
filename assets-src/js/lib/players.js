@@ -7,6 +7,8 @@ function Players() {
     this.collapseList = {};
     this.listInactiveTimer = null;
     this.listFadeTime = 3; // seconds before player list fades out
+    this.updateFrequency = 3; // seconds between auto player sidebar refreshes
+    this.updateTimer = null;
 };
 
 Players.prototype.init = function() {
@@ -14,6 +16,8 @@ Players.prototype.init = function() {
     this.prepData(playerList);
 
     this.setupInteractionHandlers();
+
+    this.updateTimer = setInterval(this.updateList.bind(this), this.updateFrequency * 1000);
 };
 
 Players.prototype.setupInteractionHandlers = function() {
@@ -128,7 +132,7 @@ Players.prototype.getNameFromId = function(id) {
 // Update the sidebar player list
 Players.prototype.updateList = function() {
 
-    console.log('Updating player list', this.groups);
+    //console.log('Updating player list', markers.list);
 
     var self = this;
 
@@ -158,7 +162,20 @@ Players.prototype.updateList = function() {
 
             var playerData = self.getInfo(playerId);
 
-            var imgUrl = (typeof markers.list[playerData.unit] !== "undefined")? markers.list[playerData.unit].iconUrl : webPath + '/assets/images/map/markers/blank.png';
+            var imgUrl = webPath + '/assets/images/map/markers/blank.png';
+
+            // Is this player on foot or driving a vehicle?
+            if(typeof markers.list[playerData.unit] !== "undefined") {
+
+                imgUrl = markers.list[playerData.unit].iconUrl;
+            } else {
+                // If not there is a good chance they are in a vehicle, lets show which one
+                var driverVehicle = markers.findPlayerInCrew(playerData.playerId);
+
+                if(driverVehicle)
+                    imgUrl = driverVehicle.iconUrl;
+            }
+
             imgUrl = imgUrl.replace(".png", "-trim.png");
 
             var trackingClass = (self.trackTarget == playerId)? 'player-list__group__member--tracking' : '';

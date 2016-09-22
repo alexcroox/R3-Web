@@ -165,7 +165,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     if (isVehicle && crew.length && crew.length > 1)
         label += this.addCrewCargoToLabel('crew', crew, data.id);
 
-    // If this is a vehicle and we have crew lets add them to the label
+    // If this is a vehicle and we have cargo lets add them to the label
     if (isVehicle && cargo.length && cargo.length > 1)
         label += this.addCrewCargoToLabel('cargo', cargo, data.id);
 
@@ -271,6 +271,10 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     // Store that we've just seen this unit so we don't delete it on the next cleanup
     this.list[unit].timeUpdated = timeUpdated;
 
+    // Store crew and cargo against the unit as we need to query this later for player list sidebar
+    this.list[unit].crew = crew;
+    this.list[unit].cargo = cargo;
+
     // Are we tracking this unit? Let's highlight it!
     if (players.trackTarget && players.trackTarget == data.id) {
 
@@ -293,6 +297,18 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
             map.handler.panTo(map.rc.unproject([position[0], position[1]]));
     }
 };
+
+Markers.prototype.findPlayerInCrew = function(id) {
+
+    return _.find(markers.list, function(unit) {
+
+        if(typeof unit.crew !== "undefined" && unit.crew.length)
+            return unit.crew.indexOf(id);
+        else if (typeof unit.cargo !== "undefined" && unit.cargo.length)
+            return unit.cargo.indexOf(id);
+        else return false;
+    });
+}
 
 Markers.prototype.getIconWithFaction = function(isVehicle, iconPath, defaultIcon, faction) {
 
@@ -366,7 +382,7 @@ Markers.prototype.convertFactionIdToFactionData = function(factionId) {
 
 Markers.prototype.cleanUnitName = function(name) {
 
-    return slug(name);
+    return name;
 }
 
 // Get the current rotation value from dom element

@@ -6,5 +6,5 @@
     "maxZoom": 7,
     "minZoom": 3,
     "initZoom": 4,
-    "doubleSize": 0
+    "doubleSize": 1
 }
