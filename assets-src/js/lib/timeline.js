@@ -32,6 +32,8 @@ Timeline.prototype.setupScrubber = function(eventList) {
     this.timeBounds.min = parseInt(eventList[0].missionTime);
     this.timeBounds.max = parseInt(eventList[eventList.length - 1].missionTime);
 
+    console.log(eventList);
+
     // Has the user shared a playback with a specific speed?
     if (typeof playBack.sharedPresets.speed !== "undefined")
         this.speed = playBack.sharedPresets.speed;

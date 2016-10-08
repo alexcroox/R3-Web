@@ -17,7 +17,7 @@ Players.prototype.init = function() {
 
     this.setupInteractionHandlers();
 
-    this.updateTimer = setInterval(this.updateList.bind(this), this.updateFrequency * 1000);
+    //this.updateTimer = setInterval(this.updateList.bind(this), this.updateFrequency * 1000);
 };
 
 Players.prototype.setupInteractionHandlers = function() {
@@ -132,7 +132,10 @@ Players.prototype.getNameFromId = function(id) {
 // Update the sidebar player list
 Players.prototype.updateList = function() {
 
-    //console.log('Updating player list', markers.list);
+    console.log('Updating player list', _.size(this.groups));
+
+    if(!_.size(this.groups))
+        return;
 
     var self = this;
 
@@ -163,6 +166,9 @@ Players.prototype.updateList = function() {
             var playerData = self.getInfo(playerId);
 
             var imgUrl = webPath + '/assets/images/map/markers/blank.png';
+
+            console.log('p', playerData);
+            console.log(markers.list);
 
             // Is this player on foot or driving a vehicle?
             if(typeof markers.list[playerData.unit] !== "undefined") {
@@ -211,7 +217,7 @@ Players.prototype.stopTracking = function() {
     setTimeout(function() {
         $originalTrackerPlayerInList.removeClass('player-list__group__member--stop-tracking');
     }, 3000);
-}
+};
 
 Players.prototype.sortGroups = function(map) {
 

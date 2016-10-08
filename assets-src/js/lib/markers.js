@@ -138,6 +138,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     var isLeader = (typeof data.ldr !== "undefined")? (data.ldr.toLowerCase() === 'true') : false;
     var position = map.gamePointToMapPoint(data.pos[0], data.pos[1]);
     var faction = this.convertFactionIdToFactionData(data.fac);
+    var newMarker = false;
 
     var label = '';
     var isPlayer = false;
@@ -183,6 +184,8 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     // This marker isn't on the map yet
     if (typeof this.list[unit] === "undefined") {
 
+        newMarker = true;
+
         var iconUrl = iconMarkerDefaults.iconUrl + self.getIconWithFaction(isVehicle, iconPath, icon, faction);
 
         var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
@@ -199,13 +202,6 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
             className: 'unit-marker__label unit-marker__label--' + type + ' unit-marker__label--' + data.id
         });
 
-        // Save some data to reference later
-        this.list[unit].posType = type;
-        this.list[unit].angle = direction;
-        this.list[unit].originalLabel = label;
-        this.list[unit].faction = faction.name;
-        this.list[unit].iconUrl = iconUrl;
-
         this.eventGroups[type].addLayer(this.list[unit]);
 
         this.list[unit].showLabel();
@@ -216,10 +212,6 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
             map.handler.setView(map.rc.unproject([position[0], position[1]]), 4);
             playBack.zoomedToFirstPlayer = true;
         }
-
-        // We need to update the list with current icons
-        if(isPlayer)
-            players.updateList();
 
     // The marker already exists, let's update it
     } else {
@@ -236,8 +228,10 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
 
         if (typeof this.list[unit].unconscious !== "undefined" && this.list[unit].unconscious) {
 
+            var iconUrl = webPath + '/assets/images/map/markers/' + iconType + '/iconMan-unconcious.png';
+
             var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
-                iconUrl: webPath + '/assets/images/map/markers/' + iconType + '/iconMan-unconcious.png',
+                iconUrl: iconUrl,
                 className: iconMarkerDefaults.className + ' unit-marker__label--unconscious'
             }));
 
@@ -251,12 +245,16 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
                 this.list[unit].setOpacity(1);
             }
 
+            var iconUrl = iconMarkerDefaults.iconUrl + self.getIconWithFaction(isVehicle, iconPath, icon, faction);
+
             var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
-                iconUrl: iconMarkerDefaults.iconUrl + self.getIconWithFaction(isVehicle, iconPath, icon, faction)
+                iconUrl: iconUrl
             }));
 
             this.list[unit].setIcon(mapIcon);
             this.list[unit].posType = type;
+        } else {
+            var iconUrl = this.list[unit].iconUrl;
         }
 
         this.list[unit].originalLabel = label;
@@ -271,9 +269,20 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
     // Store that we've just seen this unit so we don't delete it on the next cleanup
     this.list[unit].timeUpdated = timeUpdated;
 
+    // Save some data to reference later
+    this.list[unit].posType = type;
+    this.list[unit].angle = direction;
+    this.list[unit].originalLabel = label;
+    this.list[unit].faction = faction.name;
+    this.list[unit].iconUrl = iconUrl;
+
     // Store crew and cargo against the unit as we need to query this later for player list sidebar
     this.list[unit].crew = crew;
     this.list[unit].cargo = cargo;
+
+    // We need to update the list with current icons
+    if(isPlayer && newMarker)
+        players.updateList();
 
     // Are we tracking this unit? Let's highlight it!
     if (players.trackTarget && players.trackTarget == data.id) {
@@ -301,6 +310,8 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
 Markers.prototype.findPlayerInCrew = function(id) {
 
     return _.find(markers.list, function(unit) {
+
+        //console.log(unit.crew);
 
         if(typeof unit.crew !== "undefined" && unit.crew.length)
             return unit.crew.indexOf(id);

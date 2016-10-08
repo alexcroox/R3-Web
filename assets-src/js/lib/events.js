@@ -65,7 +65,19 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 
                 markers.remove(eventValue.unit);
 
-                setTimeout(players.updateList, 500);
+                console.log('get in', eventValue.id);
+
+                if(eventValue.id != "")
+                    setTimeout(players.updateList.bind(players), 500);
+
+                break;
+
+            case "get_out":
+
+                console.log('get out', eventValue.id);
+
+                if(eventValue.id != "")
+                    setTimeout(players.updateList.bind(players), 500);
 
                 break;
 
@@ -114,6 +126,11 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
             case "incoming_missile":
 
                 self.projectileLaunch(eventValue);
+                break;
+
+            case "markers":
+
+
                 break;
 
             default:

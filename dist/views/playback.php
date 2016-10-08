@@ -16,9 +16,9 @@
             <i class="fa fa-pause"></i>
         </a>
 
-        <a href="#" data-speed="10" class="timeline__speed">10x</a>
+        <a href="#" data-speed="5" class="timeline__speed">5x</a>
+        <a href="#" data-speed="10" class="timeline__speed x10">10x</a>
         <a href="#" data-speed="30" class="timeline__speed x30">30x</a>
-        <a href="#" data-speed="60" class="timeline__speed x60">60x</a>
 
         <div id="timeline__silder" class="timeline__slider">
             <div class="progress">

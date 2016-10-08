@@ -13,8 +13,8 @@ define('ACCESS_PASSWORD', '');
 // Admin password
 define('ADMIN_PASSWORD', 'changeme');
 
-// Default event playback speed (10x 30x 60x)
-define('DEFAULT_PLAYBACK_SPEED', 30);
+// Default event playback speed (5x 10x 30x)
+define('DEFAULT_PLAYBACK_SPEED', 10);
 
 /*
     Define the minimum mission time for an event
