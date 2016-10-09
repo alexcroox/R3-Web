@@ -114,12 +114,24 @@ Timeline.prototype.setupInteractionHandlers = function() {
 
         console.log(shareUrl);
 
-        $('#modal__share .share__url').val(shareUrl);
+        $.ajax({
+        url: webPath + '/fetch-share-url',
+        type: 'POST',
+        dataType: 'json',
+        data: { "url": shareUrl },
+        success: function(shareUrl) {
 
-        $('#modal__share').openModal();
+            $('#modal__share .share__url').val(shareUrl);
 
-        if(typeof window.history.pushState !== "undefined")
-            window.history.pushState({}, null, shareUrl);
+            $('#modal__share').openModal();
+
+            if(typeof window.history.pushState !== "undefined")
+                window.history.pushState({}, null, shareUrl);
+        },
+        error: function(jq, status, message) {
+                console.log('Error fetching share URL - Status: ' + status + ' - Message: ' + message);
+            }
+        });
     });
 
     // Highlight input on click for easier copy/paste
