@@ -9,6 +9,7 @@ function Players() {
     this.listFadeTime = 3; // seconds before player list fades out
     this.updateFrequency = 3; // seconds between auto player sidebar refreshes
     this.updateTimer = null;
+    this.updateLock = false;
 };
 
 Players.prototype.init = function() {
@@ -139,12 +140,20 @@ Players.prototype.getNameFromId = function(id) {
 // Update the sidebar player list
 Players.prototype.updateList = function() {
 
-    console.log('Updating player list', _.size(this.groups));
-
-    if(!_.size(this.groups))
+    if(this.updateLock) {
         return;
+    }
+
+    this.updateLock = true;
 
     var self = this;
+
+    console.log('Updating player list', _.size(this.groups));
+
+    if(!_.size(this.groups)) {
+        self.updateLock = false;
+        return;
+    }
 
     var $playerListContainer = $('.player-list');
     var $playerList = $('.player-list__content');
@@ -204,6 +213,10 @@ Players.prototype.updateList = function() {
     $playerListContainer.show();
 
     $('.player-list').perfectScrollbar('update');
+
+    setTimeout(function() {
+        self.updateLock = false;
+    }, 1000);
 };
 
 Players.prototype.stopTracking = function() {
