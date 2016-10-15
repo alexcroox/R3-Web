@@ -17,6 +17,13 @@ Players.prototype.init = function() {
 
     this.setupInteractionHandlers();
 
+    $('.player-list').perfectScrollbar({
+        suppressScrollX: true
+    });
+
+    $('.player-list .ps-scrollbar-y-rail').unbind('click');
+    $('.player-list .ps-scrollbar-y').unbind('mousedown');
+
     //this.updateTimer = setInterval(this.updateList.bind(this), this.updateFrequency * 1000);
 };
 
@@ -167,8 +174,8 @@ Players.prototype.updateList = function() {
 
             var imgUrl = webPath + '/assets/images/map/markers/blank.png';
 
-            console.log('p', playerData);
-            console.log(markers.list);
+            //console.log('p', playerData);
+            //console.log(markers.list);
 
             // Is this player on foot or driving a vehicle?
             if(typeof markers.list[playerData.unit] !== "undefined") {
@@ -195,6 +202,8 @@ Players.prototype.updateList = function() {
     });
 
     $playerListContainer.show();
+
+    $('.player-list').perfectScrollbar('update');
 };
 
 Players.prototype.stopTracking = function() {
