@@ -138,9 +138,11 @@ Players.prototype.getNameFromId = function(id) {
 };
 
 // Update the sidebar player list
-Players.prototype.updateList = function() {
+Players.prototype.updateList = function(forceUpdate) {
 
-    if(this.updateLock) {
+    forceUpdate = forceUpdate || false;
+
+    if(this.updateLock && !forceUpdate) {
         return;
     }
 

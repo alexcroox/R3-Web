@@ -182,6 +182,10 @@ Timeline.prototype.skipTime = function(value) {
 
     if (!this.playing)
         this.startTimer();
+
+    setTimeout(function() {
+        players.updateList(true);
+    }, 1000);
 };
 
 Timeline.prototype.startTimer = function () {
