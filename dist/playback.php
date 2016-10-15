@@ -15,7 +15,7 @@ if(!$replayDetails)
     $util->redirect301(WEB_PATH . '?not-found');
 
 // We do want people seeing where units are in a mission while it's still in play
-if($replayDetails->minutesSinceLastEvent < MINUTES_MISSION_END_BLOCK)
+if(!$replayDetails->minutesSinceLastEvent || $replayDetails->minutesSinceLastEvent < MINUTES_MISSION_END_BLOCK)
     $util->redirect301(WEB_PATH . '?not-finished');
 
 $title = $replayDetails->missionName;

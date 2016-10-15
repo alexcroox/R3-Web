@@ -42,7 +42,11 @@
 
                         <td>
                             <span class="mission-list__item__length mission-list--hide"><?php echo (strtotime($replay->lastEventMissionTime) - strtotime($replay->dateStarted)); ?></span>
-                            <?php echo $util->humanTimeDifference(strtotime($replay->lastEventMissionTime), strtotime($replay->dateStarted)); ?>
+                            <?php if($replay->lastEventMissionTime): ?>
+                                <?php echo $util->humanTimeDifference(strtotime($replay->lastEventMissionTime), strtotime($replay->dateStarted)); ?>
+                            <?php else: ?>
+                                Still in progress
+                            <?php endif; ?>
                         </td>
 
                         <td>
