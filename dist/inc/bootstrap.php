@@ -29,8 +29,6 @@ if($matchingConfig)
 else
     throw new Exception('Could not load environment config');
 
-require_once(APP_PATH . '/config/default.php');
-
 if(!defined("DB_HOST"))
     throw new Exception('Missing connection details, check your environment config. Use config/aar.local.php as an example');
 

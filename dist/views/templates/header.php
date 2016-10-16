@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
     <link rel="stylesheet" href="<?php echo WEB_PATH; ?>/assets/app.css">
 
-    <link rel="shortcut icon" href="<?php echo WEB_PATH; ?>/assets/images/branding/favicon.png">
+    <link rel="shortcut icon" href="<?php echo FAVICON; ?>">
 </head>
 
 <body class="page-<?php echo $page;?>">

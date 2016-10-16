@@ -64,6 +64,9 @@ Map.prototype.render = function(cb) {
     // Inject sub domain support for faster tile loading (if supported)
     var tileUrl = (this.tileSubDomains) ? webPath.replace("//", "//{s}.") : webPath;
 
+    if(webPath == "http://aar.local")
+        tileUrl = 'https://titanmods.xyz/r3/ark';
+
     // Add our terrain generated tiles
     this.layer = L.tileLayer(tileUrl + '/maps/' + this.terrain + '/tiles/{z}/{x}/{y}.png', {
         noWrap: true,

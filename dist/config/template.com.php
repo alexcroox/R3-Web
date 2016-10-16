@@ -1,11 +1,11 @@
 <?php
 
-define('UNIT_NAME', 'ARK');
+define('UNIT_NAME', 'Unit Name');
 
 // Database details
 define('DB_HOST', '127.0.0.1');
-define('DB_USER', 'root');
-define('DB_PASSWORD', 'root');
+define('DB_USER', 'user');
+define('DB_PASSWORD', 'password');
 define('DB_NAME', 'aar');
 
 // Domain settings
