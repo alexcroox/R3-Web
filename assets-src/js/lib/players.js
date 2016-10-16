@@ -2,7 +2,7 @@ function Players() {
 
     this.masterList = {};
     this.currentList = {};
-    this.groups = {};
+    this.factionGroups = {};
     this.trackTarget = false;
     this.collapseList = {};
     this.listInactiveTimer = null;
@@ -10,6 +10,7 @@ function Players() {
     this.updateFrequency = 3; // seconds between auto player sidebar refreshes
     this.updateTimer = null;
     this.updateLock = false;
+    this.delayedUpdateTimer = null;
 };
 
 Players.prototype.init = function() {
@@ -60,7 +61,7 @@ Players.prototype.setupInteractionHandlers = function() {
 
         e.preventDefault();
 
-        $(this).next('.expand-list').slideToggle();
+        $(this).next('.expand-list').slideToggle(200);
         $(this).toggleClass('expand');
 
         var groupName = $(this).parent().attr('data-group');
@@ -109,15 +110,21 @@ Players.prototype.add = function(id, name, group, factionData, unit) {
     if(typeof this.masterList[id] !== "undefined")
         this.masterList[id].unit = unit;
 
+    // Do we have this faction setup yet?
+    if(typeof this.factionGroups[factionData.name] === "undefined")
+        this.factionGroups[factionData.name] = {
+            meta: factionData,
+            groups: {}
+        };
+
     // Does this player's group exist yet?
-    if (typeof this.groups[group] === "undefined")
-        this.groups[group] = {
-            "factionData": factionData,
+    if (typeof this.factionGroups[factionData.name].groups[group] === "undefined")
+        this.factionGroups[factionData.name].groups[group] = {
             "members": []
         };
 
     // Add them to the group
-    this.groups[group].members.push(id);
+    this.factionGroups[factionData.name].groups[group].members.push(id);
 
     // Update our sidebar list
     this.updateList();
@@ -143,6 +150,13 @@ Players.prototype.updateList = function(forceUpdate) {
     forceUpdate = forceUpdate || false;
 
     if(this.updateLock && !forceUpdate) {
+
+        clearTimeout(this.delayedUpdateTimer);
+
+        this.delayedUpdateTimer = setTimeout(function() {
+            players.updateList();
+        }, 500);
+
         return;
     }
 
@@ -150,65 +164,61 @@ Players.prototype.updateList = function(forceUpdate) {
 
     var self = this;
 
-    console.log('Updating player list', _.size(this.groups));
-
-    if(!_.size(this.groups)) {
+    if(!_.size(this.factionGroups)) {
         self.updateLock = false;
         return;
     }
+
+    clearTimeout(this.delayedUpdateTimer);
 
     var $playerListContainer = $('.player-list');
     var $playerList = $('.player-list__content');
     $playerList.html('');
 
-    var sortedGroups = this.sortGroups(this.groups);
-    var factionsUsed = [];
+    _.each(this.factionGroups, function(factionData, factionName) {
 
-    _.each(sortedGroups, function(groupData, groupName) {
+        // Since we are rebuilding the list every time we need to restore the expand/collapse state
+        var expandClass = (typeof self.collapseList[factionName] === "undefined")? 'expand' : 'collapse';
+        $playerList.append('<div class="player-list__faction" data-group="' + factionName + '"><a href="#" class="expand-handle ' + expandClass + '">' + factionName + '</a> <div class="expand-list"></div></div>');
 
-        var factionName = groupData.factionData.name;
+        var sortedGroups = self.sortGroups(factionData.groups);
 
-        if(factionsUsed.indexOf(factionName) === -1) {
+        _.each(sortedGroups, function(groupData, groupName) {
 
-            // Since we are rebuilding the list every time we need to restore the expand/collapse state
-            var expandClass = (typeof self.collapseList[factionName] === "undefined")? 'expand' : 'collapse';
-            $playerList.append('<div class="player-list__faction" data-group="' + factionName + '"><a href="#" class="expand-handle ' + expandClass + '">' + factionName + '</a> <div class="expand-list"></div></div>');
-            factionsUsed.push(factionName);
-        }
+            var expandClass = (typeof self.collapseList[groupName] === "undefined")? 'expand' : 'collapse';
+            $('.player-list__faction[data-group="' + factionName + '"]').find('.expand-list').eq(0).append('<div class="player-list__group" data-group="' + groupName + '"><a href="#" class="expand-handle ' + expandClass + '">' + groupName + '</a> <div class="expand-list"></div></div>');
 
-        var expandClass = (typeof self.collapseList[groupName] === "undefined")? 'expand' : 'collapse';
-        $('.player-list__faction[data-group="' + factionName + '"]').find('.expand-list').eq(0).append('<div class="player-list__group" data-group="' + groupName + '"><a href="#" class="expand-handle ' + expandClass + '">' + groupName + '</a> <div class="expand-list"></div></div>');
+            _.each(groupData.members, function(playerId) {
 
-        _.each(groupData.members, function(playerId) {
+                var playerData = self.getInfo(playerId);
 
-            var playerData = self.getInfo(playerId);
+                var imgUrl = webPath + '/assets/images/map/markers/blank.png';
 
-            var imgUrl = webPath + '/assets/images/map/markers/blank.png';
+                //console.log('p', playerData);
+                //console.log(markers.list);
 
-            //console.log('p', playerData);
-            //console.log(markers.list);
+                // Is this player on foot or driving a vehicle?
+                if(typeof markers.list[playerData.unit] !== "undefined") {
 
-            // Is this player on foot or driving a vehicle?
-            if(typeof markers.list[playerData.unit] !== "undefined") {
+                    imgUrl = markers.list[playerData.unit].iconUrl;
+                } else {
+                    // If not there is a good chance they are in a vehicle, lets show which one
+                    var driverVehicle = markers.findPlayerInCrew(playerData.playerId);
 
-                imgUrl = markers.list[playerData.unit].iconUrl;
-            } else {
-                // If not there is a good chance they are in a vehicle, lets show which one
-                var driverVehicle = markers.findPlayerInCrew(playerData.playerId);
+                    if(driverVehicle)
+                        imgUrl = driverVehicle.iconUrl;
+                }
 
-                if(driverVehicle)
-                    imgUrl = driverVehicle.iconUrl;
-            }
+                imgUrl = imgUrl.replace(".png", "-trim.png");
 
-            imgUrl = imgUrl.replace(".png", "-trim.png");
+                var trackingClass = (self.trackTarget == playerId)? 'player-list__group__member--tracking' : '';
 
-            var trackingClass = (self.trackTarget == playerId)? 'player-list__group__member--tracking' : '';
-
-            $('.player-list__group[data-group="' + groupName + '"]').find('.expand-list').eq(0).append('\
-                <a href="#" class="player-list__group__member ' + trackingClass + '" data-id="' + playerId + '">\
-                    <img src="' + imgUrl + '">\
-                    ' + playerData.name + '\
-                </a>');
+                $('.player-list__faction[data-group="' + factionName + '"] .player-list__group[data-group="' + groupName + '"]').find('.expand-list').eq(0).append('\
+                    <a href="#" class="player-list__group__member ' + trackingClass + '" data-id="' + playerId + '">\
+                        <img src="' + imgUrl + '">\
+                        ' + playerData.name + '\
+                    </a>');
+            });
         });
     });
 
