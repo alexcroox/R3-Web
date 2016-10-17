@@ -110,7 +110,7 @@ gulp.task('default', ['all'], function() {
 
 // This is the same as the default task but it doesn't have any watchers
 // which means it correctly exits when complete (used on deployment)
-gulp.task('build', ['css', 'js', 'js-third-party', 'fonts', 'images'], function() {
+gulp.task('build', ['css', 'js', 'js-third-party', 'fonts'], function() {
 
     console.log('All built!');
 });

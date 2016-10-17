@@ -112,7 +112,7 @@ class Replays {
     public function isCachedVersionAvailable($replayId) {
 
         // Don't bother with a filesystem lookup if the functionality is disabled
-        return (CACHE_EVENTS)? file_exists(APP_PATH . '/cache/events/' . $replayId . '.json') : FALSE;
+        return file_exists(APP_PATH . '/cache/events/' . $replayId . '.json');
     }
 
     public function fetchEvents($replayId) {
@@ -138,32 +138,9 @@ class Replays {
         $data = $query->fetchAll();
 
         // Cache our events for the next person
-        if(CACHE_EVENTS) {
+        $this->saveEventCache($replayId, $data);
 
-            $this->saveEventCache($replayId, '[', TRUE);
-
-            $tempData = array();
-
-            // Lets loop through our data and save in chunks to the flat file to avoid
-            // out of memory issues on json_encode
-            foreach($data as $row) {
-
-                $tempData[] = $row;
-
-                if(count($tempData) > 1000) {
-                    $this->saveEventCache($replayId, $tempData);
-                    $tempData = array();
-                }
-            }
-
-            // Any more data left?
-            if(count($tempData))
-                $this->saveEventCache($replayId, $tempData);
-
-            $this->saveEventCache($replayId, ']', TRUE);
-        }
-
-        return $data;
+        return TRUE;
     }
 
     public function fetchReplayPlayers($replayId) {
