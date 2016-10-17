@@ -48,6 +48,12 @@ PlayBack.prototype.fetch = function(cacheAvailable) {
 
 PlayBack.prototype.prepData = function(eventList) {
 
+    // Did our /fetch-events endpoint get hit instead of the json file?
+    // Let's go get the json then!
+    if(typeof eventList.id !== "undefined") {
+        return this.fetch(false);
+    }
+
     var self = this;
 
     $('#timeline__silder .progress').remove();

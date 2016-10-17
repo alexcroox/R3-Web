@@ -117,6 +117,13 @@ class Replays {
 
     public function fetchEvents($replayId) {
 
+        //$query = $this->_db->prepare("SELECT count(*) totalEvents FROM events WHERE replayId = :replayId");
+        //$query->execute(array('replayId' => $replayId));
+
+        //$result = $query->fetchOne();
+
+        //if($result->totalEvents > 15000)
+
         $query = $this->_db->prepare("
             SELECT
                 playerId, type, value, missionTime
@@ -131,8 +138,30 @@ class Replays {
         $data = $query->fetchAll();
 
         // Cache our events for the next person
-        if(CACHE_EVENTS)
-            $this->saveEventCache($replayId, $data);
+        if(CACHE_EVENTS) {
+
+            $this->saveEventCache($replayId, '[', TRUE);
+
+            $tempData = array();
+
+            // Lets loop through our data and save in chunks to the flat file to avoid
+            // out of memory issues on json_encode
+            foreach($data as $row) {
+
+                $tempData[] = $row;
+
+                if(count($tempData) > 1000) {
+                    $this->saveEventCache($replayId, $tempData);
+                    $tempData = array();
+                }
+            }
+
+            // Any more data left?
+            if(count($tempData))
+                $this->saveEventCache($replayId, $tempData);
+
+            $this->saveEventCache($replayId, ']', TRUE);
+        }
 
         return $data;
     }
@@ -186,21 +215,19 @@ class Replays {
     // With 5R we saw a big reduction in CPU usage when switching to flat file caches.
     // If your site experiences heavy traffic consider setting up nginx as a reverse proxy to apache
     // so it can serve up these static files avoiding PHP altogether
-    private function saveEventCache($replayId, $eventData) {
+    private function saveEventCache($replayId, $eventData, $skipEncode = FALSE) {
 
-        if(count($eventData)) {
+        $playbackCacheFile = APP_PATH . '/cache/events/' . $replayId . '.json';
 
-            $playbackCacheFile = APP_PATH . '/cache/events/' . $replayId . '.json';
+        $data = ($skipEncode)? $eventData : json_encode($eventData);
+        $fp = fopen($playbackCacheFile, 'a');
+        fwrite($fp, $data);
+        fclose($fp);
 
-            $fp = fopen($playbackCacheFile, 'w');
-            fwrite($fp, json_encode($eventData));
-            fclose($fp);
-
-            /*
-            $query = $this->_db->prepare("
-                DELETE FROM events WHERE replayId = :replayId");
-            $query->execute(array('replayId' => $replayId));
-            */
-       }
+        /*
+        $query = $this->_db->prepare("
+            DELETE FROM events WHERE replayId = :replayId");
+        $query->execute(array('replayId' => $replayId));
+        */
     }
 }
