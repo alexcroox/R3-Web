@@ -147,6 +147,7 @@ Events.prototype.hit = function(hitType, eventData) {
     var victim = eventData.victim;
     var attacker = eventData.attacker;
     var attackerKnown = (typeof attacker !== "undefined")? true : false;
+    var attackerIsPlayer = false;
 
     var playerInfo = players.getInfo(victim.id);
 
@@ -155,6 +156,16 @@ Events.prototype.hit = function(hitType, eventData) {
 
         // Are both units on the map currently?
         if (typeof markers.list[victim.unit] !== "undefined" && typeof markers.list[attacker.unit] !== "undefined") {
+
+            if(attacker.id != "") {
+
+                var attackerInfo = players.getInfo(attacker.id);
+
+                if (typeof attackerInfo !== "undefined") {
+
+                    attackerIsPlayer = true;
+                }
+            }
 
             var unitsPos = [markers.list[victim.unit].getLatLng(), markers.list[attacker.unit].getLatLng()];
             var lineColor = '#ED5C66';
@@ -197,10 +208,13 @@ Events.prototype.hit = function(hitType, eventData) {
             message = '<span>' + playerInfo.name + '</span>' + ' ' + hitType + ' <span class="toast-smaller">himself!</span>';
         } else {
 
-            if (attacker.weapon != "")
-                message = '<span>' + playerInfo.name + '</span>' + ' was ' + hitType + ' by ' + '<span class="toast-smaller">' + attacker.weapon + '</span>';
-            else
+            if (attacker.weapon != "") {
+
+                var byText = (!attackerIsPlayer)? '<span class="toast-smaller">' + attacker.weapon + '</span>' : '<span class="toast-smaller">' + attackerInfo.name + '</span> (' + attacker.weapon + ')';
+                message = '<span>' + playerInfo.name + '</span>' + ' was ' + hitType + ' by ' + byText;
+            } else {
                 message = '<span>' + playerInfo.name + '</span>' + ' was ' + hitType;
+            }
         }
 
         if(hitType == "killed")
