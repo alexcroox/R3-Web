@@ -6,3 +6,5 @@ dist/cache
 dist/assets
 dist/config/r3.local.php
 dist/config/titanmods.xyz.php
+config.json
+poi.json

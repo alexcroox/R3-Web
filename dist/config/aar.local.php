@@ -12,7 +12,7 @@ define('DB_NAME', 'aar');
 
 // http://yourunit.com/aar
 // Note the lack of trailing slash
-define('WEB_PATH', 'http://r3.local');
+define('WEB_PATH', 'http://aar.local');
 
 define('FAVICON', 'http://ark-group.org/images/favicon.ico');
 
@@ -26,16 +26,6 @@ define('ACCESS_PASSWORD', '');
 
 // Admin password
 define('ADMIN_PASSWORD', 'changeme');
-
-/*
-    If enabled the events will be cached to a flat file on first load and
-    the original data deleted from the db table.
-
-    With 5R we saw a big reduction in CPU usage when switching to flat file caches.
-    If your site experiences heavy traffic consider setting up nginx as a reverse proxy to apache
-    so it can serve up these static files avoiding resource hungry PHP altogether
-*/
-define('CACHE_EVENTS', FALSE); // Will delete original data, backup your cache folder regularly!
 
 /*
     To increase the speed in which your terrain tiles load

@@ -4,8 +4,26 @@ function Notifications() {
     this.minWidth = 800;
 };
 
-Notifications.prototype.setup = function() {
+Notifications.prototype.init = function() {
 
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut",
+        "target": '.playback-container'
+    };
 
     this.setupInteractionHandlers();
 };
@@ -24,18 +42,24 @@ Notifications.prototype.checkWindowWidth = function() {
 
 Notifications.prototype.info = function(message) {
 
-    console.log(message);
-    this.showMessage(message, 'info');
+    if(!this.enabled)
+        return;
+
+    toastr.info(message);
 };
 
 Notifications.prototype.warning = function(message) {
 
-    console.log(message);
+    if(!this.enabled)
+        return;
 
-    this.showMessage(message, 'warning');
+    toastr.warning(message);
 };
 
-Notifications.prototype.showMessage = function(message, type) {
+Notifications.prototype.error = function(message) {
 
-    Materialize.toast('<span class="notification notification--' + type + '">' + message + '</span>', 4000);
+    if(!this.enabled)
+        return;
+
+    toastr.error(message);
 };

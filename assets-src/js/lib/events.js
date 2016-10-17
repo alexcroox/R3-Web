@@ -194,16 +194,19 @@ Events.prototype.hit = function(hitType, eventData) {
 
         if (!attackerKnown) {
 
-            message = playerInfo.name + ' ' + hitType + ' himself!';
+            message = '<span>' + playerInfo.name + '</span>' + ' ' + hitType + ' <span class="toast-smaller">himself!</span>';
         } else {
 
             if (attacker.weapon != "")
-                message = playerInfo.name + ' was ' + hitType + ' by ' + attacker.weapon;
+                message = '<span>' + playerInfo.name + '</span>' + ' was ' + hitType + ' by ' + '<span class="toast-smaller">' + attacker.weapon + '</span>';
             else
-                message = playerInfo.name + ' was ' + hitType;
+                message = '<span>' + playerInfo.name + '</span>' + ' was ' + hitType;
         }
 
-        notifications.warning(message);
+        if(hitType == "killed")
+            notifications.error(message);
+        else
+            notifications.warning(message);
     }
 };
 

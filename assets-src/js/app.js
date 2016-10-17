@@ -13,8 +13,8 @@ $('document').ready(function() {
     if($('#replay-list').length)
         replayList.init();
 
-    if(typeof replayDetails !== "undefined")
+    if(typeof replayDetails !== "undefined") {
         playBack.init(replayDetails, sharedPresets, cacheAvailable);
-
-    $('.button-collapse').sideNav();
+        notifications.init();
+    }
 });

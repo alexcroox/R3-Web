@@ -31,4 +31,14 @@ ReplayList.prototype.setupInteractionHandlers = function() {
         else
             $(this).removeClass('mission-list__sort--desc').addClass('mission-list__sort--asc');
     });
+
+    $('body').on('focus', '.text-input--with-icon .text-input', function(e) {
+
+        $(this).parent().removeClass('text-input--with-icon--unfocused');
+    });
+
+    $('body').on('blur', '.text-input--with-icon .text-input', function(e) {
+
+        $(this).parent().addClass('text-input--with-icon--unfocused');
+    });
 };

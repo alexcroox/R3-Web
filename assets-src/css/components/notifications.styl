@@ -1,24 +1,32 @@
 #toast-container
     right 1%
     top 1%
+    position absolute
+    z-index 10
 
-.toast
+#toast-container > div
     padding 0
-    background none
-    box-shadow none
+    background none !important
+    box-shadow none !important
     margin-top 5px
     word-break normal
     min-height 0
+    font-size 14px
+    font-weight 500
+    padding 10px 15px
 
-.notification
-    font-size 13px
-    padding 5px 10px
+#toast-container span
+    font-weight 700
+    font-size 15px
 
-.notification--info
+    &.toast-smaller
+        font-size 14px
+
+#toast-container > .toast-info
     background #666 !important
 
-.notification--warning
+#toast-container > .toast-warning
     background #934A86 !important
 
-.notification--error
+#toast-container > .toast-error
     background #E3233C !important

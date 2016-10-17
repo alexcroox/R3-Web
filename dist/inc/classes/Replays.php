@@ -137,8 +137,30 @@ class Replays {
 
         $data = $query->fetchAll();
 
+        $chunkedData = array();
+        $flushCount = 0;
+
         // Cache our events for the next person
-        $this->saveEventCache($replayId, $data);
+        $this->saveEventCache($replayId, '[', -1, TRUE);
+
+        // Lets loop through our data and save in chunks to the flat file to avoid
+        // out of memory issues on json_encode
+        foreach($data as $row) {
+
+            $chunkedData[] = $row;
+
+            if(count($chunkedData) > 5000) {
+                $this->saveEventCache($replayId, $chunkedData, $flushCount, FALSE);
+                $chunkedData = array();
+                $flushCount++;
+            }
+        }
+
+        // Any more data left?
+        if(count($chunkedData))
+            $this->saveEventCache($replayId, $chunkedData, $flushCount, FALSE);
+
+        $this->saveEventCache($replayId, ']', -1, TRUE);
 
         return TRUE;
     }
@@ -192,11 +214,23 @@ class Replays {
     // With 5R we saw a big reduction in CPU usage when switching to flat file caches.
     // If your site experiences heavy traffic consider setting up nginx as a reverse proxy to apache
     // so it can serve up these static files avoiding PHP altogether
-    private function saveEventCache($replayId, $eventData, $skipEncode = FALSE) {
+    private function saveEventCache($replayId, $eventData, $flushCount = 0, $skipEncode = FALSE) {
 
         $playbackCacheFile = APP_PATH . '/cache/events/' . $replayId . '.json';
 
-        $data = ($skipEncode)? $eventData : json_encode($eventData);
+        if(!$skipEncode) {
+
+            $json = json_encode($eventData);
+            $data = trim($json, '[');
+            $data = trim($data, ']');
+
+            if($flushCount > 0)
+                $data = ',' . $data;
+
+        } else {
+            $data = $eventData;
+        }
+
         $fp = fopen($playbackCacheFile, 'a');
         fwrite($fp, $data);
         fclose($fp);
