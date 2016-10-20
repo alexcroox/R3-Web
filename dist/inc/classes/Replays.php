@@ -111,8 +111,20 @@ class Replays {
 
     public function isCachedVersionAvailable($replayId) {
 
-        // Don't bother with a filesystem lookup if the functionality is disabled
         return file_exists(APP_PATH . '/cache/events/' . $replayId . '.json');
+    }
+
+    private function isPlayerListCachedVersionAvailable($replayId) {
+
+        return file_exists(APP_PATH . '/cache/events/' . $replayId . '-players.json');
+    }
+
+    private function savePlayerListCache($replayId, $data) {
+
+        $fp = fopen(APP_PATH . '/cache/events/' . $replayId . '-players.json', 'w');
+
+        fwrite($fp, json_encode($data));
+        fclose($fp);
     }
 
     public function fetchEvents($replayId) {
@@ -167,21 +179,38 @@ class Replays {
 
     public function fetchReplayPlayers($replayId) {
 
-        $query = $this->_db->prepare("
-            SELECT
-                DISTINCT p.id, p.name
-            FROM
-                players p
-            LEFT JOIN
-                events e
-            ON
-                e.value LIKE CONCAT('%', p.id, '%')
-            WHERE
-                e.replayId = :replayId");
+        $data = array();
 
-        $query->execute(array('replayId' => $replayId));
+        if($this->isPlayerListCachedVersionAvailable($replayId)) {
 
-        return $query->fetchAll();
+            $json = file_get_contents(APP_PATH . '/cache/events/' . $replayId . '-players.json');
+
+            if($json) {
+                $data = json_decode($json);
+            }
+
+        } else {
+
+            $query = $this->_db->prepare("
+                SELECT
+                    DISTINCT p.id, p.name
+                FROM
+                    players p
+                LEFT JOIN
+                    events e
+                ON
+                    e.value LIKE CONCAT('%', p.id, '%')
+                WHERE
+                    e.replayId = :replayId");
+
+            $query->execute(array('replayId' => $replayId));
+
+            $data = $query->fetchAll();
+
+            $this->savePlayerListCache($replayId, $data);
+        }
+
+        return $data;
     }
 
     // Hardcode available mod icon packs for testing...
