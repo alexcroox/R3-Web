@@ -103,8 +103,8 @@ class Replays {
             $updateQuery->execute(array(
                 'replayId' => $data->id,
                 'slug' => $util->slugify($data->missionName),
-                'lastEventMissionTime' => (strtotime($data->lastEventTime) > strtotime("-4 minutes"))? null : $data->lastEventTime,
-                'hidden' => (!$data->lastEventTime && (strtotime($data->dateStarted) < strtotime("-3 minutes")))? 1 : 0
+                'lastEventMissionTime' => (strtotime($data->lastEventTime) > strtotime("-" . MINUTES_MISSION_END_BLOCK . " minutes"))? null : $data->lastEventTime,
+                'hidden' => (!$data->lastEventTime && (strtotime($data->dateStarted) < strtotime("-" . MIN_MISSION_TIME . " minutes")))? 1 : 0
             ));
         }
     }
