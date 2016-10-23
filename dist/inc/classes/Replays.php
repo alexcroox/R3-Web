@@ -251,7 +251,7 @@ class Replays {
             $fileName = str_replace("-civilian", "", $fileName);
 
             if($fileName != "." && $fileName != "..")
-                $icons[basename($fileName, ".png")] = '/' . $modName . '/' . $fileName;
+                $icons[basename(strtolower($fileName), ".png")] = '/' . $modName . '/' . $fileName;
         }
 
         return $icons;

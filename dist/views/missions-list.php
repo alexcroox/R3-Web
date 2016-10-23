@@ -21,6 +21,13 @@
             </div>
         <?php endif; ?>
 
+        <?php if(isset($_GET['not-finished'])): ?>
+            <div class="feedback feedback--error">
+                <i class="fa fa-exclamation fa-pad-right" aria-hidden="true"></i>
+                You cannot view missions that are in progress!
+            </div>
+        <?php endif; ?>
+
         <table>
             <thead>
                 <tr>

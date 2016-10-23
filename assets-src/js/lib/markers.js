@@ -325,6 +325,9 @@ Markers.prototype.getIconWithFaction = function(isVehicle, iconPath, defaultIcon
 
     var icon = defaultIcon + '.png';
 
+    if (typeof iconPath !== "undefined")
+        iconPath = iconPath.toLowerCase();
+
     if (isVehicle && typeof this.vehicleIcons[iconPath] !== "undefined")
         icon = 'mod-specific' + this.vehicleIcons[iconPath];
 
