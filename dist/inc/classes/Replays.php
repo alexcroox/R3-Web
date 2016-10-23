@@ -76,7 +76,8 @@ class Replays {
                 hidden = 0 AND
                 (
                     r.lastEventMissionTime IS NULL OR
-                    r.slug IS NULL
+                    r.slug IS NULL OR
+                    r.playerCount IS NULL
                 )
         ");
 
@@ -88,13 +89,29 @@ class Replays {
         // Hide missions without any events
         foreach($result as $data) {
 
+            $missionFinished = (strtotime($data->lastEventTime) < strtotime("-" . MINUTES_MISSION_END_BLOCK . " minutes"));
+
+            if($missionFinished) {
+
+                $players = $this->fetchReplayPlayers($data->id);
+                $playerCount = count($players);
+
+                $missionLength = strtotime($data->lastEventTime) - strtotime($data->dateStarted);
+                $missionTooShort = ($missionLength < (MIN_MISSION_TIME * 60));
+            } else {
+
+                $playerCount = null;
+                $missionTooShort = false;
+            }
+
             $updateQuery = $this->_db->prepare("
                 UPDATE
                     replays
                 SET
                     slug = :slug,
                     lastEventMissionTime = :lastEventMissionTime,
-                    hidden = :hidden
+                    hidden = :hidden,
+                    playerCount = :playerCount
                 WHERE
                     id = :replayId
                 LIMIT 1
@@ -103,8 +120,9 @@ class Replays {
             $updateQuery->execute(array(
                 'replayId' => $data->id,
                 'slug' => $util->slugify($data->missionName),
-                'lastEventMissionTime' => (strtotime($data->lastEventTime) > strtotime("-" . MINUTES_MISSION_END_BLOCK . " minutes"))? null : $data->lastEventTime,
-                'hidden' => (!$data->lastEventTime && (strtotime($data->dateStarted) < strtotime("-" . MIN_MISSION_TIME . " minutes")))? 1 : 0
+                'playerCount' => $playerCount,
+                'lastEventMissionTime' => (!$missionFinished)? null : $data->lastEventTime,
+                'hidden' => (!$data->lastEventTime || $missionTooShort || ($missionFinished && $playerCount < MIN_PLAYER_COUNT)) ? 1 : 0
             ));
         }
     }

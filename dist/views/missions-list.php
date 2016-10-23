@@ -27,6 +27,7 @@
                     <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__name">Mission Name</th>
                     <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__map">Map</th>
                     <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__length">Length</th>
+                    <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__player-count">Players</th>
                     <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__date">Date Played</th>
                 </tr>
             </thead>
@@ -53,6 +54,10 @@
                         <?php else: ?>
                             <img width="11" class="mission-list__item__in-progress-icon" src="<?php echo WEB_PATH . '/assets/images/map/markers/infantry/iconMan-civilian-trim.png'; ?>"> In progress
                         <?php endif; ?>
+                    </td>
+
+                    <td class="mission-list__item__player-count">
+                        <?php echo $replay->playerCount; ?>
                     </td>
 
                     <td>

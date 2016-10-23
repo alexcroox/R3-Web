@@ -12,6 +12,7 @@ ReplayList.prototype.init = function() {
             'mission-list__item__name',
             'mission-list__item__map',
             'mission-list__item__length',
+            'mission-list__item__player-count',
             'mission-list__item__date'
         ],
         searchClass: 'mission-list__search',

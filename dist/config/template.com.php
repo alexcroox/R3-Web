@@ -47,6 +47,7 @@ define('DEFAULT_PLAYBACK_SPEED', 10);
     test missions from cluttering the list
  */
 define('MIN_MISSION_TIME', 15);
+define('MIN_PLAYER_COUNT', 5);
 
 /*
     Minutes after last event received before playback can be viewed.
