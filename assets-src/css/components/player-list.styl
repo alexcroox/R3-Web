@@ -24,6 +24,12 @@
 
 .player-list__content
     padding 10px 10px 10px 10px
+    overflow hidden
+    position absolute
+    top 36px
+    bottom 0px
+    right 0
+    left 0
 
 .player-list__faction
     text-transform uppercase
@@ -90,6 +96,17 @@
         margin-right 5px
         width 12px
         vertical-align sub
+
+.player-list__toggle-sticky
+    position absolute
+    top -3px
+    right 2px
+    color #FFF
+    padding 10px
+    z-index 2
+
+.player-list__toggle-sticky--inactive
+    color #B7C0C6
 
 @keyframes trackingFlash
     0%

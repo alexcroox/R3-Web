@@ -5,6 +5,7 @@ function Players() {
     this.factionGroups = {};
     this.trackTarget = false;
     this.collapseList = {};
+    this.listFadeEnabled = true;
     this.listInactiveTimer = null;
     this.listFadeTime = 3; // seconds before player list fades out
     this.updateFrequency = 3; // seconds between auto player sidebar refreshes
@@ -19,12 +20,12 @@ Players.prototype.init = function() {
 
     this.setupInteractionHandlers();
 
-    $('.player-list').perfectScrollbar({
+    $('.player-list__content').perfectScrollbar({
         suppressScrollX: true
     });
 
-    $('.player-list .ps-scrollbar-y-rail').unbind('click');
-    $('.player-list .ps-scrollbar-y').unbind('mousedown');
+    $('.player-list__content .ps-scrollbar-y-rail').unbind('click');
+    $('.player-list__content .ps-scrollbar-y').unbind('mousedown');
 
     //this.updateTimer = setInterval(this.updateList.bind(this), this.updateFrequency * 1000);
 };
@@ -71,6 +72,22 @@ Players.prototype.setupInteractionHandlers = function() {
         else
             delete self.collapseList[groupName];
     });
+
+    $('body').on('click', '.player-list__toggle-sticky', function(e) {
+
+        e.preventDefault();
+
+        if($(this).hasClass('player-list__toggle-sticky--inactive')) {
+
+            $(this).removeClass('player-list__toggle-sticky--inactive');
+            self.listFadeEnabled = true;
+        } else {
+            $(this).addClass('player-list__toggle-sticky--inactive');
+            clearTimeout(self.listInactiveTimer);
+            self.listFadeEnabled = false;
+        }
+
+    });
 }
 
 // Countdown to hiding the player list
@@ -79,9 +96,13 @@ Players.prototype.startInactiveListTimer = function(timeout) {
     // Did we specify a custom timeout? If not use default
     timeout = timeout || this.listFadeTime;
 
+    var self = this;
+
     this.listInactiveTimer = setTimeout(function() {
 
-        $('.player-list').addClass('player-list--inactive');
+        if(self.listFadeEnabled)
+            $('.player-list').addClass('player-list--inactive');
+
     }, timeout * 1000);
 }
 
@@ -224,7 +245,7 @@ Players.prototype.updateList = function(forceUpdate) {
 
     $playerListContainer.show();
 
-    $('.player-list').perfectScrollbar('update');
+    $('.player-list__content').perfectScrollbar('update');
 
     setTimeout(function() {
         self.updateLock = false;

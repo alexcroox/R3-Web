@@ -7,6 +7,10 @@
             Mission list
         </a>
 
+        <a href="#" class="player-list__toggle-sticky" title="Toggle player list auto hide">
+            <i class="fa fa-exchange" aria-hidden="true"></i>
+        </a>
+
         <div class="player-list__content"></div>
     </div>
 
