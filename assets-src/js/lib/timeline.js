@@ -115,29 +115,42 @@ Timeline.prototype.setupInteractionHandlers = function() {
         console.log(shareUrl);
 
         $.ajax({
-        url: webPath + '/fetch-share-url',
-        type: 'POST',
-        dataType: 'json',
-        data: { "url": shareUrl },
-        success: function(shareUrl) {
+            url: webPath + '/fetch-share-url',
+            type: 'POST',
+            dataType: 'json',
+            data: { "url": shareUrl },
+            success: function(shareUrl) {
 
-            $('#modal__share .share__url').val(shareUrl);
+                $('#modal__share .share__copy-link').val(shareUrl);
 
-            $('#modal__share').openModal();
+                modal.show('modal__share');
 
-            if(typeof window.history.pushState !== "undefined")
-                window.history.pushState({}, null, shareUrl);
-        },
-        error: function(jq, status, message) {
+                var shareCopy = new Clipboard('.share__copy-link', {
+                    text: function() {
+                        return shareUrl;
+                    }
+                });
+
+                shareCopy.on('success', function(e) {
+
+                    // Highlight input on click for easier copy/paste
+                    $('.share__copy-link').select();
+
+                    $('.share__copy-link__container').addClass('share__copy-link__container--copied');
+
+                    setTimeout(function() {
+                        $('.share__copy-link__container').removeClass('share__copy-link__container--copied');
+                        shareCopy.destroy();
+                    }, 2000);
+                });
+
+                if (typeof window.history.pushState !== "undefined")
+                    window.history.pushState({}, null, shareUrl);
+            },
+            error: function(jq, status, message) {
                 console.log('Error fetching share URL - Status: ' + status + ' - Message: ' + message);
             }
         });
-    });
-
-    // Highlight input on click for easier copy/paste
-    $('body').on('click', '.share__url', function(e) {
-
-        $(this).select();
     });
 
     $('body').on('click', '.timeline__fullscreen', function(e) {
@@ -160,7 +173,7 @@ Timeline.prototype.changeSpeed = function(speed) {
 
     // If we increase the speed too much chances are the browser can't
     // keep up with the rendering so we need to start skipping events entirely
-    if(this.speed == 60)
+    if (this.speed == 60)
         this.timeJump = 5;
     else
         this.timeJump = 1;
@@ -188,7 +201,7 @@ Timeline.prototype.skipTime = function(value) {
     }, 1000);
 };
 
-Timeline.prototype.startTimer = function () {
+Timeline.prototype.startTimer = function() {
 
     var self = this;
 

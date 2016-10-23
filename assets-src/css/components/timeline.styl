@@ -62,8 +62,14 @@
     .fa
         font-size 19px
 
-.timeline--loading .timeline__slider
-    padding-right 5px
+.timeline--loading:after
+    content 'Loading playback...'
+    position absolute
+    left 130px
+    top 10px
+    color #FFF
+    font-size 14px
+    font-weight 500
 
 .timeline__slider .progress
     position absolute
@@ -76,12 +82,12 @@
     z-index 2
 
 &.noUi-horizontal .noUi-handle
-    padding 7px 0 0 9px
-    font-size 13px
+    padding 8px 0 0 9px
+    font-size 12px
     font-weight 500
 
     &.left-time
-        text-indent -62px
+        text-indent -58px
         color #000
 
 .noUi-horizontal .noUi-handle

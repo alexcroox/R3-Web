@@ -6,9 +6,12 @@ var replayList = new ReplayList(),
     poi = new Poi(),
     map = new Map(),
     timeline = new Timeline(),
-    notifications = new Notifications();
+    notifications = new Notifications(),
+    modal = new Modal();
 
 $('document').ready(function() {
+
+    modal.setupInteractionHandlers();
 
     if($('#replay-list').length)
         replayList.init();
