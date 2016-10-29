@@ -27,6 +27,9 @@ Players.prototype.init = function() {
     $('.player-list__content .ps-scrollbar-y-rail').unbind('click');
     $('.player-list__content .ps-scrollbar-y').unbind('mousedown');
 
+    if(typeof playBack.sharedPresets.track !== "undefined")
+        this.trackTarget = playBack.sharedPresets.track;
+
     //this.updateTimer = setInterval(this.updateList.bind(this), this.updateFrequency * 1000);
 };
 

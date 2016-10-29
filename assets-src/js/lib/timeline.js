@@ -109,8 +109,8 @@ Timeline.prototype.setupInteractionHandlers = function() {
         shareUrl += '&time=' + self.timePointer;
         shareUrl += '&speed=' + self.speed;
 
-        if (playBack.trackTarget)
-            shareUrl += '&track=' + playBack.trackTarget
+        if (players.trackTarget)
+            shareUrl += '&track=' + players.trackTarget
 
         console.log(shareUrl);
 
