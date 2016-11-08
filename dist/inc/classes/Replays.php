@@ -77,7 +77,8 @@ class Replays {
                 (
                     r.lastEventMissionTime IS NULL OR
                     r.slug IS NULL OR
-                    r.playerCount IS NULL
+                    r.playerCount IS NULL OR
+                    r.playerList IS NULL
                 )
         ");
 
@@ -89,11 +90,15 @@ class Replays {
         // Hide missions without any events
         foreach($result as $data) {
 
-            $missionFinished = (strtotime($data->lastEventTime) < strtotime("-" . MINUTES_MISSION_END_BLOCK . " minutes"));
+            // If we haven't had any events in x minutes then we can safely say the mission has finished
+            $missionFinished = (strtotime($data->lastEventTime) < strtotime("-" . MINUTES_MISSION_END_BLOCK * 60 . " seconds"));
+
+            // Data won't start coming in until the mission gets past the briefing screen. Some units might take a while for this to happen
+            $noData = (!$data->lastEventTime && strtotime($data->dateStarted) < strtotime("-30 minutes"));
 
             if($missionFinished) {
 
-                $players = $this->fetchReplayPlayers($data->id);
+                $players = $this->fetchReplayPlayers($data->id, $data->playerList);
                 $playerCount = count($players);
 
                 $missionLength = strtotime($data->lastEventTime) - strtotime($data->dateStarted);
@@ -122,7 +127,7 @@ class Replays {
                 'slug' => $util->slugify($data->missionName),
                 'playerCount' => $playerCount,
                 'lastEventMissionTime' => (!$missionFinished)? null : $data->lastEventTime,
-                'hidden' => (!$data->lastEventTime || $missionTooShort || ($missionFinished && $playerCount < MIN_PLAYER_COUNT)) ? 1 : 0
+                'hidden' => ($noData || $missionTooShort || ($missionFinished && $playerCount < MIN_PLAYER_COUNT)) ? 1 : 0
             ));
         }
     }
@@ -137,12 +142,26 @@ class Replays {
         return file_exists(APP_PATH . '/cache/events/' . $replayId . '-players.json');
     }
 
-    private function savePlayerListCache($replayId, $data) {
+    private function savePlayerListCache($replayId, $playerList) {
 
-        $fp = fopen(APP_PATH . '/cache/events/' . $replayId . '-players.json', 'w');
+        $jsonPlayerList = json_encode($playerList);
 
-        fwrite($fp, json_encode($data));
-        fclose($fp);
+        $updateQuery = $this->_db->prepare("
+            UPDATE
+                replays
+            SET
+                playerList = :playerList
+            WHERE
+                id = :replayId
+            LIMIT 1
+        ");
+
+        $updateQuery->execute(array(
+            'replayId' => $replayId,
+            'playerList' => $jsonPlayerList
+        ));
+
+        return $jsonPlayerList;
     }
 
     public function fetchEvents($replayId) {
@@ -195,16 +214,18 @@ class Replays {
         return TRUE;
     }
 
-    public function fetchReplayPlayers($replayId) {
+    public function fetchReplayPlayers($replayId, $playerList) {
 
         $data = array();
 
-        if($this->isPlayerListCachedVersionAvailable($replayId)) {
+        if($playerList) {
 
-            $json = file_get_contents(APP_PATH . '/cache/events/' . $replayId . '-players.json');
+            try {
 
-            if($json) {
-                $data = json_decode($json);
+                $data = json_decode($playerList);
+
+            } catch (Exception $e) {
+                // Bad json
             }
 
         } else {

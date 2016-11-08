@@ -25,7 +25,7 @@ $replayDetails->{'tileSubDomains'} = TILE_SUBDOMAINS;
 
 $mappingConfig = file_get_contents(APP_PATH . '/maps/config.json');
 
-$playerList = $replays->fetchReplayPlayers($_GET['replayId']);
+$playerList = $replays->fetchReplayPlayers($_GET['replayId'], $replayDetails->playerList);
 
 $sharedPresets = $_GET;
 
