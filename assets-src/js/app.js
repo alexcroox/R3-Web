@@ -13,8 +13,10 @@ $('document').ready(function() {
 
     modal.setupInteractionHandlers();
 
-    if($('#replay-list').length)
-        replayList.init();
+    if($('.mission-list__tab').length) {
+        replayList.init('missions-all');
+        replayList.setupInteractionHandlers();
+    }
 
     if(typeof replayDetails !== "undefined") {
         playBack.init(replayDetails, sharedPresets, cacheAvailable);

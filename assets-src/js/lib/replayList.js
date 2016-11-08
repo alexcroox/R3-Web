@@ -1,29 +1,34 @@
 function ReplayList() {
 
-    this.list = {};
+    this.lists = {
+        "missions-all": null,
+        "missions-mine": null
+    };
 };
 
-ReplayList.prototype.init = function() {
+ReplayList.prototype.init = function(listId) {
 
-    console.log('Replay list init');
+    if(this.lists[listId])
+        return;
 
-    this.list = new List('replay-list', {
+    this.lists[listId] = new List(listId, {
         valueNames: [
-            'mission-list__item__name',
-            'mission-list__item__map',
-            'mission-list__item__length',
-            'mission-list__item__player-count',
-            'mission-list__item__date'
+            listId + '-mission-list__item__name',
+            listId + '-mission-list__item__map',
+            listId + '-mission-list__item__length',
+            listId + '-mission-list__item__player-count',
+            listId + '-mission-list__item__date'
         ],
-        searchClass: 'mission-list__search',
-        sortClass: 'mission-list__sort',
+        searchClass: listId + '-mission-list__search',
+        sortClass: listId + '-mission-list__sort',
+        listClass: listId + '-list',
         plugins: [ListFuzzySearch()]
     });
-
-    this.setupInteractionHandlers();
 };
 
 ReplayList.prototype.setupInteractionHandlers = function() {
+
+    var self = this;
 
     $('body').on('click', '.mission-list__sort', function(e) {
 
@@ -41,5 +46,29 @@ ReplayList.prototype.setupInteractionHandlers = function() {
     $('body').on('blur', '.text-input--with-icon .text-input', function(e) {
 
         $(this).parent().addClass('text-input--with-icon--unfocused');
+    });
+
+    $('body').on('click', '.mission-list__tab', function(e) {
+
+        e.preventDefault();
+
+        var currentList = $('.mission-list__tab--active').attr('data-list');
+        var targetList = $(this).attr('data-list');
+
+        $('.mission-list__tab--active').removeClass('mission-list__tab--active');
+        $('.mission-list--active').removeClass('mission-list--active');
+
+        $(this).addClass('mission-list__tab--active');
+        $('#' + targetList).addClass('mission-list--active');
+
+        if(!$('#' + targetList + ' input[name="my-player-id"]').length)
+            self.init(targetList);
+        else
+            return;
+
+        // Set the search input to match previous tab
+        var currentSearchTerm = $('.' + currentList + '-mission-list__search').val();
+        $('.' + targetList + '-mission-list__search').val(currentSearchTerm);
+        self.lists[targetList].search(currentSearchTerm);
     });
 };

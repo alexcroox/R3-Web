@@ -9,7 +9,8 @@ $title = 'Mission replay list';
 $page = 'missions-list';
 
 $replays->updateMeta();
-$replayList = $replays->fetchAll();
+$allMissions = $replays->fetchAll();
+$myMissions = FALSE;
 
 require_once(APP_PATH . '/views/templates/header.php');
 require_once(APP_PATH . '/views/' . $page . '.php');

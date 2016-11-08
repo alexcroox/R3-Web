@@ -1,80 +1,60 @@
 <div class="mission-list__tabs">
-    <a href="#" class="mission-list__tab mission-list__tab--active">All missions</a>
-    <a href="#" class="mission-list__tab">My missions</a>
+    <a href="#" class="mission-list__tab mission-list__tab--active" data-list="missions-all">All missions</a>
+    <a href="#" class="mission-list__tab" data-list="missions-mine">My missions</a>
 </div>
 
 <div class="container">
-    <div class="mission-list" id="replay-list">
-        <div class="mission-list__filters">
-            <h3 class="mission-list__table-title">Missions (<?php echo count($replayList); ?>)</h3>
 
-            <div class="text-input--with-icon text-input--with-icon--unfocused">
-                <i class="fa fa-search" aria-hidden="true"></i>
-                <input class="mission-list__search text-input" type="text" placeholder="Search missions">
-            </div>
+    <?php if(isset($_GET['not-found'])): ?>
+        <div class="feedback feedback--error">
+            <i class="fa fa-exclamation fa-pad-right" aria-hidden="true"></i>
+            That mission cannot be found
         </div>
+    <?php endif; ?>
 
-        <?php if(isset($_GET['not-found'])): ?>
-            <div class="feedback feedback--error">
-                <i class="fa fa-exclamation fa-pad-right" aria-hidden="true"></i>
-                That mission cannot be found
-            </div>
-        <?php endif; ?>
+    <?php if(isset($_GET['not-finished'])): ?>
+        <div class="feedback feedback--error">
+            <i class="fa fa-exclamation fa-pad-right" aria-hidden="true"></i>
+            You cannot view missions that are in progress!
+        </div>
+    <?php endif; ?>
 
-        <?php if(isset($_GET['not-finished'])): ?>
-            <div class="feedback feedback--error">
-                <i class="fa fa-exclamation fa-pad-right" aria-hidden="true"></i>
-                You cannot view missions that are in progress!
-            </div>
-        <?php endif; ?>
+    <div class="mission-list mission-list--active" id="missions-all">
+        <?php
 
-        <table>
-            <thead>
-                <tr>
-                    <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__name">Mission Name</th>
-                    <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__map">Map</th>
-                    <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__length">Length</th>
-                    <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__player-count">Players</th>
-                    <th class="mission-list__sort mission-list__sort--asc" data-sort="mission-list__item__date">Date Played</th>
-                </tr>
-            </thead>
+        $tablePrefix = 'missions-all';
+        $replayList = $allMissions;
 
-            <tbody class="list">
-
-            <?php foreach($replayList as $replay): ?>
-
-                <tr data-mission-id="<?php echo $replay->id; ?>">
-                    <td>
-                        <a class="text-link mission-list__item__name" href="<?php echo WEB_PATH . '/' . $replay->id . '/' . $replay->slug; ?>">
-                            <?php echo $replay->missionName; ?>
-                        </a>
-                    </td>
-
-                    <td class="mission-list__item__map">
-                        <?php echo strtoupper($replay->map); ?>
-                    </td>
-
-                    <td>
-                        <span class="mission-list__item__length mission-list--hide"><?php echo (strtotime($replay->lastEventMissionTime) - strtotime($replay->dateStarted)); ?></span>
-                        <?php if($replay->lastEventMissionTime): ?>
-                            <?php echo $util->humanTimeDifference(strtotime($replay->lastEventMissionTime), strtotime($replay->dateStarted)); ?>
-                        <?php else: ?>
-                            <img width="11" class="mission-list__item__in-progress-icon" src="<?php echo WEB_PATH . '/assets/images/map/markers/infantry/iconMan-civilian-trim.png'; ?>"> In progress
-                        <?php endif; ?>
-                    </td>
-
-                    <td class="mission-list__item__player-count">
-                        <?php echo $replay->playerCount; ?>
-                    </td>
-
-                    <td>
-                        <span class="mission-list__item__date mission-list--hide"><?php echo strtotime($replay->dateStarted); ?></span>
-                        <?php echo $util->humanRelativeTimeDifference(strtotime($replay->dateStarted)); ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-
-            </tbody>
-        </table>
+        include(APP_PATH . '/views/templates/missions-table.php'); ?>
     </div><!--mission-list-->
+
+    <div class="mission-list" id="missions-mine">
+        <?php
+
+        if($myMissions !== FALSE) {
+
+            $tablePrefix = 'missions-mine';
+            $replayList = $myMissions;
+
+            include(APP_PATH . '/views/templates/missions-table.php');
+        } else { ?>
+
+            <div class="form__surround">
+                <i class="fa fa-user-circle-o new-user__icon" aria-hidden="true"></i>
+                <h3>
+                    Enter your
+                    <a href="<?php echo WEB_PATH . '/assets/images/player-id.gif' ?>" class="text-link text-link--with-underline" target="_blank">
+                        Arma Player ID
+                    </a>
+                    to filter your missions</h3>
+                <p class="new-user__intro">
+                    Events that effect you in the playback will also be highlighted.
+                </p>
+
+                <input type="text" placeholder="Arma Player ID" class="new-user__input input--large input--grey-bg" name="my-player-id">
+
+                <a href="#" class="button">Save</a>
+            </div>
+        <?php } ?>
+    </div>
 </div><!--/container-->
