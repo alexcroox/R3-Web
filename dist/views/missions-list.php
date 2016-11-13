@@ -19,6 +19,13 @@
         </div>
     <?php endif; ?>
 
+    <?php if(isset($_GET['missing-terrain'])): ?>
+        <div class="feedback feedback--error">
+            <i class="fa fa-exclamation fa-pad-right" aria-hidden="true"></i>
+            The <?php echo $_GET['terrain']; ?> terrain is missing!
+        </div>
+    <?php endif; ?>
+
     <div class="mission-list mission-list--active" id="missions-all">
         <?php
 

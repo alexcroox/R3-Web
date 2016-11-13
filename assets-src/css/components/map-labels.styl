@@ -42,15 +42,20 @@
         line-height 4px
         color #888
 
+    .operation-driver
+        padding 0 2px
+        display block
+
     .operation-crew
     .operation-cargo
         line-height 14px
         display block
         color #666
-        margin-top -20px
 
-    .operation-crew + .operation-cargo
-        margin-top -14px
+        .operation-cargo__unit
+            display block
+            padding 0 6px
+            line-height 14px
 
     .operation-crew + .player-marker-stat
     .operation-cargo + .player-marker-stat
@@ -60,6 +65,9 @@
         font-size 11px
         letter-spacing 0.03em
         margin 0 0 0 -12px
+
+.unit-marker__label--positions_vehicles
+    padding-left 0px
 
 .leaflet-label.leaflet-clickable
     cursor pointer

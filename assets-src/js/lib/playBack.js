@@ -18,8 +18,11 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
     // Setup map with our chosen terrain
     map.init(this.replayDetails.map, this.replayDetails.tileSubDomains, function(error) {
 
-        if (error)
+        if (error) {
+
+            window.location = webPath + '?missing-terrain&terrain=' + this.replayDetails.map;
             return;
+        }
 
         // Fetch our event data from the server
         self.fetch(cacheAvailable);

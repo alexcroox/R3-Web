@@ -153,7 +153,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         if (typeof players.currentList[data.id] === "undefined")
             players.add(data.id, label, group, faction, unit);
 
-        label = players.getNameFromId(data.id);
+        label = '<span class="operation-driver">' + players.getNameFromId(data.id) + '</span>';
     }
 
     var markerId = (isPlayer)? data.id : this.cleanUnitName(unit);
@@ -285,25 +285,28 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         players.updateList();
 
     // Are we tracking this unit? Let's highlight it!
-    if (players.trackTarget && players.trackTarget == data.id) {
+    if (players.trackTarget) {
 
-        // Highlight
-        this.list[unit].setZIndexOffset(9999);
-        $('.unit-marker--tracking').removeClass('unit-marker--tracking');
-        //markerDomElement.addClass('unit-marker--tracking');
+        if(players.trackTarget == data.id || (isVehicle && (~crew.indexOf(players.trackTarget) || ~cargo.indexOf(players.trackTarget)))) {
 
-        $('.unit-marker__label--tracking').removeClass('unit-marker__label--tracking');
-        $('.unit-marker__label--' + data.id).addClass('unit-marker__label--tracking').css('z-index', 99999);
+            // Highlight
+            this.list[unit].setZIndexOffset(9999);
+            $('.unit-marker--tracking').removeClass('unit-marker--tracking');
+            //markerDomElement.addClass('unit-marker--tracking');
 
-        if(label == " ")
-            this.list[unit].label.setContent(players.getNameFromId(data.id));
+            $('.unit-marker__label--tracking').removeClass('unit-marker__label--tracking');
+            $('.unit-marker__label--' + players.trackTarget).addClass('unit-marker__label--tracking').css('z-index', 99999);
 
-        // Has the map view moved away from the tracked player? Lets bring it back into view
-        var point = map.handler.latLngToLayerPoint(this.list[unit].getLatLng());
-        var distance = point.distanceTo(map.handler.latLngToLayerPoint(map.handler.getCenter()));
+            if(label == " ")
+                this.list[unit].label.setContent(players.getNameFromId(data.id));
 
-        if (distance > 200)
-            map.handler.panTo(map.rc.unproject([position[0], position[1]]));
+            // Has the map view moved away from the tracked player? Lets bring it back into view
+            var point = map.handler.latLngToLayerPoint(this.list[unit].getLatLng());
+            var distance = point.distanceTo(map.handler.latLngToLayerPoint(map.handler.getCenter()));
+
+            if (distance > 200)
+                map.handler.panTo(map.rc.unproject([position[0], position[1]]));
+        }
     }
 };
 
@@ -347,7 +350,7 @@ Markers.prototype.addCrewCargoToLabel = function(type, data, unitId) {
             var playerInfo = players.getInfo(c);
 
             if (typeof playerInfo !== "undefined")
-                label += '<br>' + playerInfo.name;
+                label += '<span class="operation-cargo__unit unit-marker__label--' + c + '">' + playerInfo.name + '</span>';
         }
     });
 
