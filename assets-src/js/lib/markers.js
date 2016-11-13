@@ -153,7 +153,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         if (typeof players.currentList[data.id] === "undefined")
             players.add(data.id, label, group, faction, unit);
 
-        label = '<span class="operation-driver">' + players.getNameFromId(data.id) + '</span>';
+        label = (!isVehicle)? players.getNameFromId(data.id) : '<span class="operation-driver unit-marker__label--' + data.id + '">' + players.getNameFromId(data.id) + '</span>';
     }
 
     var markerId = (isPlayer)? data.id : this.cleanUnitName(unit);
@@ -252,9 +252,20 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
             }));
 
             this.list[unit].setIcon(mapIcon);
-            this.list[unit].posType = type;
         } else {
             var iconUrl = this.list[unit].iconUrl;
+        }
+
+        // Type changed? Have they moved in and out of a vehicle recently?
+        if(this.list[unit].posType != type) {
+
+            if(type == "positions_vehicles")
+                $('.unit-marker__label--' + data.id).removeClass('unit-marker__label--positions_infantry').addClass('unit-marker__label--positions_vehicles');
+
+            if(type == "positions_infantry")
+                $('.unit-marker__label--' + data.id).removeClass('unit-marker__label--positions_vehicles').addClass('unit-marker__label--positions_infantry');
+
+            this.list[unit].posType = type;
         }
 
         this.list[unit].originalLabel = label;
@@ -295,7 +306,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
             //markerDomElement.addClass('unit-marker--tracking');
 
             $('.unit-marker__label--tracking').removeClass('unit-marker__label--tracking');
-            $('.unit-marker__label--' + players.trackTarget).addClass('unit-marker__label--tracking').css('z-index', 99999);
+            $('.unit-marker__label--' + players.trackTarget).not('.unit-marker__label--positions_vehicles').addClass('unit-marker__label--tracking').css('z-index', 99999);
 
             if(label == " ")
                 this.list[unit].label.setContent(players.getNameFromId(data.id));
