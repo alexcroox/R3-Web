@@ -71,4 +71,28 @@ ReplayList.prototype.setupInteractionHandlers = function() {
         $('.' + targetList + '-mission-list__search').val(currentSearchTerm);
         self.lists[targetList].search(currentSearchTerm);
     });
+
+    $('body').on('click', '.new-user__save', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: webPath + '/save-player-id',
+            type: 'POST',
+            dataType: 'json',
+            data: { id: $('input[name="my-player-id"]').val() },
+            success: function(response) {
+
+                if(!response.error) {
+
+                    $('#missions-mine').html(response.myReplaysHtml);
+                    self.init('missions-mine');
+                } else {
+                    alert(response.error);
+                }
+            },
+            error: function(error) {
+                console.log('Error saving player ID', error);
+            }
+        });
+    });
 };
