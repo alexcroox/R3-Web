@@ -1,4 +1,7 @@
-<p align="center">
+
+# Arma 3 After Action Replay *Web* Component
+
+<p>
     <a href="https://github.com/alexcroox/R3-Web/releases/latest">
         <img src="https://img.shields.io/badge/Version-0.0.1-blue.svg" alt="Project Version">
     </a>    
@@ -7,8 +10,6 @@
         <img src="https://img.shields.io/badge/license-MIT-red.svg" alt="Project License">
     </a>
 </p>
-
-# Arma 3 After Action Replay *Web* Component
 
 Website component for the [game server side addon](https://github.com/alexcroox/R3)
 
