@@ -252,6 +252,53 @@ class Replays {
         return $data;
     }
 
+    public function savePlayerId($playerId) {
+
+        // Set cookie for 5 years
+        setcookie('playerId', $playerId, time() + (3600 * 1000 * 24 * 365 * 5), '/');
+    }
+
+    public function getPlayerMissions($replayData) {
+
+        if(!isset($_COOKIE['playerId']) || $_COOKIE['playerId'] == "")
+            return FALSE;
+
+        // Pass existing replay data so we don't make another expensive db call
+        return $this->getHtmlReplaysForPlayer($_COOKIE['playerId'], $replayData);
+    }
+
+    public function getHtmlReplaysForPlayer($playerId, $replayData = FALSE) {
+
+        if(!$replayData)
+            $replayData = $this->fetchAll();
+
+        $myReplays = array();
+
+        foreach($replayData as $replay) {
+
+            $playerList = json_decode($replay->playerList);
+
+            foreach($playerList as $player) {
+
+                if($player->id == $playerId)
+                    $myReplays[] = $replay;
+            }
+        }
+
+        ob_start();
+
+        $tablePrefix = 'missions-mine';
+        $replayList = $myReplays;
+        $util = Util::Instance();
+
+        include(APP_PATH . '/views/templates/missions-table.php');
+
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        return $html;
+    }
+
     // Hardcode available mod icon packs for testing...
     public function compileVehicleIcons() {
 

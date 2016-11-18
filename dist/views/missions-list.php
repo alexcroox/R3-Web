@@ -30,7 +30,7 @@
         <?php
 
         $tablePrefix = 'missions-all';
-        $replayList = $allMissions;
+        $replayList = $allReplays;
 
         include(APP_PATH . '/views/templates/missions-table.php'); ?>
     </div><!--mission-list-->
@@ -38,12 +38,9 @@
     <div class="mission-list" id="missions-mine">
         <?php
 
-        if($myMissions !== FALSE) {
+        if($myReplaysHtml !== FALSE) {
 
-            $tablePrefix = 'missions-mine';
-            $replayList = $myMissions;
-
-            include(APP_PATH . '/views/templates/missions-table.php');
+            echo $myReplaysHtml;
         } else { ?>
 
             <div class="form__surround">
@@ -60,7 +57,7 @@
 
                 <input type="text" placeholder="Arma Player ID" class="new-user__input input--large input--grey-bg" name="my-player-id">
 
-                <a href="#" class="button">Save</a>
+                <a href="#" class="button new-user__save">Save</a>
             </div>
         <?php } ?>
     </div>
