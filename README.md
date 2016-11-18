@@ -10,12 +10,14 @@
 
 # Arma 3 After Action Replay *Web* Component
 
-Website component for the [game server side addon](https://github.com/alexcroox/R3).
+Website component for the [game server side addon](https://github.com/alexcroox/R3)
 
-### WIP
+### DEMO
 
-This is a heavy work in progress, don't expect anything to work at this stage.
+An exact mirror of this repo [can be viewed here](https://titanmods.xyz/r3/ark/)
 
 ### INSTALL
 
 Follow the step by step [instructions on the addon repo](https://github.com/alexcroox/R3)
+
+This repo is under heavy development and as such has no installation instructions
