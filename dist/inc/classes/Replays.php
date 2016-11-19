@@ -276,6 +276,9 @@ class Replays {
 
         foreach($replayData as $replay) {
 
+            if($replay->playerList == "")
+                continue;
+
             $playerList = json_decode($replay->playerList);
 
             foreach($playerList as $player) {
