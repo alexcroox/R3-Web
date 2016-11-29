@@ -2,7 +2,7 @@
     <div class="playback-container__map" id="map"></div>
 
     <div class="player-list">
-        <a href="<? echo WEB_PATH; ?>" class="playback-container__back">
+        <a href="<?php echo WEB_PATH; ?>" class="playback-container__back">
             <i class="fa fa-arrow-left"></i>
             Mission list
         </a>
