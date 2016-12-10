@@ -43,8 +43,9 @@ PlayBack.prototype.fetch = function(cacheAvailable) {
         dataType: 'json',
         data: { "id": this.replayDetails.id },
         success: this.prepData.bind(self),
-        error: function(jq, status, message) {
-            console.log('Error fetching playback data - Status: ' + status + ' - Message: ' + message);
+        error: function(jq, status, xhr) {
+            console.log('Error fetching playback data - Status: ' + status + ' - Message: ' + xhr.status);
+            window.location = webPath + '?events-error&code=' + xhr.status;
         }
     });
 };
