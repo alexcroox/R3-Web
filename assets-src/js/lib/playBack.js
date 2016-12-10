@@ -45,7 +45,10 @@ PlayBack.prototype.fetch = function(cacheAvailable) {
         success: this.prepData.bind(self),
         error: function(xhr, errorType, message) {
             console.log('Error fetching playback data - Status: ' + errorType + ' - Message: ' + message);
-            window.location = webPath + '?events-error&code=' + xhr.status;
+
+            var errorCode = (xhr.status >= 200 && xhr.status < 400)? message : xhr.status;
+
+            window.location = webPath + '?events-error&code=' + errorCode;
         }
     });
 };
