@@ -14,7 +14,7 @@ define('DB_NAME', 'aar');
 // Note the lack of trailing slash
 define('WEB_PATH', 'http://r3.local');
 
-define('FAVICON', 'http://ark-group.org/images/favicon.ico');
+define('FAVICON', WEB_PATH . '/assets/images/brand/favicon.png');
 
 /*
     Add a password that users must enter to view the

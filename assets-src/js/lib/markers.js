@@ -396,7 +396,7 @@ Markers.prototype.convertFactionIdToFactionData = function(factionId) {
         case 2:
 
             factionData.name = 'independant';
-            factionData.color = '#00FF00';
+            factionData.color = '#518245';
             break;
 
         case 3:

@@ -29,7 +29,7 @@
     <?php if(isset($_GET['events-error'])): ?>
         <div class="feedback feedback--error">
             <i class="fa fa-exclamation fa-pad-right" aria-hidden="true"></i>
-            Error generating event cache, error code <?php echo $_GET['code']; ?>, check your server error logs for more info.
+            Error generating event cache, error code <?php echo $_GET['code']; ?>, check your server error logs for more info
         </div>
     <?php endif; ?>
 

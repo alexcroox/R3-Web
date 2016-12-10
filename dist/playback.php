@@ -19,6 +19,8 @@ if(!$replayDetails->minutesSinceLastEvent || $replayDetails->minutesSinceLastEve
     $util->redirect301(WEB_PATH . '?not-finished');
 
 $title = $replayDetails->missionName;
+$metaDescription = 'Watch the interactive mission playback for ' . $replayDetails->missionName . ' (' . $util->humanTimeDifference(strtotime($replayDetails->lastEventMissionTime), strtotime($replayDetails->dateStarted)) . ')';
+$metaImage = WEB_PATH . '/maps/' . strtolower($replayDetails->map) . '/tiles/0/0/0.png';
 $page = 'playback';
 
 $replayDetails->{'tileSubDomains'} = TILE_SUBDOMAINS;
