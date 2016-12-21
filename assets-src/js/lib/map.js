@@ -20,8 +20,6 @@ Map.prototype.init = function(terrainName, cb) {
     })
     .fail(function(e) {
         console.log("Error loading terrain config");
-        console.log(e);
-        return;
         cb(true);
     });
 };

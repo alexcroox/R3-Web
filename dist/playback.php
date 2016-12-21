@@ -23,7 +23,7 @@ $metaDescription = 'Watch the interactive mission playback for ' . $replayDetail
 $metaImage = WEB_PATH . '/maps/' . strtolower($replayDetails->map) . '/tiles/0/0/0.png';
 $page = 'playback';
 
-$mappingConfig = file_get_contents(APP_PATH . '/maps/config.json');
+$mappingConfig = file_get_contents('https://r3tiles-a.titanmods.xyz/config.json');
 
 $playerList = $replays->fetchReplayPlayers($_GET['replayId'], $replayDetails->playerList);
 
