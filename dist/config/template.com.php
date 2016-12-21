@@ -27,17 +27,6 @@ define('ACCESS_PASSWORD', '');
 // Admin password
 define('ADMIN_PASSWORD', 'changeme');
 
-/*
-    To increase the speed in which your terrain tiles load
-    on the end user's browser it's highly recommended you create
-    3 x subdomains pointing to your main website.
-    a.yourunitname.com b.yourunitname.com c.yourunitname.com
-    If you have set this up change the below to TRUE
-
-    If you have HTTP/2 enabled this isn't nessasary
- */
-define('TILE_SUBDOMAINS', FALSE);
-
 // Default event playback speed (5x 10x 30x)
 define('DEFAULT_PLAYBACK_SPEED', 10);
 

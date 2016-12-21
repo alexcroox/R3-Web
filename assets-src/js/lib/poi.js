@@ -26,7 +26,7 @@ Poi.prototype.add = function() {
 
     var self = this;
 
-    $.getJSON(webPath + '/maps/' + this.terrain + '/poi.json', function(poiJson) {
+    $.getJSON(map.tileDomain + this.terrain + '/poi.json', function(poiJson) {
 
         async.forEachOf(poiJson, function(poi, key, callback) {
 
