@@ -13,6 +13,8 @@
 
 Website component for the [game server side addon](https://github.com/alexcroox/R3)
 
+Being built along side the [addon component](https://github.com/alexcroox/R3) and [tile generation component](https://github.com/alexcroox/R3-Tile-Generator)
+
 ### DEMO
 
 An exact mirror of this repo [can be viewed here](https://titanmods.xyz/r3/ark/)
