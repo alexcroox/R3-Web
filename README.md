@@ -24,7 +24,7 @@ An exact mirror of this repo [can be viewed here](https://titanmods.xyz/r3/ark/)
 _Note:_ R3 is in heavy development, it's not setup for auto updating or completely bug free, but it's in a stable enough state for a first preview release.
 
 1. Follow the step by step [instructions on the addon repo](https://github.com/alexcroox/R3) and ensure you have mission event data in your database
-2. Download the [latest release](https://github.com/alexcroox/R3-Web/releases/latest)
+2. Download the [latest web release](https://github.com/alexcroox/R3-Web/releases/latest)
 3. Rename `config.template.php` to `config.php`, pay close attention to `DB_*` and `WEB_PATH` configurations
 4. Upload the files to your web server which matches the URL in `WEB_PATH` in `config.php`
 
