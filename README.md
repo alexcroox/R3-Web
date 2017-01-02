@@ -13,7 +13,7 @@
 
 Website component for the [game server side addon](https://github.com/alexcroox/R3)
 
-Being built along side the [addon component](https://github.com/alexcroox/R3) and [tile generation component](https://github.com/alexcroox/R3-Tile-Generator)
+Being built along side the [addon component](https://github.com/alexcroox/R3)
 
 ### Demo
 
@@ -21,9 +21,12 @@ An exact mirror of this repo [can be viewed here](https://titanmods.xyz/r3/ark/)
 
 ### Install
 
-Follow the step by step [instructions on the addon repo](https://github.com/alexcroox/R3)
+_Note:_ R3 is in heavy development, it's not setup for easy updating or completely bug free, but it's in a workable enough state for a first preview release.
 
-This repo is under heavy development and as such has no installation instructions
+1. Follow the step by step [instructions on the addon repo](https://github.com/alexcroox/R3) and ensure you have mission event data in your database
+2. Download the [latest release](https://github.com/alexcroox/R3-Web/releases/latest)
+3. Rename `config.template.php` to `config.php`, pay close attention to `DB_*` and `WEB_PATH` configurations
+4. Upload the files to your web server which matches the URL in `WEB_PATH` in `config.php`
 
 ### Adding new Terrains
 

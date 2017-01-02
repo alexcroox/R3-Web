@@ -1,7 +1,7 @@
 {
   "name": "r3-web",
   "description": "R3 Web",
-  "version": "0.0.1",
+  "version": "0.5",
   "author": "alexcroox",
   "license": "MIT",
   "main": "gulpfile.js",
