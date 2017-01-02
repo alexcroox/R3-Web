@@ -279,25 +279,24 @@ Events.prototype.projectileLaunch = function(eventData) {
 function Map() {
 
     this.terrain;
-    this.tileSubDomains = false;
     this.zooming = false;
+    this.tileDomain = 'https://r3tiles-a.titanmods.xyz/';
 };
 
-Map.prototype.init = function(terrainName, tileSubDomains, cb) {
+Map.prototype.init = function(terrainName, cb) {
 
     var self = this;
 
     this.terrain = terrainName.toLowerCase();
-    this.tileSubDomains = tileSubDomains;
 
     if(typeof mappingConfig[this.terrain] !== "undefined")
         this.terrain = mappingConfig[this.terrain];
 
-    $.getJSON(webPath + '/maps/' + this.terrain + '/config.json', function(configJson) {
+    $.getJSON(this.tileDomain + this.terrain + '/config.json', function(configJson) {
         self.config = configJson;
         self.render(cb);
     })
-    .fail(function() {
+    .fail(function(e) {
         console.log("Error loading terrain config");
         cb(true);
     });
@@ -339,14 +338,11 @@ Map.prototype.render = function(cb) {
     // We need to set an initial view for the tiles to render
     this.setView([this.config.height / 2, this.config.width / 2], this.config.initZoom);
 
-    // Inject sub domain support for faster tile loading (if supported)
-    var tileUrl = (this.tileSubDomains) ? webPath.replace("//", "//{s}.") : webPath;
-
-    if(webPath == "http://aar.local")
-        tileUrl = 'https://titanmods.xyz/r3/ark';
+    // Inject sub domain support for faster tile loading (for those on non http/2 servers)
+    var tileUrl = "https://r3tiles-{s}.titanmods.xyz/";
 
     // Add our terrain generated tiles
-    this.layer = L.tileLayer(tileUrl + '/maps/' + this.terrain + '/tiles/{z}/{x}/{y}.png', {
+    this.layer = L.tileLayer(tileUrl + this.terrain + '/tiles/{z}/{x}/{y}.png', {
         noWrap: true,
         maxNativeZoom: this.config.maxZoom,
         maxZoom: 10,
@@ -1029,7 +1025,7 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
         this.zoomedToFirstPlayer = true;
 
     // Setup map with our chosen terrain
-    map.init(this.replayDetails.map, this.replayDetails.tileSubDomains, function(error) {
+    map.init(this.replayDetails.map, function(error) {
 
         if (error) {
 
@@ -1425,7 +1421,7 @@ Poi.prototype.add = function() {
 
     var self = this;
 
-    $.getJSON(webPath + '/maps/' + this.terrain + '/poi.json', function(poiJson) {
+    $.getJSON(map.tileDomain + this.terrain + '/poi.json', function(poiJson) {
 
         async.forEachOf(poiJson, function(poi, key, callback) {
 

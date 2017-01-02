@@ -1,5 +1,5 @@
 <?php
-// Rename this file to yourdomain.com.php
+// Rename this file to config.php
 
 define('UNIT_NAME', 'Unit Name');
 
