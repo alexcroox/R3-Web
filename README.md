@@ -15,12 +15,16 @@ Website component for the [game server side addon](https://github.com/alexcroox/
 
 Being built along side the [addon component](https://github.com/alexcroox/R3) and [tile generation component](https://github.com/alexcroox/R3-Tile-Generator)
 
-### DEMO
+### Demo
 
 An exact mirror of this repo [can be viewed here](https://titanmods.xyz/r3/ark/)
 
-### INSTALL
+### Install
 
 Follow the step by step [instructions on the addon repo](https://github.com/alexcroox/R3)
 
 This repo is under heavy development and as such has no installation instructions
+
+### Adding new Terrains
+
+Just played a mission on a map that R3 doesn't yet support? Feel free to add it yourself and let every user of R3 benefit from it! Follow the [simple instructions here](https://github.com/alexcroox/R3-Web/wiki/Adding-new-terrains)
