@@ -16,7 +16,7 @@ PlayBack.prototype.init = function(replayDetails, sharedPresets, cacheAvailable)
         this.zoomedToFirstPlayer = true;
 
     // Setup map with our chosen terrain
-    map.init(this.replayDetails.map, this.replayDetails.tileSubDomains, function(error) {
+    map.init(this.replayDetails.map, function(error) {
 
         if (error) {
 

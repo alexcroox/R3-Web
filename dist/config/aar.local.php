@@ -1,20 +1,20 @@
 <?php
 
-define('UNIT_NAME', 'Unit Name');
+define('UNIT_NAME', 'ARK');
 
 // Database details
 define('DB_HOST', '127.0.0.1');
-define('DB_USER', 'user');
-define('DB_PASSWORD', 'password');
+define('DB_USER', 'root');
+define('DB_PASSWORD', 'root');
 define('DB_NAME', 'aar');
 
 // Domain settings
 
 // http://yourunit.com/aar
 // Note the lack of trailing slash
-define('WEB_PATH', 'http://r3.local');
+define('WEB_PATH', 'http://aar.local');
 
-define('FAVICON', WEB_PATH . '/assets/images/brand/favicon.png');
+define('FAVICON', 'http://ark-group.org/images/favicon.ico');
 
 /*
     Add a password that users must enter to view the
