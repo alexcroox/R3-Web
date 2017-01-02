@@ -13,7 +13,7 @@ $matchingConfigs = array_map(function($id) {
     return APP_PATH . '/config/' . $id . '.php';
 }, [ gethostname(), $_SERVER['HTTP_HOST'] ]);
 
-$matchingConfig;
+$matchingConfig = false;
 
 foreach($matchingConfigs as $config) {
 
