@@ -306,7 +306,12 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
             //markerDomElement.addClass('unit-marker--tracking');
 
             $('.unit-marker__label--tracking').removeClass('unit-marker__label--tracking');
-            $('.unit-marker__label--' + players.trackTarget).not('.unit-marker__label--positions_vehicles').addClass('unit-marker__label--tracking').css('z-index', 99999);
+
+            if(isVehicle && !$('.unit-marker__label--' + players.trackTarget).length) {
+                $('.unit-marker__label__group--' + group).not('.unit-marker__label--positions_vehicles').addClass('unit-marker__label--tracking').css('z-index', 99999);
+            } else {
+                $('.unit-marker__label--' + players.trackTarget).not('.unit-marker__label--positions_vehicles').addClass('unit-marker__label--tracking').css('z-index', 99999);
+            }
 
             if(label == " ")
                 this.list[unit].label.setContent(players.getNameFromId(data.id));
@@ -353,6 +358,8 @@ Markers.prototype.addCrewCargoToLabel = function(type, data, unitId) {
 
     var label = '<span class="operation-' + type + '">';
 
+    var groupCargo = {};
+
     _.each(data, function(c) {
 
         // We don't want to include the driver
@@ -360,8 +367,20 @@ Markers.prototype.addCrewCargoToLabel = function(type, data, unitId) {
 
             var playerInfo = players.getInfo(c);
 
-            if (typeof playerInfo !== "undefined")
-                label += '<span class="operation-cargo__unit unit-marker__label--' + c + '">' + playerInfo.name + '</span>';
+            if (typeof playerInfo !== "undefined") {
+
+                if(type == "cargo" && data.length > 5) {
+
+                    if(typeof groupCargo[playerInfo.group] === "undefined") {
+                        groupCargo[playerInfo.group] = 1;
+                        label += '<span class="operation-cargo__unit unit-marker__label__group--' + playerInfo.group + '">' + playerInfo.group + '</span>';
+                    } else {
+                        groupCargo[playerInfo.group]++;
+                    }
+                } else {
+                    label += '<span class="operation-cargo__unit unit-marker__label--' + c + '">' + playerInfo.name + '</span>';
+                }
+            }
         }
     });
 

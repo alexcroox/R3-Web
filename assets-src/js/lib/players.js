@@ -131,8 +131,10 @@ Players.prototype.add = function(id, name, group, factionData, unit) {
         "name": name
     };
 
-    if(typeof this.masterList[id] !== "undefined")
+    if(typeof this.masterList[id] !== "undefined") {
         this.masterList[id].unit = unit;
+        this.masterList[id].group = group;
+    }
 
     // Do we have this faction setup yet?
     if(typeof this.factionGroups[factionData.name] === "undefined")
