@@ -168,11 +168,11 @@ class Replays {
 
         // We need to use unbuffered queries to avoid memory issues loading a large number
         // of mission events into memory
-        $unbuff = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASSWORD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
-        $unbuff->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-        $unbuff->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
+        $unbufferedPdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASSWORD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+        $unbufferedPdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+        $unbufferedPdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
 
-        $query = $unbuff->prepare("
+        $query = $unbufferedPdo->prepare("
             SELECT
                 playerId, type, value, missionTime
             FROM
