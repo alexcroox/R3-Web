@@ -43,6 +43,7 @@
 <?php require_once(APP_PATH . '/views/templates/modals/share.php'); ?>
 
 <script>
+    var icons = <?php echo $icons ?>;
     var replayDetails = <?php echo json_encode($replayDetails); ?>;
     var sharedPresets = <?php echo strip_tags(json_encode($sharedPresets)); ?>;
     var playerList = <?php echo strip_tags(json_encode($playerList)); ?>;

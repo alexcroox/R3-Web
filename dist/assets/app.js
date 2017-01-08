@@ -142,7 +142,7 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 // Killed or unconscious
 Events.prototype.hit = function(hitType, eventData) {
 
-    //console.log(hitType, eventData.victim);
+    console.log(hitType, eventData.victim);
 
     var victim = eventData.victim;
     var attacker = eventData.attacker;
@@ -186,6 +186,8 @@ Events.prototype.hit = function(hitType, eventData) {
             }, 1000);
         }
     }
+
+    console.log(markers.list[victim.unit]);
 
     // Lets mark the unit as unconscious so we can change the colour of their icon
     if(typeof markers.list[victim.unit] !== "undefined") {
@@ -453,8 +455,7 @@ function Markers() {
 
     this.list = {};
     this.matchedIcons = {};
-    this.icons = {};
-    this.vehicleIcons = {};
+    this.icons = icons;
     this.maxZoomLevelForIndividualPlayerLabels = 7;
     this.eventGroups = {
         'positions_vehicles': {},
@@ -482,28 +483,7 @@ Markers.prototype.setupLayers = function() {
 
     this.eventGroups.positions_vehicles.addTo(map.handler);
     this.eventGroups.positions_infantry.addTo(map.handler);
-
-    this.fetchVehicleIcons();
 }
-
-Markers.prototype.fetchVehicleIcons = function() {
-
-    var self = this;
-
-    $.ajax({
-        url: webPath + '/fetch-vehicle-icons',
-        type: 'GET',
-        dataType: 'json',
-        success: function(responseData) {
-            self.vehicleIcons = responseData;
-
-            console.log(self.vehicleIcons);
-        },
-        error: function(jq, status, message) {
-            console.log('Error fetching playback data - Status: ' + status + ' - Message: ' + message);
-        }
-    });
-};
 
 // Cleanup old units we are no longer receiving data for and add update others
 Markers.prototype.processPositionalUpdate = function(replayEvent, eventValue, type) {
@@ -609,10 +589,6 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
 
     var markerId = (isPlayer)? data.id : this.cleanUnitName(unit);
 
-    // Show height markers on AI aircraft, but we need a name for it to display nicely
-    if (icon == "iconPlane" && !isPlayer)
-        label = 'Jet';
-
     // If this is a vehicle and we have crew lets add them to the label
     if (isVehicle && crew.length && crew.length > 1)
         label += this.addCrewCargoToLabel('crew', crew, data.id);
@@ -629,7 +605,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
         iconSize: [30, 30],
         iconAnchor: [15, 15],
         className: 'unit-marker unit-marker__class--' + iconClass + ' unit-marker--' + icon + ' unit-marker__id--' + markerId,
-        iconUrl: webPath + '/assets/images/map/markers/' + iconType + '/'
+        iconUrl: 'https://r3icons.titanmods.xyz/'
     };
 
     // This marker isn't on the map yet
@@ -679,7 +655,7 @@ Markers.prototype.add = function(unit, data, type, timeUpdated) {
 
         if (typeof this.list[unit].unconscious !== "undefined" && this.list[unit].unconscious) {
 
-            var iconUrl = webPath + '/assets/images/map/markers/' + iconType + '/iconMan-unconcious.png';
+            var iconUrl = iconMarkerDefaults.iconUrl + 'iconMan-unconcious.png';
 
             var mapIcon = L.icon(_.extend(iconMarkerDefaults, {
                 iconUrl: iconUrl,
@@ -795,11 +771,8 @@ Markers.prototype.getIconWithFaction = function(isVehicle, iconPath, defaultIcon
 
     var icon = defaultIcon + '.png';
 
-    if (typeof iconPath !== "undefined")
-        iconPath = iconPath.toLowerCase();
-
-    if (isVehicle && typeof this.vehicleIcons[iconPath] !== "undefined")
-        icon = 'mod-specific' + this.vehicleIcons[iconPath];
+    if (typeof iconPath !== "undefined" && typeof this.icons[iconPath.toLowerCase()] !== "undefined")
+        icon = this.icons[iconPath.toLowerCase()] + '.png';
 
     // Add our faction to the icon name so we get a colour specific version
     return icon.replace(".png", "-" + faction.name + ".png");
@@ -1346,7 +1319,7 @@ Players.prototype.updateList = function(forceUpdate) {
 
                 var playerData = self.getInfo(playerId);
 
-                var imgUrl = webPath + '/assets/images/map/markers/blank.png';
+                var imgUrl = 'https://r3icons.titanmods.xyz/blank.png';
 
                 //console.log('p', playerData);
                 //console.log(markers.list);
@@ -1497,7 +1470,7 @@ Poi.prototype.add = function() {
             }
 
             var poiIcon = L.icon({
-                iconUrl: webPath + '/assets/images/map/markers/poi/' + poiIconName + '.png',
+                iconUrl: 'https://r3icons.titanmods.xyz/' + poiIconName + '.png',
                 iconSize: iconSize,
                 iconAnchor: iconAnchor,
                 className: 'poi-image--' + poi.type

@@ -9,7 +9,7 @@ if(!isset($_GET['replayId']))
     $util->redirect301(WEB_PATH);
 
 // Get info about our mission
-$replayDetails = $replays->fetchOne($_GET['replayId']);
+$replayDetails = $replays->fetchOne($_GET['replayId'], isset($_GET['force']));
 
 if(!$replayDetails)
     $util->redirect301(WEB_PATH . '?not-found');
@@ -28,6 +28,8 @@ $mappingConfig = file_get_contents('https://r3tiles-a.titanmods.xyz/config.json'
 $playerList = $replays->fetchReplayPlayers($_GET['replayId'], $replayDetails->playerList);
 
 $sharedPresets = $_GET;
+
+$icons = $replays->getIcons();
 
 // Do we have a cached version of this playback?
 $cacheAvailable = $replays->isCachedVersionAvailable($replayDetails->id);

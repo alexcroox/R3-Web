@@ -42,7 +42,9 @@ class Replays {
         return $query->fetchAll();
     }
 
-    public function fetchOne($replayId) {
+    public function fetchOne($replayId, $forceHidden = FALSE) {
+
+        $hiddenClause = (!$forceHidden)? 'hidden = 0 AND' : '';
 
         $query = $this->_db->prepare("
             SELECT
@@ -51,7 +53,7 @@ class Replays {
             FROM
                 replays
             WHERE
-                hidden = 0 AND
+                " . $hiddenClause . "
                 id = :replayId
             LIMIT 1
         ");
@@ -268,6 +270,11 @@ class Replays {
 
         // Pass existing replay data so we don't make another expensive db call
         return $this->getHtmlReplaysForPlayer($_COOKIE['playerId'], $replayData);
+    }
+
+    public function getIcons() {
+
+        return file_get_contents('https://r3icons.titanmods.xyz/config.json');
     }
 
     public function getHtmlReplaysForPlayer($playerId, $replayData = FALSE) {

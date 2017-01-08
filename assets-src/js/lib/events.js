@@ -142,7 +142,7 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 // Killed or unconscious
 Events.prototype.hit = function(hitType, eventData) {
 
-    //console.log(hitType, eventData.victim);
+    console.log(hitType, eventData.victim);
 
     var victim = eventData.victim;
     var attacker = eventData.attacker;
@@ -186,6 +186,8 @@ Events.prototype.hit = function(hitType, eventData) {
             }, 1000);
         }
     }
+
+    console.log(markers.list[victim.unit]);
 
     // Lets mark the unit as unconscious so we can change the colour of their icon
     if(typeof markers.list[victim.unit] !== "undefined") {
