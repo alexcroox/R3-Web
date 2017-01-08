@@ -455,7 +455,7 @@ function Markers() {
 
     this.list = {};
     this.matchedIcons = {};
-    this.icons = icons;
+    this.icons = (typeof icons !== "undefined") ? icons : {};
     this.maxZoomLevelForIndividualPlayerLabels = 7;
     this.eventGroups = {
         'positions_vehicles': {},
