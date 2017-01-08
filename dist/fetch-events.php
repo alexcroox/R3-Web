@@ -8,7 +8,7 @@ $replays = Replays::Instance();
 if(!isset($_POST['id']))
     die(http_response_code(400));
 
-$replays->fetchEvents($_POST['id']);
+$successful = $replays->fetchEvents($_POST['id']);
 
-die(json_encode(array('id' => $_POST['id'])));
+die(json_encode(array('id' => $_POST['id'], 'success' => $successful)));
 

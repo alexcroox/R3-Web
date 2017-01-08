@@ -37,6 +37,9 @@ PlayBack.prototype.fetch = function(cacheAvailable) {
 
     var self = this;
 
+    if(!cacheAvailable)
+        $('.timeline').addClass('timeline--caching');
+
     $.ajax({
         url: eventSourceUrl,
         type: fetchType,

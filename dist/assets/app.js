@@ -1065,6 +1065,9 @@ PlayBack.prototype.fetch = function(cacheAvailable) {
 
     var self = this;
 
+    if(!cacheAvailable)
+        $('.timeline').addClass('timeline--caching');
+
     $.ajax({
         url: eventSourceUrl,
         type: fetchType,
@@ -1694,6 +1697,7 @@ Timeline.prototype.setupScrubber = function(eventList) {
 
     $('.timeline__silder__value').html(0);
     $('.timeline').removeClass('timeline--loading');
+    $('.timeline').removeClass('timeline--caching');
 
     this.timePointer = this.timeBounds.min;
 

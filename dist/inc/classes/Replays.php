@@ -166,14 +166,13 @@ class Replays {
 
     public function fetchEvents($replayId) {
 
-        //$query = $this->_db->prepare("SELECT count(*) totalEvents FROM events WHERE replayId = :replayId");
-        //$query->execute(array('replayId' => $replayId));
+        // We need to use unbuffered queries to avoid memory issues loading a large number
+        // of mission events into memory
+        $unbuff = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASSWORD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+        $unbuff->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+        $unbuff->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
 
-        //$result = $query->fetchOne();
-
-        //if($result->totalEvents > 15000)
-
-        $query = $this->_db->prepare("
+        $query = $unbuff->prepare("
             SELECT
                 playerId, type, value, missionTime
             FROM
@@ -184,34 +183,38 @@ class Replays {
 
         $query->execute(array('replayId' => $replayId));
 
-        $data = $query->fetchAll();
-
         $chunkedData = array();
         $flushCount = 0;
 
-        // Cache our events for the next person
-        $this->saveEventCache($replayId, '[', -1, TRUE);
+        if($query) {
 
-        // Lets loop through our data and save in chunks to the flat file to avoid
-        // out of memory issues on json_encode
-        foreach($data as $row) {
+            // Cache our events for the next person
+            $this->saveEventCache($replayId, '[', -1, TRUE);
 
-            $chunkedData[] = $row;
+            while ($row = $query->fetch()) {
 
-            if(count($chunkedData) > 5000) {
-                $this->saveEventCache($replayId, $chunkedData, $flushCount, FALSE);
-                $chunkedData = array();
-                $flushCount++;
+                // Lets loop through our data and save in chunks to the flat file to avoid
+                // out of memory issues on json_encode and to avoid thrashing the disk I/O
+
+                $chunkedData[] = $row;
+
+                if(count($chunkedData) > 5000) {
+                    $this->saveEventCache($replayId, $chunkedData, $flushCount, FALSE);
+                    $chunkedData = array();
+                    $flushCount++;
+                }
             }
+
+            // Any more data left?
+            if(count($chunkedData))
+                $this->saveEventCache($replayId, $chunkedData, $flushCount, FALSE);
+
+            $this->saveEventCache($replayId, ']', -1, TRUE);
+
+            return TRUE;
+        } else {
+            return FALSE;
         }
-
-        // Any more data left?
-        if(count($chunkedData))
-            $this->saveEventCache($replayId, $chunkedData, $flushCount, FALSE);
-
-        $this->saveEventCache($replayId, ']', -1, TRUE);
-
-        return TRUE;
     }
 
     public function fetchReplayPlayers($replayId, $playerList) {

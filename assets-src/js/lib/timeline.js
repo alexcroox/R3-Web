@@ -42,6 +42,7 @@ Timeline.prototype.setupScrubber = function(eventList) {
 
     $('.timeline__silder__value').html(0);
     $('.timeline').removeClass('timeline--loading');
+    $('.timeline').removeClass('timeline--caching');
 
     this.timePointer = this.timeBounds.min;
 
