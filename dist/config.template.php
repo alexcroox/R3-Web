@@ -15,6 +15,10 @@ define('DB_NAME', 'aar');
 // Note the lack of trailing slash
 define('WEB_PATH', 'http://r3.local');
 
+// Locale settings, the timezone should match your database server
+date_default_timezone_set('Europe/London');
+define('US_DATE_FORMAT', FALSE);
+
 define('FAVICON', WEB_PATH . '/assets/images/brand/favicon.png');
 
 /*
@@ -45,11 +49,6 @@ define('MIN_PLAYER_COUNT', 5);
     the enemy unit positions
  */
 define('MINUTES_MISSION_END_BLOCK', 2);
-
-// Locale settings
-date_default_timezone_set('Europe/London');
-define('US_DATE_FORMAT', FALSE);
-
 
 // Set this to FALSE if you are deploying
 // to production server
