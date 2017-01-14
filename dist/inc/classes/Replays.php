@@ -277,6 +277,11 @@ class Replays {
         return file_get_contents('https://r3icons.titanmods.xyz/config.json');
     }
 
+    public function getObjectiveMarkers() {
+
+        return file_get_contents('https://r3icons.titanmods.xyz/markers.json');
+    }
+
     public function getHtmlReplaysForPlayer($playerId, $replayData = FALSE) {
 
         if(!$replayData)
