@@ -3,6 +3,7 @@ function ObjectiveMarkers() {
     this.supportedList = (typeof objectiveMarkersConfig !== "undefined") ? objectiveMarkersConfig : {};
     this.ready = false;
     this.layer = null;
+    this.validMarkerCount = 0;
 };
 
 ObjectiveMarkers.prototype.init = function(terrainName) {
@@ -40,12 +41,11 @@ ObjectiveMarkers.prototype.setupInteractionHandlers = function() {
 ObjectiveMarkers.prototype.add = function(markerData) {
 
     var self = this;
+    var newLayer = false;
 
     if(!this.layer) {
         this.layer = new L.featureGroup([]);
         this.layer.addTo(map.handler);
-
-        $('.hide-markers, .hide-markers__ignore').show();
     }
 
     async.forEachOf(markerData, function(singleMarker, key, callback) {
@@ -56,6 +56,9 @@ ObjectiveMarkers.prototype.add = function(markerData) {
             console.warn('Unsupported marker', singleMarker);
             return callback();
         }
+
+        if(self.validMarkerCount == 0)
+            newLayer = true;
 
         var offset = [0, 0];
         var iconSize = [30, 30];
@@ -83,6 +86,9 @@ ObjectiveMarkers.prototype.add = function(markerData) {
 
         callback();
     }, function(err) {
+
+        if(newLayer)
+            $('.hide-markers, .hide-markers__ignore').show();
 
     });
 };
