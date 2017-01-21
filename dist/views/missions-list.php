@@ -23,6 +23,7 @@
         <div class="feedback feedback--error">
             <i class="fa fa-exclamation fa-pad-right" aria-hidden="true"></i>
             The <?php echo $_GET['terrain']; ?> terrain is missing!
+            <a href="https://github.com/alexcroox/R3-Web/wiki/Adding-new-terrains" target="_blank" class="text-link text-link--with-underline">Why don't you add it?</a>
         </div>
     <?php endif; ?>
 
