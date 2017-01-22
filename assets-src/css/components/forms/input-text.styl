@@ -1,0 +1,58 @@
+inputText()
+    border 1px solid $borderPrimaryColor
+    border-radius $borderRadiusSmall
+    width 100%
+    padding 15px 20px
+    background #FFF
+    buttonLabelsMetaContent()
+    font-weight 400
+
+.input-text
+    inputText()
+
+.input-text--with-icon
+    position relative
+
+.input-text--short
+    width 400px
+
+.input-text--shorter
+    width 250px
+
+.input-text--tiny
+    width 50px
+
+.input-text--prominent
+    font-size 18px
+    font-weight 700
+
+.input-text--with-icon .input-text
+    z-index 0
+    position relative
+    padding-left 45px
+
+.input-text__icon,
+.input-text--with-icon .fa
+    z-index 1
+    position absolute
+    left 20px
+    top 17px
+    font-size 15px
+    color $bodyTextSecondaryColor
+
+.input-text--small-font .input-text
+    font-size 14px
+    padding 10px 15px
+
+.input-text--small-font .input-text
+    padding 10px 15px 10px 40px
+
+.input-text--small-font .input-text--with-icon .fa,
+.input-text--small-font .input-text__icon
+    left 15px
+    top 13px
+
+// Horrible hack to overide chrome auto fill yellow background
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill
+    -webkit-box-shadow 0 0 0 1000px white inset !important
+    color $bodyTextPrimaryColor !important

@@ -7,7 +7,8 @@ var replayList = new ReplayList(),
     map = new Map(),
     timeline = new Timeline(),
     notifications = new Notifications(),
-    modal = new Modal();
+    modal = new Modal(),
+    admin = new Admin();
 
 $('document').ready(function() {
 
@@ -22,4 +23,10 @@ $('document').ready(function() {
         playBack.init(replayDetails, sharedPresets, cacheAvailable);
         notifications.init();
     }
+
+    $('body').on('click', '.js-help', function(e) {
+        e.preventDefault();
+
+        modal.show('modal__help');
+    });
 });

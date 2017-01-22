@@ -34,9 +34,21 @@
 </head>
 
 <body class="page-<?php echo $page;?>">
-    <header>
+    <header class="clearfix">
         <h1>
-            <a href="#" class="brand-logo"><?php echo UNIT_NAME . ' Mission List'; ?></a>
+            <a href="<?php echo WEB_PATH ?>" class="brand-logo"><?php echo $headerTitle ?></a>
         </h1>
+
+        <div class="header__right">
+            <a href="<?php echo WEB_PATH . '/admin' ?>" class="header__right__item">
+                <i class="fa fa-lock" aria-hidden="true"></i>
+                Admin
+            </a>
+
+            <a href="#" class="header__right__item js-help">
+                <i class="fa fa-question-circle" aria-hidden="true"></i>
+                Help
+            </a>
+        </div>
     </header>
 
