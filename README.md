@@ -35,3 +35,7 @@ R3 supports over [70 popular terrains](https://titanmods.xyz/r3/tiler). Just pla
 ### Adding new vehicle icons
 
 Is a modded vehicle using the vanilla map icon instead of the correct shape and outline for that mod? [Submit new vehicle icons here](https://titanmods.xyz/r3/tiler/icons), and every user of R3 will get access to it! [instructions here](https://github.com/alexcroox/R3-Web/wiki/Adding-new-icons)
+
+### Getting help
+
+You can find me (Titan) on [ACE3 Slack](https://slackin.ace3mod.com/)
