@@ -126,10 +126,12 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
             case "incoming_missile":
 
                 self.projectileLaunch(eventValue);
+
                 break;
 
             case "markers":
 
+                objectiveMarkers.add(eventValue);
 
                 break;
 

@@ -17,6 +17,6 @@
     </script>
 
     <script src="<?php echo WEB_PATH; ?>/assets/app-third-party.min.js"></script>
-    <script src="<?php echo WEB_PATH; ?>/assets/<?php echo (DEBUG)? 'app.js' : 'app.min.js'; ?>"></script>
+    <script src="<?php echo WEB_PATH; ?>/assets/<?php echo (DEBUG)? 'app.js' : 'app.min.js'; ?>?<?php echo APP_VERSION ?>"></script>
 </body>
 </html>

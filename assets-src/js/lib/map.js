@@ -74,6 +74,7 @@ Map.prototype.render = function(cb) {
     this.setupInteractionHandlers();
 
     poi.init(this.terrain);
+    objectiveMarkers.init();
 
     cb(false);
 };

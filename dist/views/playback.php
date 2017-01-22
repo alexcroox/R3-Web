@@ -8,11 +8,18 @@
         </a>
 
         <a href="#" class="player-list__toggle-sticky" title="Toggle player list auto hide">
-            <i class="fa fa-low-vision" aria-hidden="true"></i>
+            <i class="fa fa-thumb-tack" aria-hidden="true"></i>
         </a>
 
         <div class="player-list__content"></div>
     </div>
+
+    <a href="#" class="hide-markers">
+        <i class="fa fa-map-signs" aria-hidden="true"></i>
+        <span>Hide editor markers</span>
+    </a>
+
+    <a href="#" class="hide-markers__ignore"><i class="fa fa-times" aria-hidden="true"></i></a>
 
     <div class="timeline timeline--loading">
 
@@ -43,6 +50,7 @@
 <?php require_once(APP_PATH . '/views/templates/modals/share.php'); ?>
 
 <script>
+    var objectiveMarkersConfig = <?php echo $objectiveMarkersConfig ?>;
     var icons = <?php echo $icons ?>;
     var replayDetails = <?php echo json_encode($replayDetails); ?>;
     var sharedPresets = <?php echo strip_tags(json_encode($sharedPresets)); ?>;

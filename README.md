@@ -30,8 +30,12 @@ _Note:_ R3 is in heavy development, it's not setup for auto updating or complete
 
 ### Adding new Terrains
 
-R3 supports over [45 popular terrains](https://titanmods.xyz/r3/tiler). Just played a mission on a map that R3 doesn't yet support? Feel free to add it yourself and let every user of R3 benefit from it! Follow the [simple instructions here](https://github.com/alexcroox/R3-Web/wiki/Adding-new-terrains)
+R3 supports over [70 popular terrains](https://titanmods.xyz/r3/tiler). Just played a mission on a map that R3 doesn't yet support? Feel free to add it yourself and let every user of R3 benefit from it! Follow the [simple instructions here](https://github.com/alexcroox/R3-Web/wiki/Adding-new-terrains)
 
 ### Adding new vehicle icons
 
-Is a modded vehicle using the vanilla map icon instead of the correct shape and outline for that mod? [Submit new vehicle icons here](https://titanmods.xyz/r3/tiler/icons), and every user of R3 will get access to it! [instructions here](https://github.com/alexcroox/R3-Web/wiki/Adding-new-icons)
+Is a modded vehicle using the vanilla map icon instead of the correct shape and outline for that mod? [Submit new vehicle icons here](https://titanmods.xyz/r3/tiler/icons), and every user of R3 will get access to it! Follow the [simple instructions here](https://github.com/alexcroox/R3-Web/wiki/Adding-new-icons)
+
+### Getting help
+
+You can find me (Titan) on [ACE3 Slack](https://slackin.ace3mod.com/) or feel free to create an issue here.

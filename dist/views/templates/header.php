@@ -28,7 +28,7 @@
     <meta name="description" content="<?php echo $metaDescription; ?>">
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo WEB_PATH; ?>/assets/app.css">
+    <link rel="stylesheet" href="<?php echo WEB_PATH; ?>/assets/app.css?<?php echo APP_VERSION ?>">
 
     <link rel="shortcut icon" href="<?php echo FAVICON; ?>">
 </head>

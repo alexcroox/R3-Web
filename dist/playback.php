@@ -31,6 +31,7 @@ $playerList = $replays->fetchReplayPlayers($_GET['replayId'], $replayDetails->pl
 $sharedPresets = $_GET;
 
 $icons = $replays->getIcons();
+$objectiveMarkersConfig = $replays->getObjectiveMarkers();
 
 // Do we have a cached version of this playback?
 $cacheAvailable = $replays->isCachedVersionAvailable($replayDetails->id);
