@@ -7,6 +7,7 @@ $util = Util::Instance();
 
 $title = 'Mission replay list';
 $metaDescription = 'View after action replays of ' . UNIT_NAME . ' missions';
+$headerTitle = UNIT_NAME . ' Mission List';
 $page = 'missions-list';
 
 $replays->updateMeta();

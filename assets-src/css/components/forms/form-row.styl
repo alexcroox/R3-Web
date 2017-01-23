@@ -1,0 +1,59 @@
+.form-row__container--small
+    width 50%
+
+    +below(800px)
+        width 100%
+
+.form-row__container:not(:first-child):not(.form-row__container--inline)
+    margin-top 35px
+
+.form-row__container--small-top-margin:not(:first-child)
+    margin-top 15px
+
+.form-row__input-wrapper
+    position relative
+
+.form-row__input-wrapper:after
+    position absolute
+    right 20px
+    top 50%
+    transform translateY(-50%)
+    font-family FontAwesome
+    font-size 18px
+    font-weight 400
+
+.form-row--errors
+    input
+        border-color $errorPrimaryColor
+        color $errorSecondaryColor
+
+    .form-row__input-wrapper:after
+        content "\f12a"
+        color $errorPrimaryColor
+
+.form-row--success
+    input
+        border-color $successPrimaryColor
+        color $successSecondaryColor
+
+    .form-row__input-wrapper:after
+        content "\f00c"
+        color $successPrimaryColor
+
+.form-row__message
+    margin-top 10px
+    text-transform uppercase
+    letter-spacing 0.01em
+    color $errorSecondaryColor
+    font-weight 700
+    font-size 12px
+    line-height 15px
+
+
+.form-row__container--half
+    width 49%
+    display inline-block
+
+.form-row__container--inline
+    display inline-block
+    margin-right 40px

@@ -41,3 +41,8 @@ Is a modded vehicle using the vanilla map icon instead of the correct shape and 
 ### Getting help
 
 You can find me (Titan) on [ACE3 Slack](https://slackin.ace3mod.com/) or feel free to create an issue here.
+
+### Why not x framework/language
+
+In an ideal world I'd be using web sockets and node to stream from the game server straight to a flat json file, and to the browser. 
+However the goal is to allow Arma 3 server admins to be able to run this and contribute. PHP + MySQL is the most common setup these administrators (with potentially limited sysadmin knowledge or sudo access) will have so it is the correct choice, as limiting as that can be!

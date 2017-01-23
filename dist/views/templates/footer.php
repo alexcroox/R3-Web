@@ -1,3 +1,5 @@
+    <?php require_once(APP_PATH . '/views/templates/modals/help.php'); ?>
+
     <script type="text/javascript">
         var webPath = '<?php echo WEB_PATH; ?>';
         var configDefaults = { speed: <?php echo DEFAULT_PLAYBACK_SPEED; ?> };

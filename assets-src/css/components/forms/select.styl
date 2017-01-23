@@ -1,0 +1,103 @@
+// Lots of horrible overriding over the libraries css :'(
+
+.select--dynamic--single
+    opacity 0
+    font-size 32px
+
+.select--dynamic--tags
+    width 100%
+
+.select--dynamic--short
+    width 400px
+
+.select2-container--default .select2-selection--multiple, .select2-container--default .select2-selection--single
+    background #FFF
+    border-radius $borderRadiusSmall
+    border-color $borderPrimaryColor
+    box-shadow none
+
+//.select2-container--classic .select2-selection--single .select2-selection__arrow b, .select2-container--default .select2-selection--single .select2-selection__arrow b
+
+.select2-container--default .select2-selection--single .select2-selection__rendered
+    padding 10px 40px 10px 20px
+
+.select2-container .select2-selection--single
+    height auto
+
+.select2-container--default .select2-selection--single .select2-selection__arrow
+    right 8px
+    top 50%
+    transform translateY(-50%)
+
+.select2-dropdown
+    border-color $borderPrimaryColor
+
+.select2-container--default .select2-search--dropdown .select2-search__field,
+.select--dynamic--tags + .select2-container--default .select2-search--inline .select2-search__field
+    inputText()
+    border none
+    border-radius 0
+    padding 10px 15px 10px 35px
+    position relative
+    z-index 0
+
+.select--dynamic--tags + .select2-container--default .select2-search--inline .select2-search__field
+    padding-left 15px
+
+.select2-search--dropdown
+    &:before
+        content '\f002'
+        font-family FontAwesome
+        color $bodyTextSecondaryColor
+        position absolute
+        font-size 17px
+        left 15px
+        top 14px
+        z-index 1
+
+.select2-container--default .select2-results__option--highlighted[aria-selected]
+    background-color $buttonPrimaryColor
+
+.select2-container--default.select2-container--focus .select2-selection--multiple
+    border-color $buttonPrimaryColor
+
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice
+    background $secondaryHighlightColor
+    color #FFF
+    padding 8px 10px 9px
+    border 1px solid $secondaryHighlightColor
+    border-radius $borderRadiusSmall
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove
+    color $secondaryHighlightColor
+    position relative
+    width 13px
+    margin-right 5px
+
+    &:before
+        content '\f00d'
+        font-family FontAwesome
+        color #FFF
+        position absolute
+        font-size 14px
+        left 0
+        top 0
+        z-index 1
+
+.select2-container--hide-dropdown .select2-selection__arrow
+    display none
+
+.select2-container--hide-dropdown .fa.select__loader
+    display block
+
+.fa.select__loader
+    position absolute
+    display none
+    right 7px
+    top 17px
+    font-size 16px
+    z-index 2
+    color $bodyTextSecondaryColor
+
+
