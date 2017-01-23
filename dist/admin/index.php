@@ -19,7 +19,15 @@ if(isset($_SESSION['admin'])) {
 
 } else {
 
-    $page = 'admin/admin-login';
+    if(isset($_POST['admin-password'])) {
+
+        if($_POST['admin-password'] == ADMIN_PASSWORD)
+            $_SESSION['admin'] = TRUE;
+        else
+            $page = 'admin/admin-login';
+    } else {
+        $page = 'admin/admin-login';
+    }
 }
 
 require_once(APP_PATH . '/views/templates/header.php');

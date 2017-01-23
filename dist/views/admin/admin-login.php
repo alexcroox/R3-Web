@@ -1,8 +1,14 @@
 <div class="container--center container--box">
-    <label>Admin password</label>
-    <div class="text-input--with-icon text-input--with-icon--unfocused">
-        <i class="fa fa-lock" aria-hidden="true"></i>
-        <input class="text-input" type="password" name="admin-password" placeholder="Search missions">
-    </div>
-    <button class="button">Login</button>
+    <?php if(isset($_POST)): ?>
+        <div class="feedback feedback--error margin__bottom--medium">Access denied</div>
+    <?php endif; ?>
+
+    <form method="post">
+        <label>Admin password</label>
+        <div class="input-text--with-icon">
+            <i class="fa fa-lock" aria-hidden="true"></i>
+            <input class="input-text" type="password" name="admin-password" placeholder="Admin password" autofocus>
+        </div>
+        <button class="button margin__top--medium">Login</button>
+    </form>
 </div>

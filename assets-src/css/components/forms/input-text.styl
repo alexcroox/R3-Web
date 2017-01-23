@@ -10,6 +10,9 @@ inputText()
 .input-text
     inputText()
 
+.input-text:focus
+    border-color $buttonPrimaryColor
+
 .input-text--with-icon
     position relative
 
@@ -19,12 +22,22 @@ inputText()
 .input-text--shorter
     width 250px
 
+.input-text--shortest
+    width 150px
+
 .input-text--tiny
     width 50px
 
 .input-text--prominent
     font-size 18px
     font-weight 700
+
+.input-text--compact
+    padding 9px 20px 8px
+
+.input-text--inline
+    display inline-block
+    vertical-align middle
 
 .input-text--with-icon .input-text
     z-index 0
@@ -37,8 +50,8 @@ inputText()
     position absolute
     left 20px
     top 17px
-    font-size 15px
-    color $secondaryBodyColor
+    font-size 20px
+    color $bodyTextSecondaryColor
 
 .input-text--small-font .input-text
     font-size 14px
@@ -52,7 +65,11 @@ inputText()
     left 15px
     top 13px
 
+.form-row__container--error .input-text
+    border-color $errorPrimaryColor
+
+
 // Horrible hack to overide chrome auto fill yellow background
 input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill
     -webkit-box-shadow 0 0 0 1000px white inset !important
-    color $mainBodyColor !important
+    color $bodyTextPrimaryColor !important

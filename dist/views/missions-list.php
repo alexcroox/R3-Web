@@ -6,21 +6,21 @@
 <div class="container">
 
     <?php if(isset($_GET['not-found'])): ?>
-        <div class="feedback feedback--error">
+        <div class="feedback feedback--error margin__top--medium">
             <i class="fa fa-exclamation fa-pad-right" aria-hidden="true"></i>
             That mission cannot be found
         </div>
     <?php endif; ?>
 
     <?php if(isset($_GET['not-finished'])): ?>
-        <div class="feedback feedback--error">
+        <div class="feedback feedback--error margin__top--medium">
             <i class="fa fa-exclamation fa-pad-right" aria-hidden="true"></i>
             You cannot view missions that are in progress!
         </div>
     <?php endif; ?>
 
     <?php if(isset($_GET['missing-terrain'])): ?>
-        <div class="feedback feedback--error">
+        <div class="feedback feedback--error margin__top--medium">
             <i class="fa fa-exclamation fa-pad-right" aria-hidden="true"></i>
             The <?php echo $_GET['terrain']; ?> terrain is missing!
             <a href="https://github.com/alexcroox/R3-Web/wiki/Adding-new-terrains" target="_blank" class="text-link text-link--with-underline">Why don't you add it?</a>
@@ -28,7 +28,7 @@
     <?php endif; ?>
 
     <?php if(isset($_GET['events-error'])): ?>
-        <div class="feedback feedback--error">
+        <div class="feedback feedback--error margin__top--medium">
             <i class="fa fa-exclamation fa-pad-right" aria-hidden="true"></i>
             Error generating event cache, error code <?php echo $_GET['code']; ?>, check your server error logs for more info
         </div>

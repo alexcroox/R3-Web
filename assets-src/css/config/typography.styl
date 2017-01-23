@@ -3,7 +3,7 @@ bodyFont()
     font-size 15px
     line-height 20px
     font-weight 400
-    color $mainBodyColor
+    color $bodyTextPrimaryColor
 
 headerFont()
     font-family 'Roboto', sans-serif
@@ -16,44 +16,23 @@ buttonLabelsMetaContent()
 
 metaFont()
     bodyFont()
-    color $secondaryBodyColor
+    color $bodyTextSecondaryColor
 
-body
-    bodyFont()
-    color $mainBodyColor
-
-h1()
-    headerFont()
-    font-size 32px
-    line-height 38px
-
-h1
-    h1()
-
-h2()
-    headerFont()
-    font-size 26px
-    line-height 30px
-
-h2
-    h2()
-
-h3()
-    bodyFont()
-    font-size 22px
-    line-height 25px
-    font-weight 400
+header()
+    color #556069
+    font-size 18px
+    font-weight 500
 
 h3
-    h3()
+    header()
 
-h4()
-    headerFont()
-    font-size 18px
-    line-height 20px
+h1
+    header()
+    font-size 25px
+    font-weight 700
 
-h4
-    h4()
+    .fa
+        margin-right 5px
 
 .font-weight--regular
     font-weight 500
@@ -67,3 +46,4 @@ h4
 
 strong
     font-weight 700
+
