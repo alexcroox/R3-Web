@@ -17,6 +17,8 @@ var
     del = require('del'),
     inlineCss = require('gulp-inline-css'),
     concat = require('gulp-concat'),
+    prompt = require('gulp-prompt'),
+    zip = require('gulp-zip'),
     fs = require('fs'),
     paths = {};
 
@@ -106,6 +108,23 @@ gulp.task('default', ['all'], function() {
     gulp.watch(['!' + paths.js + 'third-party/*', paths.js + '/**/*'], ['js']);
     gulp.watch([paths.js + '/third-party/**/*'], ['js-third-party']);
     gulp.watch([paths.images + '/**/*'], ['images']);
+});
+
+// Create a release for github
+gulp.task('release', ['all'], function() {
+
+    gulp.src('gulpfile.js')
+        .pipe(prompt.prompt({
+            type: 'input',
+            name: 'version',
+            message: 'What version is this release?'
+        }, function(res){
+            console.log('version', res.version);
+
+            return gulp.src(['dist/**/*', 'dist/.htaccess', '!dist/config.php', '!dist/cache/events/*.json', '!dist/.DS_Store'])
+                .pipe(zip('r3-' + res.version + '.zip'))
+                .pipe(gulp.dest('release'));
+        }));
 });
 
 // This is the same as the default task but it doesn't have any watchers

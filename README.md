@@ -28,7 +28,7 @@ _Note:_ R3 is in heavy development, it's not setup for auto updating or complete
 1. Follow the step by step [instructions on the addon repo](https://github.com/alexcroox/R3) and ensure you have mission event data in your database
 2. Download the [latest web release](https://github.com/alexcroox/R3-Web/releases/latest)
 3. Rename `config.template.php` to `config.php`, pay close attention to `DB_*`, `WEB_PATH` and timezone configurations
-4. Upload the files to your web server which matches the URL in `WEB_PATH` in `config.php`
+4. Upload the files to your web server which matches the URL in `WEB_PATH` in `config.php`. Take note of `/.htaccess` in the download that may be hidden on your system before you upload.
 
 ### Adding new Terrains
 
