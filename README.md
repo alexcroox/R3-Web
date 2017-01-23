@@ -11,7 +11,9 @@
     </a>
 </p>
 
-Website component for the [game server side addon](https://github.com/alexcroox/R3)
+Website component for the [game server side addon](https://github.com/alexcroox/R3) for capturing unit movement and behaviour to a database for After Action Replays online.
+
+No modifications to your missions required, nothing for clients to download.
 
 Being built along side the [addon component](https://github.com/alexcroox/R3) and [automated tiler](https://titanmods.xyz/r3/tiler)
 
