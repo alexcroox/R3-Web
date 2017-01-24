@@ -18,4 +18,4 @@ spl_autoload_register(function ($className) {
     include 'classes/' . $className . '.php';
 });
 
-define('APP_VERSION', '0.11.1');
+define('APP_VERSION', '0.11.2');

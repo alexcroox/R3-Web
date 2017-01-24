@@ -343,7 +343,7 @@ Events.prototype.projectileExplode = function(eventData) {
     if(projectileType == "grenade") {
 
         var explodePulse = L.circle(map.rc.unproject([explodedPos[0], explodedPos[1]]), 15, {
-            weight: 5,
+            weight: 1,
             color: 'black',
             opacity: 0.6,
             fill: true,
@@ -373,7 +373,7 @@ Events.prototype.projectileExplode = function(eventData) {
         console.log(ammoName, color);
 
         var smokeCircle = L.circle(map.rc.unproject([explodedPos[0], explodedPos[1]]), 50, {
-            weight: 20,
+            weight: 40,
             color: color,
             opacity: 0.5,
             className: 'projectile-smoke',
