@@ -168,6 +168,12 @@ Events.prototype.actionType = function(type, replayEvent, eventValue) {
 
                 break;
 
+            case "projectile":
+
+                self.projectileExplode(eventValue);
+
+                break;
+
             case "markers":
 
                 objectiveMarkers.add(eventValue);
@@ -298,7 +304,7 @@ Events.prototype.projectileLaunch = function(eventData) {
 
         var projectileIcon = L.marker(map.rc.unproject([launchPos[0], launchPos[1]]), {
             icon: L.icon({
-                iconUrl: webPath + '/assets/images/map/markers/' + attacker.ammoType.toLowerCase() + '.png',
+                iconUrl: 'https://r3icons.titanmods.xyz/' + attacker.ammoType.toLowerCase() + '.png',
                 iconSize: [30, 30],
                 iconAnchor: [15, 15],
                 className: 'projectile-' + attacker.ammoType.toLowerCase()
@@ -317,6 +323,67 @@ Events.prototype.projectileLaunch = function(eventData) {
 
     if (typeof playerInfo !== "undefined")
         notifications.info(attacker.ammoType + ' Launch at ' + playerInfo.name);
+};
+
+// Pulse a large circle around the attacker and animate a smoke or explosion where the projectile lands
+Events.prototype.projectileExplode = function(eventData) {
+
+    var self = this;
+
+    var unit = eventData.unit;
+    var projectileType = eventData.type;
+    var ammoName = eventData.ammo.toLowerCase();
+    var explodedPos = map.gamePointToMapPoint(eventData.position[0], eventData.position[1]);
+    var unitMarker = markers.list[unit];
+
+    var sourcePos = (typeof unitMarker !== "undefined") ? unitMarker.getLatLng() : false;
+
+    var playerInfo = players.getInfo(eventData.id);
+
+    if(projectileType == "grenade") {
+
+        var explodePulse = L.circle(map.rc.unproject([explodedPos[0], explodedPos[1]]), 15, {
+            weight: 5,
+            color: 'black',
+            opacity: 0.6,
+            fill: true,
+            className: 'projectile-grenade',
+            clickable: false
+        }).addTo(map.handler);
+
+        setTimeout(function() {
+            map.handler.removeLayer(explodePulse);
+        }, 1000);
+    } else {
+
+        var color = '#CCC';
+
+        if(ammoName.indexOf('purple') > -1)
+            color = 'purple';
+
+        if(ammoName.indexOf('green') > -1)
+            color = 'green';
+
+        if(ammoName.indexOf('red') > -1)
+            color = 'red';
+
+        if(ammoName.indexOf('blue') > -1)
+            color = 'blue';
+
+        console.log(ammoName, color);
+
+        var smokeCircle = L.circle(map.rc.unproject([explodedPos[0], explodedPos[1]]), 50, {
+            weight: 20,
+            color: color,
+            opacity: 0.5,
+            className: 'projectile-smoke',
+            clickable: false
+        }).addTo(map.handler);
+
+        setTimeout(function() {
+            map.handler.removeLayer(smokeCircle);
+        }, 5000);
+    }
 };
 
 function Map() {

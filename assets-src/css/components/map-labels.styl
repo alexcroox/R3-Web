@@ -117,8 +117,36 @@
     100%
         transform scale(0)
 
+.projectile-grenade
+    visibility hidden
+    animation grenadeExplode 1s
+    animation-timing-function ease-in-out
+    transform-origin 50% 50%
+
+@keyframes grenadeExplode
+    0%
+        visibility visible
+        transform scale(0)
+    50%
+        transform scale(5)
+    100%
+        transform scale(0)
+
+.projectile-smoke
+    animation smoke 5s
+    animation-timing-function ease-in-out
+
+@keyframes smoke
+    0%
+        opacity 0
+    50%
+        opacity 1
+    100%
+        opacity 0
+
 .projectile-missile
 .projectile-rocket
+.projectile-grenade
     transition all 0.7s
 
 .leaflet-control-zoom
