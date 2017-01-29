@@ -37,6 +37,8 @@ class Stats {
                 ) as lastPlayed
             FROM
                 replays r
+            WHERE
+                hidden = 0
             GROUP BY
                 r.map
             ORDER BY
