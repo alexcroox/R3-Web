@@ -1830,6 +1830,41 @@ ReplayList.prototype.setupInteractionHandlers = function() {
     });
 };
 
+function Stats() {
+
+    this.list;
+};
+
+Stats.prototype.init = function(listId) {
+
+    console.log('stats init');
+
+    this.lists = new List('stats-terrains', {
+        valueNames: [
+            'stats-list__item__map',
+            'stats-list__item__play-count',
+            'stats-list__item__last-played'
+        ],
+        searchClass: 'terrain-list__search',
+        sortClass: 'missions-list__sort',
+        listClass: 'list',
+        plugins: [ListFuzzySearch()]
+    });
+};
+
+Stats.prototype.setupInteractionHandlers = function() {
+
+    var self = this;
+
+    $('body').on('click', '.mission-list__sort', function(e) {
+
+        if($(this).hasClass('mission-list__sort--asc'))
+            $(this).removeClass('mission-list__sort--asc').addClass('mission-list__sort--desc');
+        else
+            $(this).removeClass('mission-list__sort--desc').addClass('mission-list__sort--asc');
+    });
+};
+
 // Let's show events as fast as the browser can render them to avoid choking
 // Especially useful on mobile / weaker CPUs
 window.requestAnimFrame = (function() {
@@ -2095,6 +2130,7 @@ Timeline.prototype.stopTimer = function() {
 };
 
 var replayList = new ReplayList(),
+    stats = new Stats(),
     playBack = new PlayBack(),
     events = new Events(),
     players = new Players(),
@@ -2120,6 +2156,11 @@ $('document').ready(function() {
         playBack.init(replayDetails, sharedPresets, cacheAvailable);
         notifications.init();
     }
+
+    if($('#stats-terrains').length) {
+        stats.init();
+        stats.setupInteractionHandlers();
+    };
 
     $('body').on('click', '.js-help', function(e) {
         e.preventDefault();

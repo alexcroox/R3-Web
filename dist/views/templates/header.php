@@ -40,6 +40,12 @@
         </h1>
 
         <div class="header__right">
+
+            <a href="<?php echo WEB_PATH . '/stats' ?>" class="header__right__item">
+                <i class="fa fa-area-chart" aria-hidden="true"></i>
+                Stats
+            </a>
+
             <a href="<?php echo WEB_PATH . '/admin' ?>" class="header__right__item">
                 <i class="fa fa-lock" aria-hidden="true"></i>
                 Admin

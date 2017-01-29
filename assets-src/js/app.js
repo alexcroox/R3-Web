@@ -1,4 +1,5 @@
 var replayList = new ReplayList(),
+    stats = new Stats(),
     playBack = new PlayBack(),
     events = new Events(),
     players = new Players(),
@@ -24,6 +25,11 @@ $('document').ready(function() {
         playBack.init(replayDetails, sharedPresets, cacheAvailable);
         notifications.init();
     }
+
+    if($('#stats-terrains').length) {
+        stats.init();
+        stats.setupInteractionHandlers();
+    };
 
     $('body').on('click', '.js-help', function(e) {
         e.preventDefault();
