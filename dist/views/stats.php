@@ -29,7 +29,7 @@
 
                 <tr>
                     <td>
-                        <a class="text-link" target="_blank" href="https://titanmods.xyz/r3/tiler/render-test.php?terrain=<?php echo $terrain->map; ?>">
+                        <a class="text-link" target="_blank" href="https://titanmods.xyz/r3/tiler/render-test.php?terrain=<?php echo strtolower($terrain->map); ?>">
                             <span class="stats-list__item__map mission-list__item__name"><?php echo $terrain->map; ?></span>
                             <i class="fa fa-eye" aria-hidden="true"></i>
                         </a>
