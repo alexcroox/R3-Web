@@ -38,7 +38,7 @@
                 <?php if($replay->lastEventMissionTime): ?>
                     <?php echo $util->humanTimeDifference(strtotime($replay->lastEventMissionTime), strtotime($replay->dateStarted)); ?>
                 <?php else: ?>
-                    <img width="11" class="mission-list__item__in-progress-icon" src="<?php echo WEB_PATH . '/assets/images/map/markers/infantry/iconMan-civilian-trim.png'; ?>"> In progress
+                    <img width="11" class="mission-list__item__in-progress-icon" src="https://r3icons.titanmods.xyz/iconMan-civilian-trim.png"> In progress
                 <?php endif; ?>
             </td>
 
