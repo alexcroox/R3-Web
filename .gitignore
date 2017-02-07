@@ -6,3 +6,4 @@ artisan
 api/vendor
 api/public/vendor
 api/resources/views/vendor
+npm-debug.log

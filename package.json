@@ -2,6 +2,7 @@
     "name": "r3",
     "version": "1.0.0",
     "scripts": {
-        "docs": "cd api/ && php artisan swagger-lume:generate"
+        "docs": "cd api && php artisan swagger-lume:generate",
+        "dev": "cd api && php -S localhost:8000 -t public"
     }
 }
