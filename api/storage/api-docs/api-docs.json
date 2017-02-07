@@ -1,0 +1,59 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "R3 API",
+        "contact": {
+            "email": "alexcrooks@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "basePath": "/",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/missions": {
+            "get": {
+                "summary": "Finds all missions",
+                "description": "Returns all missions that aren't hidden",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of missions"
+                    }
+                }
+            }
+        },
+        "/missions/{missionId}": {
+            "get": {
+                "summary": "Find mission by Id",
+                "description": "Find mission by Id that isn't hidden",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "missionId",
+                        "in": "path",
+                        "description": "Id of mission to return",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64",
+                        "default": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of missions"
+                    },
+                    "404": {
+                        "description": "Mission not found"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {}
+}

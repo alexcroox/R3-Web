@@ -9,11 +9,18 @@ use Illuminate\Http\Request;
 
 class MissionController extends Controller
 {
+
     /**
-     * Fetch all missions
-     *
-     * @param  none
-     * @return Response
+     * @SWG\Get(
+     *     path="/missions",
+     *     summary="Finds all missions",
+     *     description="Returns all missions that aren't hidden",
+     *     produces={"application/json"},
+     *     @SWG\Response(
+     *         response=200,
+     *         description="A list of missions"
+     *     )
+     * )
      */
     public function fetchAll()
     {
@@ -27,10 +34,29 @@ class MissionController extends Controller
     }
 
     /**
-     * Retrieve the mission for the given ID.
-     *
-     * @param  int  $id
-     * @return Response
+     * @SWG\Get(
+     *     path="/missions/{missionId}",
+     *     summary="Find mission by Id",
+     *     description="Find mission by Id that isn't hidden",
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         description="Id of mission to return",
+     *         in="path",
+     *         name="missionId",
+     *         required=true,
+     *         default=1,
+     *         type="integer",
+     *         format="int64"
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="A list of missions"
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Mission not found"
+     *     )
+     * )
      */
     public function fetchOne($id)
     {

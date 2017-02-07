@@ -1,0 +1,7 @@
+{
+    "name": "r3",
+    "version": "1.0.0",
+    "scripts": {
+        "docs": "cd api/ && php artisan swagger-lume:generate"
+    }
+}

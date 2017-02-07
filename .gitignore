@@ -4,3 +4,5 @@ node_modules
 composer.lock
 artisan
 api/vendor
+api/public/vendor
+api/resources/views/vendor
