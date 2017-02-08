@@ -12,33 +12,48 @@ class MissionController extends Controller
 
     /**
      * @SWG\Get(
+     *     tags={"Missions"},
      *     path="/missions",
-     *     summary="Finds all missions",
+     *     summary="Finds all visible missions",
      *     description="Returns all missions that aren't hidden",
-     *     produces={"application/json"},
      *     @SWG\Response(
      *         response=200,
-     *         description="A list of missions"
+     *         description="A list of all visible missions"
+     *     )
+     * )
+     */
+    public function fetchAllVisible()
+    {
+
+        return Mission::where('hidden', 0)
+                        ->orderBy('id', 'desc')
+                        ->get();
+    }
+
+    /**
+     * @SWG\Get(
+     *     tags={"Missions"},
+     *     path="/missions/all",
+     *     summary="Finds all missions hidden or otherwise",
+     *     description="Returns all missions, needs web token admin auth",
+     *     @SWG\Response(
+     *         response=200,
+     *         description="A list of all missions"
      *     )
      * )
      */
     public function fetchAll()
     {
-        $missions = DB::table('missions')->orderBy('id')->get();
 
-        $missions = Mission::where('hidden', 0)
-                        ->orderBy('id', 'desc')
-                        ->get();
-
-        return response()->json($missions);
+        return Mission::orderBy('id', 'desc')->get();
     }
 
     /**
      * @SWG\Get(
+     *     tags={"Missions"},
      *     path="/missions/{missionId}",
      *     summary="Find mission by Id",
      *     description="Find mission by Id that isn't hidden",
-     *     produces={"application/json"},
      *     @SWG\Parameter(
      *         description="Id of mission to return",
      *         in="path",
@@ -50,7 +65,7 @@ class MissionController extends Controller
      *     ),
      *     @SWG\Response(
      *         response=200,
-     *         description="A list of missions"
+     *         description="A single mission"
      *     ),
      *     @SWG\Response(
      *         response="404",

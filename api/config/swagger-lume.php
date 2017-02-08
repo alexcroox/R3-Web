@@ -24,7 +24,7 @@ return [
         | Route for accessing api documentation interface
         |--------------------------------------------------------------------------
          */
-        'api' => 'api/documentation',
+        'api' => 'api-docs',
         /*
         |--------------------------------------------------------------------------
         | Route for accessing parsed swagger annotations.

@@ -9,30 +9,51 @@
     },
     "basePath": "/",
     "schemes": [
-        "http"
+        "http",
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
     ],
     "paths": {
         "/missions": {
             "get": {
-                "summary": "Finds all missions",
-                "description": "Returns all missions that aren't hidden",
-                "produces": [
-                    "application/json"
+                "tags": [
+                    "Missions"
                 ],
+                "summary": "Finds all visible missions",
+                "description": "Returns all missions that aren't hidden",
                 "responses": {
                     "200": {
-                        "description": "A list of missions"
+                        "description": "A list of all visible missions"
+                    }
+                }
+            }
+        },
+        "/missions/all": {
+            "get": {
+                "tags": [
+                    "Missions"
+                ],
+                "summary": "Finds all missions hidden or otherwise",
+                "description": "Returns all missions, needs web token admin auth",
+                "responses": {
+                    "200": {
+                        "description": "A list of all missions"
                     }
                 }
             }
         },
         "/missions/{missionId}": {
             "get": {
+                "tags": [
+                    "Missions"
+                ],
                 "summary": "Find mission by Id",
                 "description": "Find mission by Id that isn't hidden",
-                "produces": [
-                    "application/json"
-                ],
                 "parameters": [
                     {
                         "name": "missionId",
@@ -46,10 +67,93 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "A list of missions"
+                        "description": "A single mission"
                     },
                     "404": {
                         "description": "Mission not found"
+                    }
+                }
+            }
+        },
+        "/shares": {
+            "get": {
+                "tags": [
+                    "Shares"
+                ],
+                "summary": "Finds all mission shares",
+                "description": "Returns all shares created during mission playback",
+                "responses": {
+                    "200": {
+                        "description": "A list of all shares"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Shares"
+                ],
+                "summary": "Add a new share",
+                "description": "Add a new share",
+                "parameters": [
+                    {
+                        "name": "mission",
+                        "in": "formData",
+                        "description": "Mission Id",
+                        "required": true,
+                        "type": "integer",
+                        "default": 1
+                    },
+                    {
+                        "name": "url",
+                        "in": "formData",
+                        "description": "Url to share",
+                        "required": true,
+                        "type": "string",
+                        "default": "https://example.com/1/test",
+                        "minLength": 10
+                    },
+                    {
+                        "name": "description",
+                        "in": "formData",
+                        "description": "Share description",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A single share"
+                    },
+                    "404": {
+                        "description": "Share not found"
+                    }
+                }
+            }
+        },
+        "/shares/{shareId}": {
+            "get": {
+                "tags": [
+                    "Shares"
+                ],
+                "summary": "Find share by Id",
+                "description": "Find share by Id",
+                "parameters": [
+                    {
+                        "name": "shareId",
+                        "in": "path",
+                        "description": "Id of share to return",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64",
+                        "default": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A single share"
+                    },
+                    "404": {
+                        "description": "Share not found"
                     }
                 }
             }
