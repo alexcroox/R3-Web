@@ -2,7 +2,6 @@ node_modules
 .env
 .env.remote
 composer.lock
-artisan
 api/vendor
 api/public/vendor
 api/resources/views/vendor

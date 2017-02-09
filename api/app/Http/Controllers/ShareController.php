@@ -33,7 +33,7 @@ class ShareController extends Controller
      *     tags={"Shares"},
      *     path="/shares/{shareId}",
      *     summary="Find share by Id",
-     *     description="Find share by Id",
+     *     description="Find share by Id and increment hits by 1",
      *     @SWG\Parameter(
      *         description="Id of share to return",
      *         in="path",
@@ -58,9 +58,14 @@ class ShareController extends Controller
         $share = Share::find($id);
 
         if($share)
+        {
+            Share::whereId($id)->increment('hits');
             return response()->json($share);
+        }
         else
+        {
             return response()->json(['error' => 'Not Found'], 404);
+        }
     }
 
     /**
