@@ -23,6 +23,8 @@ class CreateSharesTable extends Migration
             $table->string('ip_address', 39);
 
             $table->timestamps();
+
+            $table->index('mission');
         });
     }
 
