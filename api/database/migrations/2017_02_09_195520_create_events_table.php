@@ -16,14 +16,17 @@ class CreateEventsTable extends Migration
         Schema::create('events', function (Blueprint $table) {
 
             $table->integer('mission');
-            $table->string('unit_a', 60);
-            $table->string('unit_b', 60);
-            $table->string('extra_data', 2000);
             $table->string('type', 50);
+            $table->smallInteger('entity_a');
+            $table->smallInteger('entity_b');
+            $table->string('key_data', 100);
+            $table->string('extra_data', 2000);
             $table->integer('mission_time');
             $table->timestamp('created_at');
 
             $table->index('mission');
+            $table->index('entity_a');
+            $table->index('entity_b');
         });
     }
 

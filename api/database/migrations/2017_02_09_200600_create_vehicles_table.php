@@ -16,7 +16,7 @@ class CreateVehiclesTable extends Migration
         Schema::create('vehicles', function (Blueprint $table) {
 
             $table->integer('mission');
-            $table->string('unit', 60);
+            $table->smallInteger('entity_id');
             $table->string('class', 100);
             $table->string('icon', 60);
             $table->string('icon_path', 100);
@@ -24,7 +24,7 @@ class CreateVehiclesTable extends Migration
             $table->timestamp('created_at')->nullable();
 
             $table->index('mission');
-            $table->index('unit');
+            $table->index('entity_id');
         });
     }
 

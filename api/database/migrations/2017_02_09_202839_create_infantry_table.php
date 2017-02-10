@@ -17,7 +17,7 @@ class CreateInfantryTable extends Migration
 
             $table->integer('mission');
             $table->string('player_id', 60);
-            $table->string('unit', 60);
+            $table->smallInteger('entity_id');
             $table->string('name', 60);
             $table->tinyInteger('faction');
             $table->string('group', 50);
@@ -27,7 +27,7 @@ class CreateInfantryTable extends Migration
             $table->integer('mission_time');
 
             $table->index('mission');
-            $table->index('unit');
+            $table->index('entity_id');
             $table->index('player_id');
         });
     }
