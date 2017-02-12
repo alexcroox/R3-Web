@@ -21,7 +21,6 @@ class CreateVehiclesTable extends Migration
             $table->string('icon', 60);
             $table->string('icon_path', 100);
             $table->integer('mission_time');
-            $table->timestamp('created_at')->nullable();
 
             $table->index('mission');
             $table->index('entity_id');

@@ -20,6 +20,7 @@ class CreateInfantryTable extends Migration
             $table->smallInteger('entity_id');
             $table->string('name', 60);
             $table->tinyInteger('faction');
+            $table->string('class', 40);
             $table->string('group', 50);
             $table->tinyInteger('leader');
             $table->string('icon', 60);

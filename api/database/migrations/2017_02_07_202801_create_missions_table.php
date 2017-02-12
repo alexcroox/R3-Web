@@ -18,6 +18,7 @@ class CreateMissionsTable extends Migration
 
             $table->string('name', 100);
             $table->string('dispay_name', 100);
+            $table->string('terrain', 50);
             $table->string('slug', 100);
             $table->float('day_time');
             $table->tinyInteger('hidden');

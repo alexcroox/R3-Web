@@ -22,7 +22,6 @@ class CreateEventsTable extends Migration
             $table->string('key_data', 100);
             $table->string('extra_data', 2000);
             $table->integer('mission_time');
-            $table->timestamp('created_at');
 
             $table->index('mission');
             $table->index('entity_a');
