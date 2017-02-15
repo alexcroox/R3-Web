@@ -24,7 +24,7 @@ class CreateInfantryTable extends Migration
             $table->string('group', 50);
             $table->tinyInteger('leader');
             $table->string('icon', 60);
-            $table->string('data', 200);
+            $table->string('data', 200)->nullable();
             $table->integer('mission_time');
 
             $table->index('mission');

@@ -22,10 +22,11 @@ class CreateVehiclePositionsTable extends Migration
             $table->float('z', 6, 1);
             $table->smallInteger('direction');
             $table->tinyInteger('key_frame')->default(0);
-            $table->string('driver', 60);
-            $table->string('crew', 500);
-            $table->string('cargo', 2000);
+            $table->string('driver', 60)->nullable();
+            $table->string('crew', 500)->nullable();
+            $table->string('cargo', 2000)->nullable();
             $table->integer('mission_time');
+            $table->timestamp('added_on');
 
             $table->index('mission');
             $table->index('entity_id');

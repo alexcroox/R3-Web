@@ -18,9 +18,9 @@ class CreateEventsTable extends Migration
             $table->integer('mission');
             $table->string('type', 50);
             $table->smallInteger('entity_a');
-            $table->smallInteger('entity_b');
-            $table->string('key_data', 100);
-            $table->string('extra_data', 2000);
+            $table->smallInteger('entity_b')->default(0);
+            $table->string('key_data', 100)->nullable();
+            $table->string('extra_data', 2000)->nullable();
             $table->integer('mission_time');
 
             $table->index('mission');

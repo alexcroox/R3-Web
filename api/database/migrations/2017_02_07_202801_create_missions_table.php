@@ -16,12 +16,12 @@ class CreateMissionsTable extends Migration
         Schema::create('missions', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('name', 100);
-            $table->string('dispay_name', 100);
-            $table->string('terrain', 50);
-            $table->string('slug', 100);
+            $table->string('name', 100)->nullable();
+            $table->string('display_name', 100)->nullable();
+            $table->string('terrain', 50)->nullable();
+            $table->string('slug', 100)->nullable();
             $table->float('day_time');
-            $table->tinyInteger('hidden');
+            $table->tinyInteger('hidden')->default(0);
             $table->string('addon_version', 10);
 
             $table->timestamps();

@@ -22,6 +22,7 @@ class CreateInfantryPositionsTable extends Migration
             $table->smallInteger('direction');
             $table->tinyInteger('key_frame')->default(0);
             $table->integer('mission_time');
+            $table->timestamp('added_on');
 
             $table->index('mission');
             $table->index('entity_id');

@@ -24,7 +24,7 @@ class MissionController extends Controller
      */
     public function fetchAllVisible()
     {
-
+        // SELECT m.*, COUNT(distinct i.player_id) as player_count FROM missions m LEFT JOIN infantry i ON i.mission = m.id WHERE hidden = 0 GROUP BY m.id
         return Mission::where('hidden', 0)
                         ->orderBy('id', 'desc')
                         ->get();
