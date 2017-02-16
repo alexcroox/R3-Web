@@ -6,9 +6,12 @@ use App\Mission;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class MissionController extends Controller
 {
+    private $selectPlayerCount = 'COUNT(distinct infantry.player_id) as player_count';
+    private $selectLastEventTimestamp = '(SELECT p.added_on FROM infantry_positions p WHERE p.mission = missions.id ORDER BY p.mission_time DESC LIMIT 1) as last_event_timestamp';
 
     /**
      * @SWG\Get(
@@ -24,10 +27,16 @@ class MissionController extends Controller
      */
     public function fetchAllVisible()
     {
-        // SELECT m.*, COUNT(distinct i.player_id) as player_count FROM missions m LEFT JOIN infantry i ON i.mission = m.id WHERE hidden = 0 GROUP BY m.id
-        return Mission::where('hidden', 0)
-                        ->orderBy('id', 'desc')
-                        ->get();
+        return DB::table('missions')
+                    ->select(
+                        'missions.*',
+                        DB::raw($this->selectPlayerCount),
+                        DB::raw($this->selectLastEventTimestamp)
+                    )
+                    ->leftJoin('infantry', 'infantry.mission', '=', 'missions.id')
+                    ->where('missions.hidden', 0)
+                    ->groupBy('missions.id')
+                    ->get();
     }
 
     /**
@@ -75,11 +84,33 @@ class MissionController extends Controller
      */
     public function fetchOne($id)
     {
-        $mission = Mission::where('hidden', 0)->find($id);
+        $mission = DB::table('missions')
+                    ->select(
+                        'missions.*',
+                        DB::raw($this->selectPlayerCount),
+                        DB::raw($this->selectLastEventTimestamp)
+                    )
+                    ->leftJoin('infantry', 'infantry.mission', '=', 'missions.id')
+                    ->where('missions.hidden', 0)
+                    ->where('missions.id', $id)
+                    ->groupBy('missions.id')
+                    ->limit(1)
+                    ->get();
 
-        if($mission)
-            return response()->json($mission);
-        else
+        if($mission && count($mission)) {
+            // Do some additional validation to check if the mission is in progress or not
+            $currentTime = Carbon::now(env('APP_TIMEZONE', 'UTC'));
+            $lastEventTime = Carbon::parse($mission[0]->last_event_timestamp);
+            $lastEventTime->setTimezone(env('APP_TIMEZONE', 'UTC'));
+
+            $differenceInMinutes = $currentTime->diffInMinutes($lastEventTime);
+
+            if($differenceInMinutes >= env('R3_MINUTES_MISSION_END_BLOCK', 1))
+                return response()->json($mission);
+            else
+                return response()->json(['error' => 'Mission not finished'], 406);
+        } else {
             return response()->json(['error' => 'Not Found'], 404);
+        }
     }
 }
