@@ -27,7 +27,7 @@ class MissionController extends Controller
      */
     public function fetchAllVisible()
     {
-        return DB::table('missions')
+        $missions = DB::table('missions')
                     ->select(
                         'missions.*',
                         DB::raw($this->selectPlayerCount),
@@ -37,6 +37,20 @@ class MissionController extends Controller
                     ->where('missions.hidden', 0)
                     ->groupBy('missions.id')
                     ->get();
+
+        Carbon::setLocale(env('R3_LOCALE', 'en'));
+        $currentTime = Carbon::now(env('APP_TIMEZONE', 'UTC'));
+
+        foreach($missions as $mission) {
+
+            $lastEventTime = Carbon::parse($mission->last_event_timestamp);
+            $lastEventTime->setTimezone(env('APP_TIMEZONE', 'UTC'));
+
+            $mission->length_in_minutes = $currentTime->diffInMinutes($lastEventTime);
+            $mission->played_human = humanRelativeTimeDifference($lastEventTime);
+        }
+
+        return $missions;
     }
 
     /**
