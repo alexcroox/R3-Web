@@ -318,7 +318,10 @@ Markers.prototype.getIconWithFaction = function(isVehicle, iconPath, defaultIcon
 
     var icon = defaultIcon + '.png';
 
-    if (typeof iconPath !== "undefined" && typeof this.icons[iconPath.toLowerCase()] !== "undefined")
+    if(typeof iconPath === "undefined")
+        iconPath = defaultIcon;
+
+    if (typeof this.icons[iconPath.toLowerCase()] !== "undefined")
         icon = this.icons[iconPath.toLowerCase()] + '.png';
 
     // Add our faction to the icon name so we get a colour specific version
