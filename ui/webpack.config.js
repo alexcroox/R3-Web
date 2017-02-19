@@ -36,10 +36,7 @@ module.exports = {
                     'style-loader',
                     'css-loader',
                     {
-                        loader: 'stylus-loader',
-                        options: {
-                            use: [],
-                        },
+                        loader: 'stylus-loader'
                     },
                 ],
             }

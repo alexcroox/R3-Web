@@ -1,11 +1,27 @@
 <template>
     <header>
-        <h1>Test</h1>
+        <h1>{{ unitName }}</h1>
+
+        <div class="header__list">
+            <router-link to="/stats" class="header__list__item">
+                <i class="fa fa-area-chart" aria-hidden="true"></i>
+                Stats
+            </router-link>
+        </div>
     </header>
 </template>
 
-<style lang="stylus">
+<script>
+    export default {
+        data: () => {
+            return {
+                unitName: "Unit Mission List"
+            }
+        }
+    }
+</script>
 
+<style lang="stylus">
     header
         background $navBackgroundColor
         padding 0 $sidePadding
@@ -22,9 +38,9 @@
         font-weight 500
         line-height 50px
 
-    .header__right__item:hover
+    .header__list__item:hover
         opacity 0.7
 
-    .header__right__item .fa
+    .header__list__item .fa
         margin-right 5px
 </style>
