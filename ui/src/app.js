@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 // Import some global styles
 import './style/index.styl'
+//import 'font-awesome/css/font-awesome.css'
 
 import router from './routes'
 

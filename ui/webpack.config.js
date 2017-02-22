@@ -9,43 +9,55 @@ module.exports = {
         filename: 'build.js'
     },
     module: {
-        rules: [{
-                test: /\.vue$/,
-                loader: 'vue-loader',
-                options: {
-                    loaders: {
-                        'stylus': 'vue-style-loader!css-loader!stylus-loader',
-                    },
+        rules: [
+        {
+            test: /\.vue$/,
+            loader: 'vue-loader',
+            options: {
+                loaders: {
+                    'stylus': 'vue-style-loader!css-loader!stylus-loader',
                 },
             },
-            {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                exclude: /node_modules/
-            },
-            {
-                test: /\.(png|jpg|gif|svg)$/,
-                loader: 'file-loader',
-                options: {
-                    name: '[name].[ext]?[hash]'
-                }
-            },
-            {
-                test: /\.styl$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    {
-                        loader: 'stylus-loader'
-                    },
-                ],
+        }, {
+            test: /\.js$/,
+            loader: 'babel-loader',
+            exclude: /node_modules/
+        }, {
+            test: /\.(png|jpg|gif|svg)$/,
+            loader: 'file-loader',
+            options: {
+                name: '[name].[ext]?[hash]'
             }
+        }, {
+            test: /\.styl$/,
+            use: [
+                'style-loader',
+                'css-loader', {
+                    loader: 'stylus-loader'
+                },
+            ],
+        }, {
+            test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+            loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+        }, {
+            test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+            loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+        }, {
+            test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+            loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
+        }, {
+            test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+            loader: 'file-loader'
+        }, {
+            test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+            loader: 'url-loader?limit=10000&mimetype=image/svg+xml'
+        },
         ]
     },
     resolve: {
         alias: {
             'vue$': 'vue/dist/vue.common.js',
-            'styles': path.resolve(__dirname, './src/style/')
+            'styles': path.resolve(__dirname, './src/style')
         }
     },
     devServer: {
@@ -60,7 +72,7 @@ module.exports = {
 
 if (process.env.NODE_ENV === 'production') {
     module.exports.devtool = '#source-map'
-    // http://vue-loader.vuejs.org/en/workflow/production.html
+        // http://vue-loader.vuejs.org/en/workflow/production.html
     module.exports.plugins = (module.exports.plugins || []).concat([
         new webpack.DefinePlugin({
             'process.env': {
