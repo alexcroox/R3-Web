@@ -23,7 +23,7 @@
         <p>
             Please file an issue on the <a href="https://github.com/alexcroox/R3-Web" class="text-link text-link--with-underline" target="_blank">R3 GitHub</a>
             <br><br>
-            If you'd prefer to chat to the developer look for Titan in the ACE Slack.
+            If you'd prefer to chat to the developer look for Titan in the <a href="https://slackin.ace3mod.com/" class="text-link text-link--with-underline" target="_blank">ACE3 Slack</a>
         </p>
     </modal>
 </template>

@@ -84,4 +84,7 @@
         line-height 21px
         color #6b6b6b
 
+    .modal__close:hover
+        cursor pointer
+
 </style>

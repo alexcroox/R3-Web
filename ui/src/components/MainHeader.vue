@@ -11,7 +11,7 @@
                     Stats
                 </router-link>
 
-                <router-link to="admin-index" class="header__list__item">
+                <router-link :to="{ name: 'admin-index' }" class="header__list__item">
                     <i class="fa fa-lock" aria-hidden="true"></i>
                     Admin
                 </router-link>
@@ -49,7 +49,7 @@
 </script>
 
 <style lang="stylus">
-    @import '~styles/config/variables.styl'
+    @import '~styles/index.styl'
 
     header
         background $navBackgroundColor
@@ -78,6 +78,7 @@
 
     .header__list__item:hover
         opacity 0.7
+        cursor pointer
 
     .header__list__item .fa
         margin-right 5px

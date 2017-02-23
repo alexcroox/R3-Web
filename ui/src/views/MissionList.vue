@@ -1,13 +1,14 @@
 <template>
     <div>
-        <main-header :title="headerTitle"></main-header>
-        <tab :tabs="[{ text: 'Mission List', route: 'mission-list' }, { text: 'My Missions', route: 'my-missions' }]"></tab>
+        <main-header :title="title"></main-header>
+        <tab :tabs="[{ text: 'All missions', route: 'mission-list' }, { text: 'My missions', route: 'my-missions' }]"></tab>
 
     </div>
 </template>
 
 <script>
-    import axios from 'axios'
+    import axios from 'http'
+    import { mapMutations } from 'vuex'
 
     import MainHeader from 'components/MainHeader.vue'
     import Tab from 'components/Tab.vue'
@@ -18,48 +19,47 @@
             Tab
         },
 
-        data: () => {
+        data () {
             return {
                 missions: [],
-                settings: {},
-                headerTitle: 'M List'
             }
         },
 
         mounted () {
             console.log('Mission list mounted')
-            document.title = 'M List'
 
-            this.fetchSettings();
             this.fetchMissions();
+        },
+
+        computed: {
+            unitName() {
+                return this.$store.state.settings.unitName
+            },
+
+            title() {
+                return this.unitName ? `${this.unitName} Mission List` : 'Mission List'
+            },
+        },
+
+        watch: {
+            unitName: function (name) {
+                document.title = this.title
+            }
         },
 
         methods: {
 
-            fetchSettings () {
-
-                axios.get('/settings')
-                .then(response => {
-                    console.log(response);
-
-                    this.settings = response.settings;
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-            },
-
             fetchMissions () {
 
                 axios.get('/missions')
-                .then(response => {
+                    .then(response => {
 
-                    console.log(response);
-                    this.missions = response.missions;
-                })
-                .catch(error => {
-                    console.log(error);
-                })
+                        console.log('Got missions', response.data);
+                        this.$store.commit('setMissionList', response.data)
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
             }
         }
     }

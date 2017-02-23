@@ -6,6 +6,10 @@
 |--------------------------------------------------------------------------
 */
 
+$app->group(['prefix' => 'settings'], function () use ($app) {
+    $app->get('/', 'SettingController@fetchAll');
+});
+
 $app->group(['prefix' => 'missions'], function () use ($app) {
     $app->get('/', 'MissionController@fetchAllVisible');
     $app->get('/{id}', 'MissionController@fetchOne');

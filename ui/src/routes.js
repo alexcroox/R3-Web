@@ -10,7 +10,16 @@ let routes = [
         path: '/my-missions',
         name: 'my-missions',
         component: require('./views/MyMissions.vue')
-    }
+    },
+    {
+        path: '/admin',
+        name: 'admin-index',
+        component: require('./views/Admin.vue')
+    },
+    {
+        path: '*',
+        component: require('./views/NotFound.vue')
+    },
 ]
 
 export default new VueRouter({
