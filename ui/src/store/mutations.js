@@ -1,6 +1,6 @@
 export const state = {
     settings: {},
-    missionList: []
+    missions: []
 }
 
 export const mutations = {
@@ -10,6 +10,6 @@ export const mutations = {
     },
 
     setMissionList(state, missions) {
-        state.missionList = missions
+        state.missions = missions
     },
 }

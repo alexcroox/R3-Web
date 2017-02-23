@@ -2,16 +2,16 @@
     <div>
         <header>
             <h1>
-                <router-link to="mission-list" class="header__logo-link">{{ title }}</router-link>
+                <router-link :to="{ name: 'missions.list' }" class="header__logo-link">{{ title }}</router-link>
             </h1>
 
             <div class="header__list">
-                <router-link to="stats" class="header__list__item">
+                <router-link :to="{ name: 'stats' }" class="header__list__item">
                     <i class="fa fa-area-chart" aria-hidden="true"></i>
                     Stats
                 </router-link>
 
-                <router-link :to="{ name: 'admin-index' }" class="header__list__item">
+                <router-link :to="{ name: 'admin' }" class="header__list__item">
                     <i class="fa fa-lock" aria-hidden="true"></i>
                     Admin
                 </router-link>

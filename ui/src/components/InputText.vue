@@ -1,5 +1,5 @@
 <template>
     <div>
-        My Missions
+        Input
     </div>
 </template>

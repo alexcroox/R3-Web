@@ -1,5 +1,5 @@
 <template>
     <div>
-        My Missions
+        Stats
     </div>
 </template>
