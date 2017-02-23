@@ -1,13 +1,16 @@
 <template>
     <div>
-        <main-header></main-header>
+        <main-header :title="headerTitle"></main-header>
         <tab :tabs="[{ text: 'Mission List', route: 'mission-list' }, { text: 'My Missions', route: 'my-missions' }]"></tab>
+
     </div>
 </template>
 
 <script>
-    import MainHeader from '../components/MainHeader.vue'
-    import Tab from '../components/Tab.vue'
+    import axios from 'axios'
+
+    import MainHeader from 'components/MainHeader.vue'
+    import Tab from 'components/Tab.vue'
 
     export default {
         components: {
@@ -17,35 +20,47 @@
 
         data: () => {
             return {
-                missions: []
+                missions: [],
+                settings: {},
+                headerTitle: 'M List'
             }
         },
 
-        ready() {
+        mounted () {
             console.log('Mission list mounted')
-            document.title = 'Mission List'
+            document.title = 'M List'
 
+            this.fetchSettings();
             this.fetchMissions();
         },
 
         methods: {
-            fetchMissions: function() {
 
-                axios.get('/user', {
-                    params: {
-                        ID: 12345
-                    }
-                })
-                .then(function (response) {
+            fetchSettings () {
+
+                axios.get('/settings')
+                .then(response => {
                     console.log(response);
 
+                    this.settings = response.settings;
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+            },
+
+            fetchMissions () {
+
+                axios.get('/missions')
+                .then(response => {
+
+                    console.log(response);
                     this.missions = response.missions;
                 })
-                .catch(function (error) {
+                .catch(error => {
                     console.log(error);
-                });
+                })
             }
         }
-
     }
 </script>

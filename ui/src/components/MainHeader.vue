@@ -1,21 +1,50 @@
 <template>
-    <header>
-        <h1>
-            <router-link to="/" class="header__logo-link">{{ unitName }}</router-link>
-        </h1>
+    <div>
+        <header>
+            <h1>
+                <router-link to="mission-list" class="header__logo-link">{{ title }}</router-link>
+            </h1>
 
-        <div class="header__list">
-            <router-link to="/stats" class="header__list__item">
-                <i class="fa fa-area-chart" aria-hidden="true"></i>
-                Stats
-            </router-link>
-        </div>
-    </header>
+            <div class="header__list">
+                <router-link to="stats" class="header__list__item">
+                    <i class="fa fa-area-chart" aria-hidden="true"></i>
+                    Stats
+                </router-link>
+
+                <router-link to="admin-index" class="header__list__item">
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                    Admin
+                </router-link>
+
+                <button class="header__list__item js-help" @click="showHelpModal">
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                    Help
+                </button>
+            </div>
+        </header>
+
+        <help-modal></help-modal>
+    </div>
 </template>
 
 <script>
+    import 'font-awesome/css/font-awesome.css'
+
+    import HelpModal from 'views/modals/HelpModal.vue'
+    import bus from 'eventBus'
+
     export default {
-        props: ['unitName']
+        props: ['title'],
+
+        components: {
+            HelpModal
+        },
+
+        methods: {
+            showHelpModal () {
+                bus.$emit('showHelpModal')
+            }
+        }
     }
 </script>
 
