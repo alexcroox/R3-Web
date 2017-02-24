@@ -1,8 +1,8 @@
 <template>
     <div class="list-search__container">
-        <h3 class="list-search__title">{{ title }}({{ listTotal }})</h3>
+        <h3 class="list-search__title">{{ title }} ({{ listTotal }})</h3>
 
-        <input-text></input-text>
+        <input-text icon="search" noBackground="true" bold="true" short="true" inline="true" :placeholder="placeholder"></input-text>
     </div>
 </template>
 
@@ -10,7 +10,7 @@
     import InputText from 'components/InputText.vue'
 
     export default {
-        props: ['title', 'listTotal'],
+        props: ['title', 'listTotal', 'placeholder'],
 
         components: {
             InputText

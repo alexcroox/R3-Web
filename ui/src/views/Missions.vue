@@ -2,7 +2,7 @@
     <div>
         <main-header :title="title"></main-header>
 
-        <tab :tabs="[{ text: 'All missions', route: 'missions.list' }, { text: 'My missions', route: 'missions.mine' }]"></tab>
+        <tab :tabs="[{ text: 'All missions', route: 'missions.list', exact: true }, { text: 'My missions', route: 'missions.mine' }]"></tab>
 
         <router-view></router-view>
     </div>
@@ -10,7 +10,6 @@
 
 <script>
     import axios from 'http'
-    import { mapMutations } from 'vuex'
 
     import MainHeader from 'components/MainHeader.vue'
     import Tab from 'components/Tab.vue'

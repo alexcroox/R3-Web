@@ -1,6 +1,6 @@
 <template>
     <div class="tab__container">
-        <router-link v-for="item in tabs" :to="{ name: item.route }" class="tab__item" active-class="tab__item--active">
+        <router-link v-for="item in tabs" :to="{ name: item.route }" :exact="item.exact" class="tab__item" active-class="tab__item--active">
             {{ item.text }}
         </router-link>
     </div>
