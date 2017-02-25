@@ -2,49 +2,18 @@
     <table class="table-list">
         <thead>
             <tr>
-                <th class="table-list__sort" data-sort="table-list__item__name">Mission Name</th>
-                <th class="table-list__sort" data-sort="table-list__item__map">Map</th>
-                <th class="table-list__sort" data-sort="table-list__item__length">Length</th>
-                <th class="table-list__sort" data-sort="table-list__item__player-count">Players</th>
-                <th class="table-list__sort" data-sort="table-list__item__date">Date Played</th>
+                <th v-for="item in headers" class="table-list__sort table-list__header-item" :class="['table-list__item__' + item.dataKey]">
+                    {{ item.label }}
+                </th>
             </tr>
         </thead>
 
         <tbody class="list">
-
-        <?php foreach($replayList as $replay): ?>
-
-            <tr data-mission-id="<?php echo $replay->id; ?>">
-                <td>
-                    <a class="text-link table-list__item__name table-list__item__name" href="<?php echo WEB_PATH . '/' . $replay->id . '/' . $replay->slug; ?>">
-                        <?php echo $replay->missionName; ?>
-                    </a>
-                </td>
-
-                <td class="table-list__item__map table-list__item__map">
-                    <?php echo strtoupper($replay->map); ?>
-                </td>
-
-                <td>
-                    <span class="table-list__item__length table-list--hide"><?php echo (strtotime($replay->lastEventMissionTime) - strtotime($replay->dateStarted)); ?></span>
-                    <?php if($replay->lastEventMissionTime): ?>
-                        <?php echo $util->humanTimeDifference(strtotime($replay->lastEventMissionTime), strtotime($replay->dateStarted)); ?>
-                    <?php else: ?>
-                        <img width="11" class="table-list__item__in-progress-icon" src="https://r3icons.titanmods.xyz/iconMan-civilian-trim.png"> In progress
-                    <?php endif; ?>
-                </td>
-
-                <td class="table-list__item__player-count -table-list__item__player-count">
-                    <?php echo $replay->playerCount; ?>
-                </td>
-
-                <td>
-                    <span class="table-list__item__date table-list--hide"><?php echo strtotime($replay->dateStarted); ?></span>
-                    <?php echo $util->humanRelativeTimeDifference(strtotime($replay->dateStarted)); ?>
+            <tr v-for="item in data" class="table-list__row">
+                <td v-for="value in item" class="table-list__item">
+                    {{ value }}
                 </td>
             </tr>
-        <?php endforeach; ?>
-
         </tbody>
     </table>
 </template>
@@ -52,12 +21,59 @@
 <script>
     export default {
 
-        props: ['data', 'headers']
+        props: ['data', 'headers'],
+
+        computed: {
+
+            filteredData () {
+
+
+                return 'test'
+            }
+        }
     }
 </script>
 
 <style lang="stylus">
-    @import '~styles/index.styl'
 
+    .table-list
+        text-align left
+        margin-top 30px
+        border-spacing 0 10px
+        border-collapse separate
+        width 100%
+
+    .table-list__header-item
+        text-transform uppercase
+        color #ABB4BA
+        font-weight 500
+        font-size 14px
+        padding 0 30px 5px
+
+    .table-list__row
+        background #FFF
+        margin-top 10px
+
+    .table-list__item
+        padding 20px 30px
+        font-size 14px
+        font-weight 400
+
+    .table-list__item--bold
+        font-weight 500
+        font-size 17px
+
+    .table-list__item--loading
+        margin-right 10px
+        display inline-block
+        animation tableListSpin 3s infinite linear
+        transform-origin 50% 70%
+
+    @keyframes tableListSpin
+        0%
+            transform rotate(0deg)
+
+        100%
+            transform rotate(360deg)
 
 </style>
