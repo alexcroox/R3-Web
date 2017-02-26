@@ -48,7 +48,11 @@
                         let orderedData = []
 
                         _each(headers, (header) => {
-                            orderedData.push(item[header.dataKey])
+                            orderedData.push({
+                                value: item[header.dataKey],
+                                display: item[header.dataKey],
+                                dataKey: header.dataKey
+                            })
                         })
 
                         dataKeyed.push(orderedData)

@@ -2,7 +2,7 @@
     <table class="table-list">
         <thead>
             <tr>
-                <th v-for="item in headers" class="table-list__sort table-list__header-item" :class="['table-list__item__' + item.dataKey]">
+                <th v-for="item in headers" class="table-list__sort table-list__header-item">
                     {{ item.label }}
                 </th>
             </tr>
@@ -10,8 +10,8 @@
 
         <tbody class="list">
             <tr v-for="item in data" class="table-list__row">
-                <td v-for="value in item" class="table-list__item">
-                    {{ value }}
+                <td v-for="v in item" :data-value="v.value" :class="['table-list__item', 'table-list__item__' + v.dataKey]">
+                    {{ v.display }}
                 </td>
             </tr>
         </tbody>
@@ -22,15 +22,6 @@
     export default {
 
         props: ['data', 'headers'],
-
-        computed: {
-
-            filteredData () {
-
-
-                return 'test'
-            }
-        }
     }
 </script>
 
