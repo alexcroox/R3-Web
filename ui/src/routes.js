@@ -5,15 +5,15 @@ let routes = [
 {
     path: '/',
     name: 'missions',
-    component: require('./views/Missions.vue'),
+    component: require('./views/missions/Missions.vue'),
     children: [{
         path: '',
         name: 'missions.list',
-        component: require('./views/MissionList.vue')
+        component: require('./views/missions/MissionList.vue')
     }, {
         path: 'my-missions',
         name: 'missions.mine',
-        component: require('./views/MyMissions.vue')
+        component: require('./views/missions/MyMissions.vue')
     }]
 },
 
