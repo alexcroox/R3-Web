@@ -1,15 +1,27 @@
 <template>
     <div>
         <main-header :title="title"></main-header>
+
+        <tab :tabs="[{ text: 'All missions', route: 'missions.list', exact: true }, { text: 'My missions', route: 'missions.mine' }]"></tab>
+
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
+    import axios from 'http'
+
     import MainHeader from 'components/MainHeader.vue'
+    import Tab from 'components/Tab.vue'
 
     export default {
         components: {
-            MainHeader
+            MainHeader,
+            Tab
+        },
+
+        mounted () {
+            console.log('Stats mounted')
         },
 
         computed: {
@@ -18,7 +30,7 @@
             },
 
             title() {
-                return this.unitName ? `${this.unitName} Mission List` : 'Mission List'
+                return this.unitName ? `${this.unitName} Stats` : 'Stats'
             },
         },
 
@@ -35,7 +47,7 @@
                 axios.get('/missions')
                     .then(response => {
 
-                        console.log('Got missions', response.data);
+                        console.log('Got stats', response.data);
                         this.$store.commit('setMissionList', response.data)
                     })
                     .catch(error => {

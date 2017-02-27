@@ -2,7 +2,7 @@
     <container>
         <list-search title="Missions" :listTotal="missions.length" placeholder="Search missions"></list-search>
 
-        <table-list :data="missions" :headers="headers"></table-list>
+        <table-list id="mission-list" :data="missions" :headers="headers"></table-list>
     </container>
 </template>
 

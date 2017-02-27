@@ -1,5 +1,5 @@
 <template>
-    <table class="table-list">
+    <table class="table-list" :id="listId">
         <thead>
             <tr>
                 <th v-for="item in headers" class="table-list__sort table-list__header-item">
@@ -8,7 +8,7 @@
             </tr>
         </thead>
 
-        <tbody class="list">
+        <tbody class="table-list__data">
             <tr v-for="item in data" class="table-list__row">
                 <td v-for="v in item" :data-value="v.value" :class="['table-list__item', 'table-list__item__' + v.dataKey]">
                     {{ v.display }}
@@ -19,9 +19,60 @@
 </template>
 
 <script>
+    import List from 'list.js'
+
+    import _each from 'lodash.foreach'
+
     export default {
 
-        props: ['data', 'headers'],
+        props: ['data', 'headers', 'id'],
+
+        data () {
+            return {
+                list: null
+            }
+        },
+
+        mounted () {
+
+            console.log('Setting up list')
+
+            let valueNames = []
+
+            _each(this.headers, (header) => {
+                valueNames.push(`table-list__item__${header.dataKey}`)
+            })
+
+            this.list = new List(this.listId, {
+                valueNames,
+                sortClass: 'table-list__sort',
+                listClass: 'table-list__data',
+                fuzzySearch: {
+                    searchClass: 'table-list__search',
+                    location: 0,
+                    distance: 100,
+                    threshold: 0.4,
+                    multiSearch: true
+                }
+            })
+        },
+
+        computed: {
+
+            listId () {
+                return `table-list-${this.id}`
+            }
+        },
+
+        watch: {
+
+            data () {
+
+                console.log('re-indexing list')
+
+                this.list.reIndex()
+            }
+        }
     }
 </script>
 
