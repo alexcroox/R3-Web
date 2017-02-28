@@ -2,7 +2,7 @@
     <div class="list-search__container">
         <h3 class="list-search__title">{{ title }} ({{ listTotal }})</h3>
 
-        <input-text icon="search" noBackground="true" bold="true" short="true" inline="true" :placeholder="placeholder"></input-text>
+        <input-text icon="search" inputClass="table-list__search" noBackground="true" bold="true" short="true" inline="true" :placeholder="placeholder"></input-text>
     </div>
 </template>
 

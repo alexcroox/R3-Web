@@ -1,8 +1,8 @@
 <template>
-    <container>
+    <container :id="listId">
         <list-search title="Missions" :listTotal="missions.length" placeholder="Search missions"></list-search>
 
-        <table-list id="mission-list" :data="missions" :headers="headers"></table-list>
+        <table-list :listId="listId" :data="missions" :headers="headers"></table-list>
     </container>
 </template>
 
@@ -22,12 +22,14 @@
 
         data () {
             return {
+                listId: 'mission-list',
+
                 headers: [
-                    { label: 'Mission Name', dataKey: 'name' },
-                    { label: 'Terrain', dataKey: 'terrain' },
-                    { label: 'Length', dataKey: 'length' },
-                    { label: 'Players', dataKey: 'player_count' },
-                    { label: 'Date Played', dataKey: 'played_human' },
+                    { label: 'Mission Name', dataKey: 'name', nextSort: 'asc' },
+                    { label: 'Terrain', dataKey: 'terrain', nextSort: 'asc' },
+                    { label: 'Length', dataKey: 'length_in_minutes', nextSort: 'asc' },
+                    { label: 'Players', dataKey: 'player_count', nextSort: 'asc' },
+                    { label: 'Date Played', dataKey: 'played_human', nextSort: 'asc' },
                 ]
             }
         },

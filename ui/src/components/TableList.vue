@@ -1,8 +1,8 @@
 <template>
-    <table class="table-list" :id="listId">
+    <table class="table-list">
         <thead>
             <tr>
-                <th v-for="item in headers" class="table-list__sort table-list__header-item">
+                <th v-for="item in headers" :data-sort="['table-list__item__' + item.dataKey]" :class="['table-list__sort', 'table-list__sort--' + item.nextSort, 'table-list__header-item']">
                     {{ item.label }}
                 </th>
             </tr>
@@ -25,7 +25,7 @@
 
     export default {
 
-        props: ['data', 'headers', 'id'],
+        props: ['data', 'headers', 'listId'],
 
         data () {
             return {
@@ -43,6 +43,8 @@
                 valueNames.push(`table-list__item__${header.dataKey}`)
             })
 
+            console.log('Value names', valueNames)
+
             this.list = new List(this.listId, {
                 valueNames,
                 sortClass: 'table-list__sort',
@@ -55,13 +57,29 @@
                     multiSearch: true
                 }
             })
-        },
 
-        computed: {
+            let noResultsRow = document.createElement('tr')
+            let noResultsColumn = document.createElement('td')
+            noResultsColumn.id = 'table-list__item__no-results'
+            noResultsColumn.innerHTML = 'Nothing found for that search term'
 
-            listId () {
-                return `table-list-${this.id}`
-            }
+            noResultsRow.appendChild(noResultsColumn);
+
+            this.list.on('updated', (list) => {
+
+                console.log('List updated');
+
+                if (list.matchingItems.length == 0) {
+
+                    list.list.appendChild(noResultsRow);
+
+                } else {
+
+                    console.log('Matching results', noResultsRow)
+
+                    noResultsRow.parentNode.removeChild(noResultsRow);
+                }
+            });
         },
 
         watch: {
@@ -91,6 +109,16 @@
         font-weight 500
         font-size 14px
         padding 0 30px 5px
+
+    .table-list__sort--asc
+    .table-list__sort.asc
+        &:hover
+            cursor n-resize
+
+    .table-list__sort--desc
+    .table-list__sort.desc
+        &:hover
+            cursor s-resize
 
     .table-list__row
         background #FFF

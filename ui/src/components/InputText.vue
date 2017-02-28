@@ -14,7 +14,7 @@
             type="text"
             class="input-text"
             :placeholder="placeholder"
-            :class="{ 'input-text--short': short }"
+            :class="[{ 'input-text--short': short }, inputClass]"
             @focus="focus"
             @blur="blur">
     </div>
@@ -23,7 +23,7 @@
 <script>
     export default {
 
-        props: ['icon', 'noBackground', 'placeholder', 'inline', 'bold', 'short'],
+        props: ['icon', 'noBackground', 'placeholder', 'inline', 'bold', 'short', 'inputClass'],
 
         data () {
             return {
