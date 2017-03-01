@@ -12,5 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('home');
+
+    $request = Request::create('/api/settings', 'GET');
+    $getSettings = Route::dispatch($request);
+
+    return view('home', ['settings' => json_decode($getSettings->content())]);
 });

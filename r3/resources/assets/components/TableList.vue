@@ -22,6 +22,7 @@
     import List from 'list.js'
 
     import _each from 'lodash.foreach'
+    import $ from 'jquery'
 
     export default {
 
@@ -58,26 +59,22 @@
                 }
             })
 
-            let noResultsRow = document.createElement('tr')
-            let noResultsColumn = document.createElement('td')
-            noResultsColumn.id = 'table-list__item__no-results'
-            noResultsColumn.innerHTML = 'Nothing found for that search term'
+            var noResults = $('<tr><td class="table-list__item__no-results">Nothing found for that search term</td></tr>');
 
-            noResultsRow.appendChild(noResultsColumn);
+            this.list.on('updated', (l) => {
 
-            this.list.on('updated', (list) => {
+                console.log('List updated', l);
 
-                console.log('List updated');
+                if (l.matchingItems.length == 0) {
 
-                if (list.matchingItems.length == 0) {
-
-                    list.list.appendChild(noResultsRow);
+                    console.log('adding no results', $(l.list))
+                    $(l.list).append(noResults);
 
                 } else {
 
-                    console.log('Matching results', noResultsRow)
+                    console.log('Matching results', noResults)
 
-                    noResultsRow.parentNode.removeChild(noResultsRow);
+                    noResults.detach()
                 }
             });
         },

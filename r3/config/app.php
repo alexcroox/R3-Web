@@ -13,7 +13,7 @@ return [
     */
 
     'name' => 'R3',
-    'unit_name' => 'Unit Name',
+
 
     /*
     |--------------------------------------------------------------------------
@@ -154,10 +154,8 @@ return [
         Illuminate\Hashing\HashServiceProvider::class,
         Illuminate\Mail\MailServiceProvider::class,
         Illuminate\Notifications\NotificationServiceProvider::class,
-        Illuminate\Pagination\PaginationServiceProvider::class,
         Illuminate\Pipeline\PipelineServiceProvider::class,
         Illuminate\Queue\QueueServiceProvider::class,
-        Illuminate\Redis\RedisServiceProvider::class,
         Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
         Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
@@ -178,7 +176,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        App\Providers\HelperServiceProvider::class
+        App\Providers\HelperServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
 
     ],
 

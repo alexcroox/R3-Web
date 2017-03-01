@@ -20,22 +20,15 @@ new Vue({
 
     mounted () {
 
-        this.fetchSettings();
+        this.setSettings();
     },
 
     methods: {
 
-        fetchSettings () {
+        setSettings () {
 
-            axios.get('/settings')
-                .then(response => {
-                    console.log('Got settings', response.data);
-
-                    this.$store.commit('setSettings', response.data)
-                })
-                .catch(error => {
-                    console.log(error);
-                })
+            // Global var set in home.blade.php
+            this.$store.commit('setSettings', settings)
         },
     }
 })

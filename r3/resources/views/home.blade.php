@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.unit_name') }}</title>
+    <title>{{ config('r3.unit_name') }}</title>
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700" rel="stylesheet">
   </head>
@@ -14,7 +14,15 @@
         <router-view></router-view>
     </div>
     <script>
-        var apiBase = '{{ config('app.url') }}/api';
+        var settings = {
+            apiBase: '{{ config('app.url') }}/api',
+
+            <?php
+            foreach($settings as $key => $value) {
+                echo "'{$key}': '{$value}',";
+            }
+            ?>
+        };
     </script>
     <script src="build.js"></script>
   </body>

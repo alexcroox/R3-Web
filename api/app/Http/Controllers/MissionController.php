@@ -38,13 +38,13 @@ class MissionController extends Controller
                     ->groupBy('missions.id')
                     ->get();
 
-        Carbon::setLocale(env('R3_LOCALE', 'en'));
-        $currentTime = Carbon::now(env('APP_TIMEZONE', 'UTC'));
+        Carbon::setLocale(config('app.locale'));
+        $currentTime = Carbon::now(config('app.timezone'));
 
         foreach($missions as $mission) {
 
             $lastEventTime = Carbon::parse($mission->last_event_timestamp);
-            $lastEventTime->setTimezone(env('APP_TIMEZONE', 'UTC'));
+            $lastEventTime->setTimezone(config('app.timezone'));
 
             $mission->length_in_minutes = $currentTime->diffInMinutes($lastEventTime);
             $mission->played_human = humanRelativeTimeDifference($lastEventTime);
@@ -113,13 +113,13 @@ class MissionController extends Controller
 
         if($mission && count($mission)) {
             // Do some additional validation to check if the mission is in progress or not
-            $currentTime = Carbon::now(env('APP_TIMEZONE', 'UTC'));
+            $currentTime = Carbon::now(config('app.timezone'));
             $lastEventTime = Carbon::parse($mission[0]->last_event_timestamp);
-            $lastEventTime->setTimezone(env('APP_TIMEZONE', 'UTC'));
+            $lastEventTime->setTimezone(config('app.timezone'));
 
             $differenceInMinutes = $currentTime->diffInMinutes($lastEventTime);
 
-            if($differenceInMinutes >= env('R3_MINUTES_MISSION_END_BLOCK', 1))
+            if($differenceInMinutes >= config('r3.minutes_mission_end_block'))
                 return response()->json($mission);
             else
                 return response()->json(['error' => 'Mission not finished'], 406);
