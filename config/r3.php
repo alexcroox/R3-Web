@@ -8,6 +8,6 @@ return [
     'us_date_format' => false,
 
     // Minutes after last event received before playback can be viewed (stops players cheating)
-    'minutes_mission_end_block' => 1,
+    'minutes_mission_end_block' => 20,
 
 ];

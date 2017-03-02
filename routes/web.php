@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', function () {
+Route::any('{all?}', function () {
 
     $request = Request::create('/api/settings', 'GET');
     $getSettings = Route::dispatch($request);

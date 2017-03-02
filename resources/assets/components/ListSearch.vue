@@ -1,6 +1,6 @@
 <template>
     <div class="list-search__container">
-        <h3 class="list-search__title">{{ title }} ({{ listTotal }})</h3>
+        <h3 class="list-search__title">{{ title }} <span v-if="listTotal > 0">({{ listTotal }})</span></h3>
 
         <input-text icon="search" inputClass="table-list__search" @keyup="$emit('searched', $event)" noBackground="true" bold="true" short="true" inline="true" :placeholder="placeholder"></input-text>
     </div>

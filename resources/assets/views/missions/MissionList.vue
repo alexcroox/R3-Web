@@ -2,18 +2,18 @@
     <container>
         <list-search title="Missions" :listTotal="listData.length" @searched="updateSearchQuery($event)" placeholder="Search missions"></list-search>
 
-        <table-list
+        <table-list-missions
             :data="listData"
             :columns="listColumns"
             :filter-key="searchQuery">
-        </table-list>
+        </table-list-missions>
     </container>
 </template>
 
 <script>
     import ListSearch from 'components/ListSearch.vue'
     import Container from 'components/Container.vue'
-    import TableList from 'components/TableList.vue'
+    import TableListMissions from 'components/TableListMissions.vue'
 
     import _each from 'lodash.foreach'
 
@@ -21,7 +21,7 @@
         components: {
             Container,
             ListSearch,
-            TableList
+            TableListMissions
         },
 
         data () {

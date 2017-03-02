@@ -50,8 +50,11 @@ class MissionController extends Controller
             $missionStart->setTimezone(config('app.timezone'));
 
             $mission->length_in_minutes = $missionStart->diffInMinutes($lastEventTime);
+            $mission->minutes_since_last_event = $lastEventTime->diffInMinutes($currentTime);
             $mission->length_human = humanTimeDifference($lastEventTime, $missionStart);
-            $mission->played_human = humanEventOccuredFromNow($lastEventTime);
+            $mission->played_human = humanEventOccuredFromNow($missionStart);
+
+            $mission->in_progress_block = ($mission->minutes_since_last_event < config('r3.minutes_mission_end_block'))? true : false;
         }
 
         return $missions;
