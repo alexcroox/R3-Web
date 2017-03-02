@@ -1,10 +1,6 @@
 <template>
     <div>
-        <main-header :title="title"></main-header>
-
-        <container class="margin__top--large">
-            Page not found
-        </container>
+        Playback {{ urlData.params.id }} {{ urlData.params.terrain }}
     </div>
 </template>
 
@@ -16,6 +12,13 @@
         components: {
             MainHeader,
             Container
+        },
+
+        props: ['urlData'],
+
+        mounted () {
+
+            console.log('urlData', this.urlData)
         },
 
         computed: {

@@ -43,6 +43,7 @@ class MissionController extends Controller
 
         foreach($missions as $mission) {
 
+            // Generate extra data for consumption
             $lastEventTime = Carbon::parse($mission->last_event_timestamp);
             $lastEventTime->setTimezone(config('app.timezone'));
 
@@ -55,9 +56,24 @@ class MissionController extends Controller
             $mission->played_human = humanEventOccuredFromNow($missionStart);
 
             $mission->in_progress_block = ($mission->minutes_since_last_event < config('r3.minutes_mission_end_block'))? true : false;
+
+            // Generate and save a slug if required
+            $mission->slug = $this->generateSlug($mission);
         }
 
         return $missions;
+    }
+
+    private function generateSlug($mission = null) {
+
+        if(!$mission || !$mission->display_name || $mission->slug)
+            return $mission->slug;
+
+        $slug = str_slug($mission->display_name);
+
+        Mission::whereId($mission->id)->update(['slug' => $slug]);
+
+        return $slug;
     }
 
     /**

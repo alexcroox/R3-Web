@@ -1,3 +1,4 @@
+
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
@@ -6,7 +7,7 @@ import axios from 'http'
 // Import some global styles
 import './style/index.styl'
 
-import router from './routes'
+import router from 'routes'
 import store from './store'
 
 Vue.use(VueRouter)

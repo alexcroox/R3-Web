@@ -13,6 +13,10 @@
     <div id="app">
         <router-view></router-view>
     </div>
+
+    <script src="https://cdn.logrocket.com/LogRocket.min.js"></script>
+    <script>window.LogRocket && window.LogRocket.init('titanmods/r3');</script>
+
     <script>
         var settings = {
             apiBase: '{{ config('app.url') }}/api',
@@ -24,6 +28,6 @@
             ?>
         };
     </script>
-    <script src="build.js"></script>
+    <script src="/build.js"></script>
   </body>
 </html>

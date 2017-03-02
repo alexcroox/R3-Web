@@ -49,6 +49,7 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.common.js',
             http: path.resolve(assetsSrcDir, 'http.js'),
+            routes: path.resolve(assetsSrcDir, 'routes.js'),
             eventBus: path.resolve(assetsSrcDir, 'eventBus.js'),
             styles: path.resolve(assetsSrcDir, 'style'),
             components: path.resolve(assetsSrcDir, 'components'),

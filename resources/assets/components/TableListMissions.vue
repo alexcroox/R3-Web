@@ -10,12 +10,22 @@
 
         <tbody class="table-list__data">
 
-            <tr v-if="filteredData.length > 0" v-for="entry in filteredData" :class="{ 'table-list__row--in-progress': inProgress(entry)}" class="table-list__row">
+            <tr
+                v-if="filteredData.length > 0"
+                v-for="entry in filteredData"
+                :class="{ 'table-list__row--in-progress': inProgress(entry)}"
+                :data-url="missionUrl(entry)"
+                @click="loadMission"
+                class="table-list__row">
 
-                <td v-for="key in columns" :class="{ 'table-list__item--bold': key == 'mission' }" class="table-list__item">
+                <td
+                    v-for="key in columns"
+                    :class="{ 'table-list__item--bold': key == 'mission' }"
+                    class="table-list__item">
 
                     <span v-if="inProgress(entry, key)" class="table-list__item__progress">
-                        <img width="11" class="table-list__item__progress__icon" src="https://r3icons.titanmods.xyz/iconMan-civilian-trim.png">
+                        <img width="11" class="table-list__item__progress__icon"
+                            src="https://r3icons.titanmods.xyz/iconMan-civilian-trim.png">
                         In progress
                     </span>
                     <span v-else class="table-list__item__text">
@@ -35,6 +45,7 @@
 
 <script>
     import TableList from 'components/TableList.vue'
+    import router from 'routes'
 
     import _each from 'lodash.foreach'
 
@@ -61,6 +72,32 @@
                 sortKey: '',
                 sortOrders: sortOrders
             }
+        },
+
+        methods: {
+
+            sortBy: function(key) {
+                this.sortKey = key
+                this.sortOrders[key] = this.sortOrders[key] * -1
+            },
+
+            inProgress (entry, key) {
+                return (entry.in_progress_block && (key == "length" || !key))? true : false
+            },
+
+            missionUrl (entry) {
+
+                return `/${entry.id}/${entry.terrain}/${entry.slug}`
+            },
+
+            loadMission (event) {
+
+                console.log('loading mission', event.currentTarget.getAttribute('data-url'))
+
+                //router.push({ path: 'playback', query: { plan: 'private' }})
+                router.push({ path: event.currentTarget.getAttribute('data-url'), query: { test: 'testing' }})
+            },
+
         },
 
         computed: {
@@ -107,18 +144,6 @@
             capitalize: function(str) {
                 return str.charAt(0).toUpperCase() + str.slice(1)
             }
-        },
-
-        methods: {
-
-            sortBy: function(key) {
-                this.sortKey = key
-                this.sortOrders[key] = this.sortOrders[key] * -1
-            },
-
-            inProgress (entry, key) {
-                return (entry.in_progress_block && (key == "length" || !key))? true : false
-            },
         },
     }
 </script>
