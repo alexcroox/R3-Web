@@ -10,12 +10,10 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700" rel="stylesheet">
   </head>
   <body>
+
     <div id="app">
         <router-view></router-view>
     </div>
-
-    <script src="https://cdn.logrocket.com/LogRocket.min.js"></script>
-    <script>window.LogRocket && window.LogRocket.init('titanmods/r3');</script>
 
     <script>
         var settings = {
@@ -29,5 +27,6 @@
         };
     </script>
     <script src="/build.js"></script>
+
   </body>
 </html>
