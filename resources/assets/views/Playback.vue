@@ -24,7 +24,10 @@
                 playbackData: {},
                 terrainConfig: {},
                 missionId: this.urlData.params.id,
-                tileDomain: 'https://r3tiles-a.titanmods.xyz',
+                tileDomain: {
+                    static: 'https://r3tiles-a.titanmods.xyz',
+                    dynamic: 'https://r3tiles-{s}.titanmods.xyz' // sub domain support for faster loading (non http/2 servers)
+                },
             }
         },
 
@@ -53,7 +56,7 @@
                 if (this.$store.state.settings.mappingAliases[matchedTerrain] != null)
                     matchedTerrain = this.$store.state.settings.mappingAliases[matchedTerrain]
 
-                axios.get(`${this.tileDomain}/${matchedTerrain}/config.json`)
+                axios.get(`${this.tileDomain.static}/${matchedTerrain}/config.json`)
                     .then(response => {
 
                         console.log('Got terrain config', response.data);

@@ -1,7 +1,9 @@
 /node_modules
-/public/storage
-/public/hot
-/public/build.js
+/public/
+!/public/.htaccess
+!/public/index.php
+!/public/robots.txt
+!/public/web.config
 /storage/*.key
 /vendor
 /.idea

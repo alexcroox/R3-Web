@@ -7,7 +7,7 @@ module.exports = {
     entry: path.resolve(assetsSrcDir, 'app.js'),
     output: {
         path: path.resolve(__dirname, './public'),
-        publicPath: '/public/',
+        publicPath: '/',
         filename: 'build.js'
     },
     module: {
@@ -51,7 +51,8 @@ module.exports = {
             http: path.resolve(assetsSrcDir, 'http.js'),
             routes: path.resolve(assetsSrcDir, 'routes.js'),
             eventBus: path.resolve(assetsSrcDir, 'eventBus.js'),
-            styles: path.resolve(assetsSrcDir, 'style'),
+            styles: path.resolve(assetsSrcDir, 'assets/style'),
+            images: path.resolve(assetsSrcDir, 'assets/images'),
             components: path.resolve(assetsSrcDir, 'components'),
             views: path.resolve(assetsSrcDir, 'views')
         }

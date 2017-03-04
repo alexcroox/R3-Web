@@ -4,7 +4,6 @@ let routes = [
 
     {
         path: '/',
-        name: 'missions',
         component: require('./views/missions/Missions.vue'),
         props: true,
         children: [{
@@ -33,7 +32,6 @@ let routes = [
 
     {
         path: '/stats',
-        name: 'stats',
         component: require('./views/stats/Stats.vue'),
         children: [{
             path: '',
