@@ -2,7 +2,10 @@
     <div>
         <main-header :title="title"></main-header>
 
-        <tab :tabs="[{ text: 'All missions', route: 'missions.list', exact: true }, { text: 'My missions', route: 'missions.mine' }]"></tab>
+        <tab :tabs="[
+            { text: $t('all-missions'), route: 'missions.list', exact: true },
+            { text: $t('my-missions'), route: 'missions.mine' }
+        ]"></tab>
 
         <container>
             <feedback v-if="error" type="error" class="margin__top--medium" v-html="error"></feedback>
@@ -58,7 +61,7 @@
             },
 
             title () {
-                return this.unitName ? `${this.unitName} Mission Replays` : 'Mission Replays'
+                return this.unitName ? this.$t('mission-replays', { unitName: this.unitName }) : this.$t('mission-replays')
             },
         },
 

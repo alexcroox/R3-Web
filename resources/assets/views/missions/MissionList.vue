@@ -1,6 +1,11 @@
 <template>
     <container>
-        <list-search title="Missions" :listTotal="listData.length" @searched="updateSearchQuery($event)" placeholder="Search missions"></list-search>
+        <list-search
+            :title="ucfirst($t('missions'))"
+            :listTotal="listData.length"
+            @searched="updateSearchQuery($event)"
+            :placeholder="$t('search-missions')">
+        </list-search>
 
         <table-list-missions
             :data="listData"
@@ -16,6 +21,7 @@
     import TableListMissions from 'components/TableListMissions.vue'
 
     import _each from 'lodash.foreach'
+    import { ucfirst } from 'filters'
 
     export default {
         components: {
@@ -39,6 +45,7 @@
 
                 this.searchQuery = val
             },
+            ucfirst,
         },
 
         computed: {

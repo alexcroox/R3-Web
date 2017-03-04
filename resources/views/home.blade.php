@@ -19,6 +19,7 @@
         var settings = {
             apiBase: '{{ config('app.url') }}/api',
             mappingAliases: <?php echo $mappingAliases; ?>,
+            locales: <?php echo $locales; ?>,
 
             <?php
             foreach($settings as $key => $value) {

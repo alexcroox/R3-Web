@@ -1,9 +1,19 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-import VueRouter from 'vue-router'
+import VueI18n from 'vue-i18n'
 import axios from 'http'
 
+Vue.use(VueI18n)
+Vue.config.lang = 'sv'
+Vue.config.fallbackLang = 'en'
+
+// Setup our language strings
+Object.keys(settings.locales).forEach(function (lang) {
+    Vue.locale(lang, settings.locales[lang])
+})
+
+import VueRouter from 'vue-router'
 import router from 'routes'
 import store from './store'
 

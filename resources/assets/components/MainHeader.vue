@@ -6,19 +6,19 @@
             </h1>
 
             <div class="header__list">
-                <router-link :to="{ name: 'stats' }" class="header__list__item">
+                <router-link :to="{ name: 'stats.summary' }" class="header__list__item">
                     <i class="fa fa-area-chart" aria-hidden="true"></i>
-                    Stats
+                    {{ ucfirst($t('stats')) }}
                 </router-link>
 
                 <router-link :to="{ name: 'admin' }" class="header__list__item">
                     <i class="fa fa-lock" aria-hidden="true"></i>
-                    Admin
+                    {{ ucfirst($t('admin')) }}
                 </router-link>
 
                 <button class="header__list__item js-help" @click="showHelpModal">
                     <i class="fa fa-question-circle" aria-hidden="true"></i>
-                    Help
+                    {{ ucfirst($t('help')) }}
                 </button>
             </div>
         </header>
@@ -29,6 +29,7 @@
 
 <script>
     import 'font-awesome/css/font-awesome.css'
+    import { ucfirst } from 'filters'
 
     import HelpModal from 'views/modals/HelpModal.vue'
     import bus from 'eventBus'
@@ -43,7 +44,8 @@
         methods: {
             showHelpModal () {
                 bus.$emit('showHelpModal')
-            }
+            },
+            ucfirst,
         },
     }
 </script>

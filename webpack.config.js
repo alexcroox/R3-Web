@@ -50,6 +50,7 @@ module.exports = {
             'vue$': 'vue/dist/vue.common.js',
             http: path.resolve(assetsSrcDir, 'http.js'),
             routes: path.resolve(assetsSrcDir, 'routes.js'),
+            filters: path.resolve(assetsSrcDir, 'filters.js'),
             eventBus: path.resolve(assetsSrcDir, 'eventBus.js'),
             styles: path.resolve(assetsSrcDir, 'assets/style'),
             images: path.resolve(assetsSrcDir, 'assets/images'),
