@@ -4,21 +4,32 @@
 
         <tab :tabs="[{ text: 'All missions', route: 'missions.list', exact: true }, { text: 'My missions', route: 'missions.mine' }]"></tab>
 
+        <container>
+            <feedback v-if="error" type="error" class="margin__top--medium" v-html="error"></feedback>
+        </container>
+
         <router-view></router-view>
     </div>
 </template>
 
 <script>
     import axios from 'http'
+    import router from 'routes'
 
     import MainHeader from 'components/MainHeader.vue'
     import Tab from 'components/Tab.vue'
+    import Feedback from 'components/Feedback.vue'
+    import Container from 'components/Container.vue'
 
     export default {
         components: {
             MainHeader,
-            Tab
+            Tab,
+            Feedback,
+            Container,
         },
+
+        props: ['error'],
 
         data () {
 
@@ -29,17 +40,24 @@
         },
 
         mounted () {
-            console.log('Mission list mounted')
+
+            console.log('Missions mounted', this.error)
 
             this.startFetchTimer();
         },
 
+        beforeDestroy () {
+
+            this.stopFetchTimer();
+        },
+
         computed: {
-            unitName() {
+
+            unitName () {
                 return this.$store.state.settings.unitName
             },
 
-            title() {
+            title () {
                 return this.unitName ? `${this.unitName} Mission Replays` : 'Mission Replays'
             },
         },

@@ -18,6 +18,7 @@
     <script>
         var settings = {
             apiBase: '{{ config('app.url') }}/api',
+            mappingAliases: <?php echo $mappingAliases; ?>,
 
             <?php
             foreach($settings as $key => $value) {

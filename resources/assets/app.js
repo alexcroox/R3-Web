@@ -19,7 +19,10 @@ new Vue({
 
     router,
 
-    mounted () {
+    // We use created here because we want settings
+    // to be available to other components as soon as possible.
+    // Since it's being loaded from the php rendered view, this is possible
+    created () {
 
         this.setSettings();
     },

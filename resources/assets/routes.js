@@ -6,6 +6,7 @@ let routes = [
         path: '/',
         name: 'missions',
         component: require('./views/missions/Missions.vue'),
+        props: true,
         children: [{
             path: '',
             name: 'missions.list',

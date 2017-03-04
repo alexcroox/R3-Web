@@ -16,5 +16,10 @@ Route::get('{all}', function () {
     $request = Request::create('/api/settings', 'GET');
     $getSettings = Route::dispatch($request);
 
-    return view('home', ['settings' => json_decode($getSettings->content())]);
+    $mappingAliases = file_get_contents('https://r3tiles-a.titanmods.xyz/config.json');
+
+    return view('home', [
+        'settings' => json_decode($getSettings->content()),
+        'mappingAliases' => $mappingAliases
+    ]);
 })->where('all', '.*');
