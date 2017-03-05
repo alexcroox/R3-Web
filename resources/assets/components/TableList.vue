@@ -12,7 +12,7 @@
         text-align left
         margin-top 30px
         border-spacing 0 10px
-        border-collapse separate
+        border-collapse collapse
         width 100%
 
     .table-list__header-item
@@ -21,6 +21,7 @@
         font-weight 500
         font-size 14px
         padding 0 30px 5px
+        margin-top 5px
 
     .table-list__header-item__sort--asc:hover
         cursor n-resize

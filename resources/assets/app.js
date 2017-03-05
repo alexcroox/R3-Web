@@ -5,7 +5,7 @@ import VueI18n from 'vue-i18n'
 import axios from 'http'
 
 Vue.use(VueI18n)
-Vue.config.lang = 'sv'
+Vue.config.lang = 'en'
 Vue.config.fallbackLang = 'en'
 
 // Setup our language strings

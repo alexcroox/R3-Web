@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th v-for="key in columns" @click="sortBy(key)" :class="{ 'table-list__header-item__sort--asc': sortOrders[key] > 0, 'table-list__header-item__sort--desc': sortOrders[key] < 1  }" class="table-list__header-item">
-                    {{ key | capitalize }}
+                    {{ $t(key) | capitalize }}
                 </th>
             </tr>
         </thead>
@@ -37,7 +37,7 @@
             </tr>
 
             <tr v-if="filteredData.length == 0" v-for="n in 10"  class="table-list__row table-list__row--empty">
-                <td :colspan="columns.length" class="table-list__item table-list__item--loading">Loading...</td>
+                <td :colspan="columns.length" class="table-list__item table-list__item--loading">{{ ucfirst($t('loading')) }}...</td>
             </tr>
         </tbody>
     </table>
@@ -46,6 +46,7 @@
 <script>
     import TableList from 'components/TableList.vue'
     import router from 'routes'
+    import { ucfirst } from 'filters'
 
     import _each from 'lodash.foreach'
 
@@ -97,6 +98,7 @@
                 //router.push({ path: 'playback', query: { plan: 'private' }})
                 router.push({ path: event.currentTarget.getAttribute('data-url'), query: { test: 'testing' }})
             },
+            ucfirst,
 
         },
 
@@ -141,7 +143,7 @@
 
         filters: {
 
-            capitalize: function(str) {
+            capitalize (str) {
                 return str.charAt(0).toUpperCase() + str.slice(1)
             }
         },

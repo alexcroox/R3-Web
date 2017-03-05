@@ -19,6 +19,10 @@
         border-bottom 1px solid #E7EFF0
         padding 20px $sidePadding 0
 
+        @media (max-width $mobileBreakPoint)
+            padding-left $sidePaddingMobile
+            padding-right $sidePaddingMobile
+
     .tab__item
         display inline-block
         padding 15px 0
