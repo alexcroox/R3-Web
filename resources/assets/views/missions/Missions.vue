@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <main-header :title="title"></main-header>
 
         <tab :tabs="[
@@ -8,10 +9,18 @@
         ]"></tab>
 
         <container>
-            <feedback v-if="error" type="error" class="margin__top--medium" v-html="error"></feedback>
+
+            <feedback
+                v-if="errorFeedback"
+                type="error"
+                class="margin__top--medium">
+                <span slot="message" v-html="errorFeedback"></span>
+            </feedback>
+
         </container>
 
         <router-view></router-view>
+
     </div>
 </template>
 
@@ -37,7 +46,7 @@
         data () {
 
             return {
-
+                errorFeedback: this.error,
                 fetchTimer: null,
             }
         },
@@ -87,6 +96,12 @@
                         this.$store.commit('setMissionList', response.data)
                     })
                     .catch(error => {
+
+                        // If we've failed to get our mission data the first time
+                        // lets tell the user something is wrong with the API
+                        if (!this.$store.state.missions.length)
+                            this.errorFeedback = `Failed to fetch missions!`
+
                         console.log(error);
                     })
             }

@@ -20,8 +20,9 @@
 
                 <td
                     v-for="key in columns"
-                    :class="{ 'table-list__item--bold': key == 'mission' }"
-                    class="table-list__item">
+                    :class="{ 'table-list__item--bold': key == 'mission', 'table-list__item--responsive-header': key == 'mission' }"
+                    class="table-list__item"
+                    :data-title="ucfirst(key)">
 
                     <span v-if="inProgress(entry, key)" class="table-list__item__progress">
                         <img width="11" class="table-list__item__progress__icon"

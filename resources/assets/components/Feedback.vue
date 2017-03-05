@@ -1,7 +1,7 @@
 <template>
     <div class="feedback" :class="feedbackType">
         <i class="fa feedback__icon" :class="feedbackIcon"></i>
-        <slot></slot>
+        <slot name="message"></slot>
     </div>
 </template>
 

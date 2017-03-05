@@ -58,6 +58,7 @@
     .input-text
         inputText()
         position relative
+        width auto
 
     .input-text:focus
         border-color $buttonPrimaryColor
