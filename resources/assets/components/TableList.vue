@@ -66,6 +66,9 @@
                 font-weight 500
                 font-size 14px
 
+    .table-list__item--loading
+        color #FFF
+
     .table-list__item--bold
         font-weight 500
         font-size 17px

@@ -6,12 +6,17 @@
             </h1>
 
             <div class="header__list">
-                <router-link :to="{ name: 'stats.summary' }" class="header__list__item">
+                <router-link :to="{ name: 'missions.list' }" class="header__list__item" active-class="header__list__item--active">
+                    <i class="fa fa-list" aria-hidden="true"></i>
+                    {{ ucfirst($t('missions')) }}
+                </router-link>
+
+                <router-link :to="{ name: 'stats.summary' }" class="header__list__item" active-class="header__list__item--active">
                     <i class="fa fa-area-chart" aria-hidden="true"></i>
                     {{ ucfirst($t('stats')) }}
                 </router-link>
 
-                <router-link :to="{ name: 'admin' }" class="header__list__item">
+                <router-link :to="{ name: 'admin' }" class="header__list__item" active-class="header__list__item--active">
                     <i class="fa fa-lock" aria-hidden="true"></i>
                     {{ ucfirst($t('admin')) }}
                 </router-link>
@@ -29,12 +34,12 @@
         </header>
 
         <div v-if="mobileMenuOpen" class="header__mobile__menu">
-            <router-link :to="{ name: 'stats.summary' }" class="header__list__item">
+            <router-link :to="{ name: 'stats.summary' }" class="header__list__item" active-class="header__list__item--active">
                 <i class="fa fa-area-chart" aria-hidden="true"></i>
                 {{ ucfirst($t('stats')) }}
             </router-link>
 
-            <router-link :to="{ name: 'admin' }" class="header__list__item">
+            <router-link :to="{ name: 'admin' }" class="header__list__item" active-class="header__list__item--active">
                 <i class="fa fa-lock" aria-hidden="true"></i>
                 {{ ucfirst($t('admin')) }}
             </router-link>
@@ -128,6 +133,9 @@
     .header__list__item:hover
         opacity 0.7
         cursor pointer
+
+    .header__list__item--active
+        font-weight 700
 
     .header__list__item .fa
         margin-right 5px

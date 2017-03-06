@@ -1,14 +1,30 @@
 <template>
     <div class="tab__container">
-        <router-link v-for="item in tabs" :to="{ name: item.route }" :exact="item.exact" class="tab__item" active-class="tab__item--active">
+        <router-link
+            v-for="item in tabs"
+            :to="{ name: item.route }"
+            :exact="item.exact"
+            class="tab__item"
+            active-class="tab__item--active">
+
+            <i v-if="item.icon" :class="['fa', 'tab__item__icon', faIcon(item.icon)]" aria-hidden="true"></i>
+
             {{ item.text }}
+
         </router-link>
     </div>
 </template>
 
 <script>
     export default {
-        props: ['tabs']
+        props: ['tabs'],
+
+        methods: {
+
+            faIcon (icon) {
+                return `fa-${icon}`
+            }
+        },
     }
 </script>
 
@@ -45,4 +61,7 @@
         bottom 0
         left 0
         right 0
+
+    .tab__item__icon
+        margin-right 5px
 </style>

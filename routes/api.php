@@ -31,3 +31,9 @@ Route::group(['prefix' => 'shares'], function () {
     Route::post('/', 'ShareController@store');
     Route::get('/{id}', 'ShareController@fetchOne');
 });
+
+Route::group(['prefix' => 'stats'], function () {
+    Route::get('/', 'StatsController@fetchSummary');
+    Route::get('/terrains', 'StatsController@fetchTerrains');
+    Route::get('/attendance', 'StatsController@fetchAttendance');
+});

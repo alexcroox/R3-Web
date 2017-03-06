@@ -1,17 +1,17 @@
 <template>
     <container>
         <list-search
-            :title="ucfirst($t('terrains'))"
+            :title="ucfirst($t('players'))"
             :listTotal="listData.length"
             @searched="updateSearchQuery($event)"
-            :placeholder="$t('search-terrains')">
+            :placeholder="$t('search-players')">
         </list-search>
 
         <table-list-generic
             :data="listData"
             :columns="listColumns"
             :filterKey="searchQuery"
-            noDataMessage="No missions have been played yet!">
+            noDataMessage="No players have been found in missions yet">
         </table-list-generic>
     </container>
 </template>
@@ -36,7 +36,7 @@
             return {
 
                 searchQuery: '',
-                listColumns: ['terrain', 'play-count', 'last-played'],
+                listColumns: ['player', 'missions-attended', 'last-seen'],
             }
         },
 
@@ -54,11 +54,11 @@
 
             fetchStats () {
 
-                axios.get('/stats/terrains')
+                axios.get('/stats/attendance')
                     .then(response => {
 
-                        console.log('Got terrain stats', response.data);
-                        this.$store.commit('setStatsTerrains', response.data)
+                        console.log('Got attendance stats', response.data);
+                        this.$store.commit('setStatsAttendance', response.data)
                     })
                     .catch(error => {
                         console.error(error);
@@ -73,14 +73,15 @@
 
                 let listData = []
 
-                if(this.$store.state.stats.terrains) {
+                if(this.$store.state.stats.attendance) {
 
-                    _each(this.$store.state.stats.terrains, (item) => {
+                    _each(this.$store.state.stats.attendance, (item) => {
 
                         let itemData = item;
 
-                        itemData['play-count'] = item.play_count
-                        itemData['last-played'] = item.last_played_human
+                        itemData['player'] = item.name
+                        itemData['missions-attended'] = item.mission_count
+                        itemData['last-seen'] = item.last_seen_human
 
                         listData.push(itemData)
                     });

@@ -178,6 +178,7 @@ return [
 
         App\Providers\HelperServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
+        \L5Swagger\L5SwaggerServiceProvider::class,
 
     ],
 

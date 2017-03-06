@@ -3,8 +3,17 @@
         <table class="table-list">
             <thead>
                 <tr>
-                    <th v-for="key in columns" @click="sortBy(key)" :class="{ 'table-list__header-item__sort--asc': sortOrders[key] > 0, 'table-list__header-item__sort--desc': sortOrders[key] < 1  }" class="table-list__header-item">
-                        {{ $t(key) | capitalize }}
+                    <th
+                        v-for="key in columns"
+                        @click="sortBy(key)"
+                        :class="{
+                            'table-list__header-item__sort--asc': sortOrders[key] > 0,
+                            'table-list__header-item__sort--desc': sortOrders[key] < 1
+                        }"
+                        class="table-list__header-item">
+
+                        {{ $t(key) | capitalize | splitWord }}
+
                     </th>
                 </tr>
             </thead>
@@ -14,23 +23,15 @@
                 <tr
                     v-if="filteredData.length > 0"
                     v-for="entry in filteredData"
-                    :class="{ 'table-list__row--in-progress': inProgress(entry)}"
-                    :data-url="missionUrl(entry)"
-                    @click="loadMission"
                     class="table-list__row">
 
                     <td
                         v-for="key in columns"
-                        :class="{ 'table-list__item--bold': key == 'mission', 'table-list__item--responsive-header': key == 'mission' }"
+                        :class="{ 'table-list__item--responsive-header': key == columns[0] }"
                         class="table-list__item"
                         :data-title="ucfirst(key)">
 
-                        <span v-if="inProgress(entry, key)" class="table-list__item__progress">
-                            <img width="11" class="table-list__item__progress__icon"
-                                src="https://r3icons.titanmods.xyz/iconMan-civilian-trim.png">
-                            In progress
-                        </span>
-                        <span v-else class="table-list__item__text">
+                        <span class="table-list__item__text">
                             {{ entry[key] }}
                         </span>
 
@@ -44,12 +45,11 @@
             </tbody>
         </table>
 
-        <!-- TODO: Stop no missions flash from showing before ajax return -->
         <feedback
             v-if="noData"
             type="information"
             class="margin__top--medium">
-            <span slot="message" v-html="$t('no-player-missions', { unitName: unitName })"></span>
+            <span slot="message" v-html="noDataMessage"></span>
         </feedback>
     </div>
 </template>
@@ -74,7 +74,8 @@
             data: Array,
             columns: Array,
             filterKey: String,
-            noData: Boolean
+            noData: Boolean,
+            noDataMessage: String
         },
 
         data () {
@@ -92,36 +93,15 @@
 
         methods: {
 
-            sortBy: function(key) {
+            sortBy (key) {
                 this.sortKey = key
                 this.sortOrders[key] = this.sortOrders[key] * -1
-            },
-
-            inProgress (entry, key) {
-                return (entry.in_progress_block && (key == "length" || !key))? true : false
-            },
-
-            missionUrl (entry) {
-
-                return `/${entry.id}/${entry.terrain}/${entry.slug}`
-            },
-
-            loadMission (event) {
-
-                console.log('loading mission', event.currentTarget.getAttribute('data-url'))
-
-                //router.push({ path: 'playback', query: { plan: 'private' }})
-                router.push({ path: event.currentTarget.getAttribute('data-url'), query: { test: 'testing' }})
             },
             ucfirst,
 
         },
 
         computed: {
-
-            unitName () {
-                return this.$store.state.settings.unitName
-            },
 
             waitingForData () {
 
@@ -135,13 +115,6 @@
 
                 var order = this.sortOrders[sortKey] || 1
                 var data = this.data
-
-                // Custom sort keys based on consistent data not display data
-                if(sortKey == 'played')
-                    sortKey = 'created_at'
-
-                if(sortKey == 'length')
-                    sortKey = 'length_in_minutes'
 
                 // Searching?
                 if (filterKey) {
@@ -169,25 +142,12 @@
 
             capitalize (str) {
                 return str.charAt(0).toUpperCase() + str.slice(1)
-            }
+            },
+
+            splitWord (str) {
+
+                return str.replace('-', ' ')
+            },
         },
     }
 </script>
-
-<style lang="stylus">
-
-    .table-list__item__progress__icon
-        margin-right 10px
-        display inline-block
-        animation tableListSpin 3s infinite linear
-        transform-origin 50% 70%
-
-    .table-list__row:hover
-        cursor pointer
-
-    .table-list__row--empty:hover
-        cursor default
-
-    .table-list__row--in-progress:hover
-        cursor not-allowed
-</style>

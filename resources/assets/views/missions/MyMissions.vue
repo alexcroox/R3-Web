@@ -20,6 +20,7 @@
 
             <input-text
                 v-model="newPlayerId"
+                @enter="savePlayerId"
                 :placeholder="$t('arma-player-id')"
                 short="true"
                 name="my-player-id"
@@ -52,7 +53,7 @@
         <container v-if="playerId">
             <button @click="resetPlayerId" class="text-link text-link--with-icon margin__top--large">
                 <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                Change player ID
+                {{ $t('change-player-id') }}
             </button>
         </container>
 
@@ -149,6 +150,8 @@
 
                     if (!missionData.length)
                         this.noPlayerMissions = true
+                    else
+                        this.noPlayerMissions = false
 
                     console.log('missionData', missionData)
                 }

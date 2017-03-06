@@ -16,8 +16,10 @@
             :placeholder="placeholder"
             :class="{ 'input-text--short': short }"
             @keyup="$emit('keyup', $event.target.value)"
+            @keyup.enter="$emit('enter', $event.target.value)"
             @focus="focus"
-            @blur="blur">
+            @blur="blur"
+            @input="$emit('input', $event.target.value)">
     </div>
 
     <input
@@ -27,6 +29,7 @@
         :placeholder="placeholder"
         :class="{ 'input-text--short': short }"
         @keyup="$emit('keyup', $event.target.value)"
+        @keyup.enter="$emit('enter', $event.target.value)"
         @focus="focus"
         @blur="blur"
         @input="$emit('input', $event.target.value)">

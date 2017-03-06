@@ -2,7 +2,11 @@
     <div>
         <main-header :title="title"></main-header>
 
-        <tab :tabs="[{ text: 'All missions', route: 'missions.list', exact: true }, { text: 'My missions', route: 'missions.mine' }]"></tab>
+        <tab :tabs="[
+            { text: ucfirst($t('summary')), route: 'stats.summary', icon: 'tachometer', exact: true },
+            { text: ucfirst($t('terrains')), route: 'stats.terrains', icon: 'globe' },
+            { text: ucfirst($t('attendance')), route: 'stats.attendance', icon: 'user' },
+        ]"></tab>
 
         <router-view></router-view>
     </div>
@@ -13,6 +17,7 @@
 
     import MainHeader from 'components/MainHeader.vue'
     import Tab from 'components/Tab.vue'
+    import { ucfirst } from 'filters'
 
     export default {
         components: {
@@ -42,18 +47,19 @@
 
         methods: {
 
-            fetchMissions () {
+            fetchStats () {
 
-                axios.get('/missions')
+                axios.get('/stats/summary')
                     .then(response => {
 
                         console.log('Got stats', response.data);
-                        this.$store.commit('setMissionList', response.data)
+                        this.$store.commit('setStatsSummary', response.data)
                     })
                     .catch(error => {
                         console.log(error);
                     })
-            }
+            },
+            ucfirst,
         }
     }
 </script>
