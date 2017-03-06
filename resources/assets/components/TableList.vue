@@ -70,9 +70,6 @@
         font-weight 500
         font-size 17px
 
-    .table-list__item--loading
-        color #FFF
-
     @keyframes tableListSpin
         0%
             transform rotate(0deg)

@@ -1,8 +1,21 @@
 <template>
-    <div class="container">
+    <div
+        class="container"
+        :class="{
+            'container--box': box,
+        } ">
+
         <slot></slot>
     </div>
 </template>
+
+<script>
+    export default {
+
+        props: ['box', 'child'],
+
+    }
+</script>
 
 <style lang="stylus">
     @import '~styles/index.styl'
@@ -16,8 +29,9 @@
 
     .container--box
         background #FFF
-        padding $sidePadding
-        margin $sidePadding
+        padding 50px $sidePadding
+        margin-left $sidePadding
+        margin-right sidePadding
 
         @media (max-width $mobileBreakPoint)
             padding $sidePaddingMobile

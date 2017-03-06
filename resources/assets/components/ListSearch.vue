@@ -1,16 +1,21 @@
 <template>
     <div class="list-search__container">
-        <h3 class="list-search__title">{{ title }} <span v-if="listTotal > 0">({{ listTotal }})</span></h3>
+
+        <h3 class="list-search__title">
+            {{ title }}
+            <span v-if="listTotal > 0 || finishedLoading">({{ listTotal }})</span>
+        </h3>
 
         <input-text
+            class="table-list__search"
             icon="search"
-            inputClass="table-list__search"
             @keyup="$emit('searched', $event)"
             noBackground="true"
             bold="true"
             inline="true"
             :placeholder="placeholder">
         </input-text>
+
     </div>
 </template>
 
@@ -18,7 +23,7 @@
     import InputText from 'components/InputText.vue'
 
     export default {
-        props: ['title', 'listTotal', 'placeholder'],
+        props: ['title', 'listTotal', 'placeholder', 'finishedLoading'],
 
         components: {
             InputText

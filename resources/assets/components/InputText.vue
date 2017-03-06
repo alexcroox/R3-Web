@@ -1,5 +1,5 @@
 <template>
-    <div class="input-text__wrap"
+    <div v-if="icon" class="input-text__wrap"
         :class="{
             'input-text__wrap--with-icon': icon,
             'input-text__wrap--focus': inputFocused,
@@ -14,17 +14,28 @@
             type="text"
             class="input-text"
             :placeholder="placeholder"
-            :class="[{ 'input-text--short': short }, inputClass]"
+            :class="{ 'input-text--short': short }"
             @keyup="$emit('keyup', $event.target.value)"
             @focus="focus"
             @blur="blur">
     </div>
+
+    <input
+        v-else
+        type="text"
+        class="input-text"
+        :placeholder="placeholder"
+        :class="{ 'input-text--short': short }"
+        @keyup="$emit('keyup', $event.target.value)"
+        @focus="focus"
+        @blur="blur"
+        @input="$emit('input', $event.target.value)">
 </template>
 
 <script>
     export default {
 
-        props: ['icon', 'noBackground', 'placeholder', 'inline', 'bold', 'short', 'inputClass'],
+        props: ['value', 'icon', 'noBackground', 'placeholder', 'inline', 'bold', 'short'],
 
         data () {
             return {
@@ -56,8 +67,16 @@
     @import '~styles/index.styl'
 
     .input-text
-        inputText()
+        buttonLabelsMetaContent()
+        border none
+        background #f4f8f9
+        border-radius $borderRadiusSmall
+        width 100%
+        padding 14px 20px 15px
+        font-weight 400
         position relative
+        display inline-block
+        vertical-align middle
         width auto
 
     .input-text:focus
@@ -114,6 +133,6 @@
         display inline-block
 
     .input-text--short
-        width 400px
+        width 250px
 
 </style>

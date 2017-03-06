@@ -10,7 +10,7 @@ use Carbon\Carbon;
 
 class MissionController extends Controller
 {
-    private $selectPlayerCount = 'COUNT(distinct infantry.player_id) as player_count';
+    private $selectPlayerCount = "COUNT(distinct infantry.player_id) as player_count, GROUP_CONCAT(infantry.player_id SEPARATOR ',') as raw_player_list";
     private $selectLastEventTimestamp = '(SELECT p.added_on FROM infantry_positions p WHERE p.mission = missions.id ORDER BY p.mission_time DESC LIMIT 1) as last_event_timestamp';
 
     /**
@@ -35,6 +35,7 @@ class MissionController extends Controller
                     )
                     ->leftJoin('infantry', 'infantry.mission', '=', 'missions.id')
                     ->where('missions.hidden', 0)
+                    ->where('infantry.player_id', '<>', '_SP_AI_')
                     ->groupBy('missions.id')
                     ->get();
 
@@ -50,6 +51,7 @@ class MissionController extends Controller
             $missionStart = Carbon::parse($mission->created_at);
             $missionStart->setTimezone(config('app.timezone'));
 
+            $mission->player_list = explode(",", $mission->raw_player_list);
             $mission->length_in_minutes = $missionStart->diffInMinutes($lastEventTime);
             $mission->minutes_since_last_event = $lastEventTime->diffInMinutes($currentTime);
             $mission->length_human = humanTimeDifference($lastEventTime, $missionStart);
@@ -59,6 +61,8 @@ class MissionController extends Controller
 
             // Generate and save a slug if required
             $mission->slug = $this->generateSlug($mission);
+
+            unset($mission->raw_player_list);
         }
 
         return $missions;

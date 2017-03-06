@@ -24,6 +24,10 @@
                         return 'fa-exclamation'
                         break;
 
+                    case 'information':
+                        return 'fa-info'
+                        break;
+
                     default:
                         return 'fa-check'
                 }
@@ -47,4 +51,10 @@
         background #FDEBE8
         color #EE8574
         font-weight 500
+
+    .feedback--information
+        background #489FDF
+        color #FFF
+        font-weight 500
+
 </style>

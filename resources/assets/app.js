@@ -13,10 +13,12 @@ Object.keys(settings.locales).forEach(function (lang) {
     Vue.locale(lang, settings.locales[lang])
 })
 
+import VueCookie from 'vue-cookie'
+Vue.use(VueCookie);
+
 import VueRouter from 'vue-router'
 import router from 'routes'
 import store from './store'
-
 Vue.use(VueRouter)
 
 new Vue({

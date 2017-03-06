@@ -1,51 +1,62 @@
 <template>
-    <table class="table-list">
-        <thead>
-            <tr>
-                <th v-for="key in columns" @click="sortBy(key)" :class="{ 'table-list__header-item__sort--asc': sortOrders[key] > 0, 'table-list__header-item__sort--desc': sortOrders[key] < 1  }" class="table-list__header-item">
-                    {{ $t(key) | capitalize }}
-                </th>
-            </tr>
-        </thead>
+    <div>
+        <table class="table-list">
+            <thead>
+                <tr>
+                    <th v-for="key in columns" @click="sortBy(key)" :class="{ 'table-list__header-item__sort--asc': sortOrders[key] > 0, 'table-list__header-item__sort--desc': sortOrders[key] < 1  }" class="table-list__header-item">
+                        {{ $t(key) | capitalize }}
+                    </th>
+                </tr>
+            </thead>
 
-        <tbody class="table-list__data">
+            <tbody class="table-list__data">
 
-            <tr
-                v-if="filteredData.length > 0"
-                v-for="entry in filteredData"
-                :class="{ 'table-list__row--in-progress': inProgress(entry)}"
-                :data-url="missionUrl(entry)"
-                @click="loadMission"
-                class="table-list__row">
+                <tr
+                    v-if="filteredData.length > 0"
+                    v-for="entry in filteredData"
+                    :class="{ 'table-list__row--in-progress': inProgress(entry)}"
+                    :data-url="missionUrl(entry)"
+                    @click="loadMission"
+                    class="table-list__row">
 
-                <td
-                    v-for="key in columns"
-                    :class="{ 'table-list__item--bold': key == 'mission', 'table-list__item--responsive-header': key == 'mission' }"
-                    class="table-list__item"
-                    :data-title="ucfirst(key)">
+                    <td
+                        v-for="key in columns"
+                        :class="{ 'table-list__item--bold': key == 'mission', 'table-list__item--responsive-header': key == 'mission' }"
+                        class="table-list__item"
+                        :data-title="ucfirst(key)">
 
-                    <span v-if="inProgress(entry, key)" class="table-list__item__progress">
-                        <img width="11" class="table-list__item__progress__icon"
-                            src="https://r3icons.titanmods.xyz/iconMan-civilian-trim.png">
-                        In progress
-                    </span>
-                    <span v-else class="table-list__item__text">
-                        {{ entry[key] }}
-                    </span>
+                        <span v-if="inProgress(entry, key)" class="table-list__item__progress">
+                            <img width="11" class="table-list__item__progress__icon"
+                                src="https://r3icons.titanmods.xyz/iconMan-civilian-trim.png">
+                            In progress
+                        </span>
+                        <span v-else class="table-list__item__text">
+                            {{ entry[key] }}
+                        </span>
 
-                </td>
+                    </td>
 
-            </tr>
+                </tr>
 
-            <tr v-if="filteredData.length == 0" v-for="n in 10"  class="table-list__row table-list__row--empty">
-                <td :colspan="columns.length" class="table-list__item table-list__item--loading">{{ ucfirst($t('loading')) }}...</td>
-            </tr>
-        </tbody>
-    </table>
+                <tr v-if="waitingForData" v-for="n in 10"  class="table-list__row table-list__row--empty">
+                    <td :colspan="columns.length" class="table-list__item table-list__item--loading"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <feedback
+            v-if="noData"
+            type="information"
+            class="margin__top--medium">
+            <span slot="message" v-html="$t('no-player-missions', { unitName: unitName })"></span>
+        </feedback>
+    </div>
 </template>
 
 <script>
     import TableList from 'components/TableList.vue'
+    import Feedback from 'components/Feedback.vue'
+
     import router from 'routes'
     import { ucfirst } from 'filters'
 
@@ -54,13 +65,15 @@
     export default {
 
         components: {
-            TableList
+            TableList,
+            Feedback
         },
 
         props: {
             data: Array,
             columns: Array,
-            filterKey: String
+            filterKey: String,
+            noData: Boolean
         },
 
         data () {
@@ -104,6 +117,15 @@
         },
 
         computed: {
+
+            unitName () {
+                return this.$store.state.settings.unitName
+            },
+
+            waitingForData () {
+
+                return this.filteredData.length == 0 && !this.noData
+            },
 
             filteredData () {
 
