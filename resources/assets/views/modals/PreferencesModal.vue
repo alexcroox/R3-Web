@@ -1,0 +1,133 @@
+<template>
+    <modal :show="show" @close="closeModal">
+
+        <h1>
+            <i class="fa fa-cog" aria-hidden="true"></i>
+            {{ $t('r3-preferences') }}
+        </h1>
+
+        <p class="margin__top--medium">{{ $t('customise-r3-experience') }}</p>
+
+        <h3 class="margin__top--large">{{ ucfirst($t('language')) }}</h3>
+
+        <p>
+
+            <input-select
+                :options="languages"
+                :value="existingLanguage"
+                @changed="onLanguageChange"
+                placeholder="Select language"
+                class="margin__top--medium margin__bottom--medium">
+            </input-select>
+        </p>
+
+        <feedback
+            v-if="missingStringsForCurrentLocale"
+            type="information"
+            class="margin__top--medium margin__bottom--medium">
+            <span slot="message" v-html="$t('missing-strings', { numMissing: missingStringsForCurrentLocale })"></span>
+        </feedback>
+
+        <p v-html="$t('contribute-translations',
+            {
+                'url': 'https://github.com/alexcroox/R3-Web/wiki',
+                'class': 'text-link text-link--with-underline',
+                'target': '_blank'
+            })"></p>
+
+    </modal>
+</template>
+
+<script>
+    import 'font-awesome/css/font-awesome.css'
+    import 'styles/components/margin.styl'
+    import 'styles/components/text-link.styl'
+
+    import Modal from 'components/Modal.vue'
+    import InputSelect from 'components/InputSelect.vue'
+    import FormButton from 'components/FormButton.vue'
+    import Feedback from 'components/Feedback.vue'
+
+    import bus from 'eventBus'
+    import { ucfirst } from 'filters'
+    import _find from 'lodash.find'
+    import _each from 'lodash.foreach'
+
+    export default {
+
+        components: {
+            Modal,
+            InputSelect,
+            FormButton,
+            Feedback
+        },
+
+        data () {
+            return {
+
+                show: false,
+
+                languages: this.formatLanguages(),
+
+                locale: this.$store.state.preference.locale,
+            }
+        },
+
+        methods: {
+
+            closeModal () {
+                this.show = false
+            },
+
+            formatLanguages () {
+
+                let langs = []
+
+                _each(this.$store.state.settings.locales, (localeData, locale) => {
+
+                    langs.push({
+                        "value": locale,
+                        "text": localeData.display
+                    })
+                })
+
+                return langs
+            },
+
+            onLanguageChange (valObject) {
+
+                this.locale = valObject.value
+
+                this.$store.commit('setPreferenceLanguage', valObject.value)
+
+                this.$cookie.set('locale', this.locale, { expires: '3Y' });
+
+                this.$locale.change(this.locale)
+            },
+
+            ucfirst,
+        },
+
+        computed: {
+
+            existingLanguage () {
+
+                let locale = this.locale
+
+                return _find(this.languages, (l) => { return l.value == locale });
+            },
+
+            missingStringsForCurrentLocale () {
+
+                return (this.$store.state.settings.locales[this.locale].missingStringCount > 0)? this.$store.state.settings.locales[this.locale].missingStringCount : false
+            },
+        },
+
+        mounted () {
+
+            bus.$on('showPreferencesModal', () => {
+                this.show = true
+            })
+        }
+    }
+</script>

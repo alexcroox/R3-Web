@@ -1,7 +1,6 @@
 import VueRouter from 'vue-router'
 
 let routes = [
-
     {
         path: '/',
         component: require('./views/missions/Missions.vue'),
@@ -52,7 +51,6 @@ let routes = [
         path: '*',
         component: require('./views/NotFound.vue')
     }
-
 ]
 
 export default new VueRouter({

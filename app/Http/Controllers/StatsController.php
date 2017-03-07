@@ -13,6 +13,21 @@ Carbon::setLocale(config('app.locale'));
 
 class StatsController extends Controller
 {
+    /**
+     * @SWG\Get(
+     *     tags={"Stats"},
+     *     path="/stats/summary",
+     *     summary="Returns summary stats",
+     *     @SWG\Response(
+     *         response=200,
+     *         description="A list of all summary stats"
+     *     )
+     * )
+     */
+    public function fetchSummary()
+    {
+
+    }
 
     /**
      * @SWG\Get(

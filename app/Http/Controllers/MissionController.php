@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Setting;
 
 class MissionController extends Controller
 {
@@ -27,6 +28,7 @@ class MissionController extends Controller
      */
     public function fetchAllVisible()
     {
+
         $missions = DB::table('missions')
                     ->select(
                         'missions.*',
@@ -57,7 +59,7 @@ class MissionController extends Controller
             $mission->length_human = humanTimeDifference($lastEventTime, $missionStart);
             $mission->played_human = humanEventOccuredFromNow($missionStart);
 
-            $mission->in_progress_block = ($mission->minutes_since_last_event < config('r3.minutes_mission_end_block'))? true : false;
+            $mission->in_progress_block = ($mission->minutes_since_last_event < Setting::get('minutesMissionEndBlock', 2))? true : false;
 
             // Generate and save a slug if required
             $mission->slug = $this->generateSlug($mission);

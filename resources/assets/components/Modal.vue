@@ -13,8 +13,6 @@
 </template>
 
 <script>
-    import bus from 'eventBus'
-
     export default {
 
         props: ['show']
@@ -55,22 +53,25 @@
         top 50%
         left 50%
         min-width 295px
+        max-height 90%
         transform translateX(-50%) translateY(-50%) scale(0.7)
         background #F2F7F8
         border-radius 4px
         padding 40px 40px
-        max-height 90%
         overflow-y auto
         overflow-x hidden
         opacity 0
         transition all 0.3s
 
+        @media (max-width 1000px)
+            min-width 70%
+
+        @media (max-width 700px)
+            min-width 90%
+
         h3
             header()
             font-weight 700
-
-        p
-            margin-top 10px
 
     .modal--show .modal__content
         transform translateX(-50%) translateY(-50%) scale(1)

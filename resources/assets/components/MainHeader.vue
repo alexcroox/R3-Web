@@ -21,7 +21,12 @@
                     {{ ucfirst($t('admin')) }}
                 </router-link>
 
-                <button class="header__list__item js-help" @click="showHelpModal">
+                <button class="header__list__item" @click="showPreferencesModal">
+                    <i class="fa fa-cog" aria-hidden="true"></i>
+                    {{ ucfirst($t('preferences')) }}
+                </button>
+
+                <button class="header__list__item" @click="showHelpModal">
                     <i class="fa fa-question-circle" aria-hidden="true"></i>
                     {{ ucfirst($t('help')) }}
                 </button>
@@ -44,13 +49,14 @@
                 {{ ucfirst($t('admin')) }}
             </router-link>
 
-            <button class="header__list__item js-help" @click="showHelpModal">
+            <button class="header__list__item" @click="showHelpModal">
                 <i class="fa fa-question-circle" aria-hidden="true"></i>
                 {{ ucfirst($t('help')) }}
             </button>
         </div>
 
         <help-modal></help-modal>
+        <preferences-modal></preferences-modal>
     </div>
 </template>
 
@@ -59,9 +65,16 @@
     import { ucfirst } from 'filters'
 
     import HelpModal from 'views/modals/HelpModal.vue'
+    import PreferencesModal from 'views/modals/PreferencesModal.vue'
     import bus from 'eventBus'
 
     export default {
+
+        components: {
+            HelpModal,
+            PreferencesModal
+        },
+
         props: ['title'],
 
         data () {
@@ -71,14 +84,16 @@
             }
         },
 
-        components: {
-            HelpModal
-        },
-
         methods: {
+
             showHelpModal () {
                 bus.$emit('showHelpModal')
             },
+
+            showPreferencesModal () {
+                bus.$emit('showPreferencesModal')
+            },
+
             ucfirst,
         },
     }

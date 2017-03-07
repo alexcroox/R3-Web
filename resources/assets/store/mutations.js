@@ -1,6 +1,7 @@
 export const state = {
     settings: {},
     missions: [],
+    preference: {},
     stats: {
         summary: {},
         terrains: [],
@@ -24,5 +25,9 @@ export const mutations = {
 
     setStatsAttendance(state, attendance) {
         state.stats.attendance = attendance
+    },
+
+    setPreferenceLanguage(state, locale) {
+        state.preference.locale = locale
     },
 }

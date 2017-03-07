@@ -16,5 +16,10 @@ class SettingsTableSeeder extends Seeder
             'key' => 'unitName',
             'value' => 'Unit Name'
         ]);
+
+        DB::table('settings')->insert([
+            'key' => 'minutesMissionEndBlock',
+            'value' => 2
+        ]);
     }
 }

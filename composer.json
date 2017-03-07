@@ -6,6 +6,7 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "anlutro/l4-settings": "^0.5.0",
         "barryvdh/laravel-cors": "^0.8.6",
         "darkaonline/l5-swagger": "~4.0",
         "laravel/framework": "5.4.*",
