@@ -1,6 +1,8 @@
 <template>
     <div class="playback__container">
 
+        <full-screen-loader v-if="loading" :text="currentLoadingStage"></full-screen-loader>
+
         <leaflet-map v-if="foundTerrain" :terrainConfig="terrainConfig" :tileDomain="tileDomain"></leaflet-map>
     </div>
 </template>
@@ -8,12 +10,15 @@
 <script>
     import axios from 'http'
     import router from 'routes'
+    import _each from 'lodash.foreach'
 
     import LeafletMap from 'components/LeafletMap.vue'
+    import FullScreenLoader from 'components/FullScreenLoader.vue'
 
     export default {
         components: {
             LeafletMap,
+            FullScreenLoader
         },
 
         props: ['urlData'],
@@ -28,6 +33,21 @@
                     static: 'https://r3tiles-a.titanmods.xyz',
                     dynamic: 'https://r3tiles-{s}.titanmods.xyz' // sub domain support for faster loading (non http/2 servers)
                 },
+                loading: true,
+                loadingStages: {
+                    map: {
+                        active: true,
+                        text: 'Loading map'
+                    },
+                    missionInfo: {
+                        active: false,
+                        text: 'Loading mission'
+                    },
+                    missionEvents: {
+                        active: false,
+                        text: 'Loading events'
+                    },
+                }
             }
         },
 
@@ -96,6 +116,19 @@
 
             unitName () {
                 return this.$store.state.settings.unitName
+            },
+
+            currentLoadingStage () {
+
+                let activeText = ''
+
+                _each(this.loadingStages, stage => {
+
+                    if (stage.active)
+                        activeText = stage.text
+                })
+
+                return activeText
             },
         },
 

@@ -12,3 +12,4 @@ Homestead.yaml
 .env
 yarn.lock
 composer.lock
+npm-debug.log
