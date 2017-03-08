@@ -7,6 +7,7 @@
 
 <script>
     export default {
+
         props: ['type'],
 
         computed: {

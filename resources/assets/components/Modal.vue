@@ -1,13 +1,23 @@
 <template>
-    <div class="modal" :class="{ 'modal--show': show }">
+    <div class="modal" :class="[{ 'modal--show': show }, `modal--${width}`]">
         <div class="modal__mask"></div>
 
         <div class="modal__content">
-            <button class="modal__close" @click="$emit('close')">
-                <i class="fa fa-times"></i>
-            </button>
 
-            <slot></slot>
+            <div class="modal__header">
+
+                <h1><slot name="header"></slot></h1>
+
+                <button class="modal__close" @click="$emit('close')">
+                    <i class="fa fa-times"></i>
+                </button>
+
+            </div>
+
+            <div class="modal__body">
+                <slot name="body"></slot>
+            </div>
+
         </div>
     </div>
 </template>
@@ -15,12 +25,23 @@
 <script>
     export default {
 
-        props: ['show']
+        props: {
+            show: Boolean,
+            width: {
+                type: String,
+                default: 'normal'
+            }
+        },
 
     }
 </script>
 
 <style lang="stylus">
+    @import '~styles/index.styl'
+
+    $modalBorderRaduis = 4px
+    $modalWidthNormal = 800px
+
     .modal
         position fixed
         z-index 9999
@@ -31,9 +52,15 @@
         bottom 0
         width 100%
         height 100%
+        visibility hidden
+        backface-visibility hidden
+        display flex
+        align-items center
+        justify-content center
+        text-align center
 
     .modal--show
-        display block
+        visibility visible
 
     .modal__mask
         position fixed
@@ -45,22 +72,24 @@
         width 100%
         height 100%
         transition all 0.3s
+        visibility hidden
+        opacity 0
         z-index 1
 
+    .modal--show .modal__mask
+        opacity 1
+        visibility visible
+
     .modal__content
-        position fixed
         z-index 2
-        top 50%
-        left 50%
         min-width 295px
         max-height 90%
-        transform translateX(-50%) translateY(-50%) scale(0.7)
-        background #F2F7F8
-        border-radius 4px
-        padding 40px 40px
+        border-radius $modalBorderRaduis
         overflow-y auto
         overflow-x hidden
+        text-align left
         opacity 0
+        transform scale(0.7)
         transition all 0.3s
 
         @media (max-width 1000px)
@@ -69,21 +98,41 @@
         @media (max-width 700px)
             min-width 90%
 
-        h3
-            header()
-            font-weight 700
-
     .modal--show .modal__content
-        transform translateX(-50%) translateY(-50%) scale(1)
         opacity 1
+        transform scale(1)
+
+    .modal--normal .modal__content
+        max-width $modalWidthNormal
+
+    .modal__header
+        padding 17px 40px
+        background $navBackgroundColor
+        color #FFF
+        border-radius $modalBorderRaduis $modalBorderRaduis 0 0
+        position relative
+        display flex
+        align-items center
+
+    .modal__header h1
+        color #FFF
+        font-size 21px
+
+    .modal__body
+        padding 20px 40px 40px 40px
+        border-radius 0 0 $modalBorderRaduis $modalBorderRaduis
+        background $backgroundPrimaryColor
+
+    .modal__body h3
+        header()
+        font-weight 700
 
     .modal__close
         position absolute
-        top 10px
-        right 15px
+        right 40px
         font-size 21px
         line-height 21px
-        color #6b6b6b
+        color #FFF
 
     .modal__close:hover
         cursor pointer

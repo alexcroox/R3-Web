@@ -1,39 +1,43 @@
 <template>
     <modal :show="show" @close="closeModal">
 
-        <h1>
+        <span slot="header">
             <i class="fa fa-cog" aria-hidden="true"></i>
-            {{ $t('r3-preferences') }}
-        </h1>
+            {{ ucfirst($t('preferences')) }}
+        </span>
 
-        <p class="margin__top--medium">{{ $t('customise-r3-experience') }}</p>
+        <div slot="body">
 
-        <h3 class="margin__top--large">{{ ucfirst($t('language')) }}</h3>
+            <p class="margin__top--medium">{{ $t('customise-r3-experience') }}</p>
 
-        <p>
+            <h3 class="margin__top--large">{{ ucfirst($t('language')) }}</h3>
 
-            <input-select
-                :options="languages"
-                :value="existingLanguage"
-                @changed="onLanguageChange"
-                placeholder="Select language"
+            <p>
+
+                <input-select
+                    :options="languages"
+                    :value="existingLanguage"
+                    @changed="onLanguageChange"
+                    placeholder="Select language"
+                    class="margin__top--medium margin__bottom--medium">
+                </input-select>
+            </p>
+
+            <feedback
+                v-if="missingStringsForCurrentLocale"
+                type="information"
                 class="margin__top--medium margin__bottom--medium">
-            </input-select>
-        </p>
+                <span slot="message" v-html="$t('missing-strings', { numMissing: missingStringsForCurrentLocale })"></span>
+            </feedback>
 
-        <feedback
-            v-if="missingStringsForCurrentLocale"
-            type="information"
-            class="margin__top--medium margin__bottom--medium">
-            <span slot="message" v-html="$t('missing-strings', { numMissing: missingStringsForCurrentLocale })"></span>
-        </feedback>
-
-        <p v-html="$t('contribute-translations',
-            {
-                'url': 'https://github.com/alexcroox/R3-Web/wiki',
-                'class': 'text-link text-link--with-underline',
-                'target': '_blank'
-            })"></p>
+            <p v-html="$t('contribute-translations',
+                {
+                    'url': 'https://github.com/alexcroox/R3-Web/wiki',
+                    'class': 'text-link text-link--with-underline',
+                    'target': '_blank'
+                })">
+            </p>
+        </div>
 
     </modal>
 </template>

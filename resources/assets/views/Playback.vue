@@ -11,6 +11,7 @@
     import axios from 'http'
     import router from 'routes'
     import _each from 'lodash.foreach'
+    import _map from 'lodash.map'
 
     import LeafletMap from 'components/LeafletMap.vue'
     import FullScreenLoader from 'components/FullScreenLoader.vue'
@@ -60,6 +61,10 @@
 
             this.getTerrainInfo()
             this.fetchMissionInfo()
+
+            setTimeout(() => {
+                this.changeLoadingStage('missionInfo')
+            }, 5000);
         },
 
         methods: {
@@ -109,6 +114,17 @@
                         console.error('Error fetching mission info', error)
                         this.errorReturnToMissionList('That mission cannot be found!')
                     })
+            },
+
+            changeLoadingStage (stageType) {
+
+                // Set all current stages to false
+                _.map(this.loadingStages, stage => {
+
+                    return stage.active = false
+                });
+
+                this.loadingStages[stageType].active = true
             }
         },
 

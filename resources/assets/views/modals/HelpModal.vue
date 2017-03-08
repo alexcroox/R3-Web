@@ -1,30 +1,35 @@
 <template>
-    <modal :show="show" @close="closeModal">
-        <h1>
+    <modal :show="show" @close="closeModal" width="normal">
+
+        <span slot="header">
             <i class="fa fa-question-circle" aria-hidden="true"></i>
-            R3 help
-        </h1>
+            Help
+        </span>
 
-        <h3 class="margin__top--large">A terrain is missing</h3>
-        <p class="margin__top--small">
-            R3 has an automated tiler which allows you to add new terrains that every user of R3 across all unit websites will immediately and automatically benefit from.
-            <br><br>
-            Follow <a href="https://github.com/alexcroox/R3-Web/wiki/Adding-new-terrains" class="text-link text-link--with-underline" target="_blank">instructions here</a> to add support for a new terrain.
-        </p>
+        <div slot="body">
 
-        <h3 class="margin__top--large">A vehicle has the wrong icon</h3>
-        <p class="margin__top--small">
-            R3 has an automated vehicle icon colourizer which allows you to upload new vehicle icons that every user of R3 across all unit websites will immediately and automatically benefit from.
-            <br><br>
-            Follow <a href="https://github.com/alexcroox/R3-Web/wiki/Adding-new-icons" class="text-link text-link--with-underline" target="_blank">instructions here</a> to add new vehicle icons.
-        </p>
+            <h3>A terrain is missing</h3>
+            <p class="margin__top--small">
+                R3 has an automated tiler which allows you to add new terrains that every user of R3 across all unit websites will immediately and automatically benefit from.
+                <br><br>
+                Follow <a href="https://github.com/alexcroox/R3-Web/wiki/Adding-new-terrains" class="text-link text-link--with-underline" target="_blank">instructions here</a> to add support for a new terrain.
+            </p>
 
-        <h3 class="margin__top--large">Any other issues</h3>
-        <p class="margin__top--small">
-            Please file an issue on the <a href="https://github.com/alexcroox/R3-Web" class="text-link text-link--with-underline" target="_blank">R3 GitHub</a>
-            <br><br>
-            If you'd prefer to chat to the developer look for Titan in the <a href="https://slackin.ace3mod.com/" class="text-link text-link--with-underline" target="_blank">ACE3 Slack</a> or Arma 3 Discord
-        </p>
+            <h3 class="margin__top--large">A vehicle has the wrong icon</h3>
+            <p class="margin__top--small">
+                R3 has an automated vehicle icon colourizer which allows you to upload new vehicle icons that every user of R3 across all unit websites will immediately and automatically benefit from.
+                <br><br>
+                Follow <a href="https://github.com/alexcroox/R3-Web/wiki/Adding-new-icons" class="text-link text-link--with-underline" target="_blank">instructions here</a> to add new vehicle icons.
+            </p>
+
+            <h3 class="margin__top--large">Any other issues</h3>
+            <p class="margin__top--small">
+                Please file an issue on the <a href="https://github.com/alexcroox/R3-Web" class="text-link text-link--with-underline" target="_blank">R3 GitHub</a>
+                <br><br>
+                If you'd prefer to chat to the developer look for Titan in the <a href="https://slackin.ace3mod.com/" class="text-link text-link--with-underline" target="_blank">ACE3 Slack</a> or Arma 3 Discord
+            </p>
+        </div>
+
     </modal>
 </template>
 

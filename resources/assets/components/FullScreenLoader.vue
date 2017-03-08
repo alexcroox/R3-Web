@@ -13,10 +13,18 @@
     export default {
 
         props: ['text'],
+
+        watch: {
+
+            text () {
+
+            }
+        }
     }
 </script>
 
 <style lang="stylus">
+
     .fullscreen-loader
         position fixed
         top 0
@@ -41,7 +49,7 @@
         color #fff
         margin-top 5px
         letter-spacing 3px
-        font-size 15px
+        font-size 12px
         font-weight 500
         text-transform uppercase
 
