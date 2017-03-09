@@ -3,30 +3,54 @@
 
         <span slot="header">
             <i class="fa fa-question-circle" aria-hidden="true"></i>
-            Help
+            {{ ucfirst($t('help')) }}
         </span>
 
         <div slot="body">
 
-            <h3>A terrain is missing</h3>
+            <h3>{{ $t('terrain-missing') }}</h3>
             <p class="margin__top--small">
-                R3 has an automated tiler which allows you to add new terrains that every user of R3 across all unit websites will immediately and automatically benefit from.
+                {{ $t('automated-tiler') }}
                 <br><br>
-                Follow <a href="https://github.com/alexcroox/R3-Web/wiki/Adding-new-terrains" class="text-link text-link--with-underline" target="_blank">instructions here</a> to add support for a new terrain.
+                <span v-html="$t('automated-tiler-instructions',
+                {
+                    'url': 'https://github.com/alexcroox/R3-Web/wiki/Adding-new-terrains',
+                    'class': 'text-link text-link--with-underline',
+                    'target': '_blank'
+                })">
+                </span>
             </p>
 
-            <h3 class="margin__top--large">A vehicle has the wrong icon</h3>
+            <h3 class="margin__top--large">{{ $t('vehicle-wrong-icon') }}</h3>
             <p class="margin__top--small">
-                R3 has an automated vehicle icon colourizer which allows you to upload new vehicle icons that every user of R3 across all unit websites will immediately and automatically benefit from.
+                {{ $t('automated-icons') }}
                 <br><br>
-                Follow <a href="https://github.com/alexcroox/R3-Web/wiki/Adding-new-icons" class="text-link text-link--with-underline" target="_blank">instructions here</a> to add new vehicle icons.
+                <span v-html="$t('vehicle-wrong-icon-instructions',
+                {
+                    'url': 'https://github.com/alexcroox/R3-Web/wiki/Adding-new-icons',
+                    'class': 'text-link text-link--with-underline',
+                    'target': '_blank'
+                })">
+                </span>
             </p>
 
-            <h3 class="margin__top--large">Any other issues</h3>
+            <h3 class="margin__top--large">{{ $t('any-other-issues') }}</h3>
             <p class="margin__top--small">
-                Please file an issue on the <a href="https://github.com/alexcroox/R3-Web" class="text-link text-link--with-underline" target="_blank">R3 GitHub</a>
+                <span v-html="$t('file-issue',
+                {
+                    'url': 'https://github.com/alexcroox/R3-Web',
+                    'class': 'text-link text-link--with-underline',
+                    'target': '_blank'
+                })">
+                </span>
                 <br><br>
-                If you'd prefer to chat to the developer look for Titan in the <a href="https://slackin.ace3mod.com/" class="text-link text-link--with-underline" target="_blank">ACE3 Slack</a> or Arma 3 Discord
+                <span v-html="$t('chat-developer',
+                {
+                    'url': 'https://slackin.ace3mod.com/',
+                    'class': 'text-link text-link--with-underline',
+                    'target': '_blank'
+                })">
+                </span>
             </p>
         </div>
 
@@ -40,6 +64,7 @@
 
     import Modal from 'components/Modal.vue'
     import bus from 'eventBus'
+    import { ucfirst } from 'filters'
 
     export default {
 
@@ -56,7 +81,8 @@
         methods: {
             closeModal () {
                 this.show = false
-            }
+            },
+            ucfirst
         },
 
         mounted () {

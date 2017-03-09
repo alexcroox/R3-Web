@@ -3,6 +3,7 @@
 
         <div class="fullscreen-loader__content">
             <span class="fullscreen-loader__icon"></span>
+
             <p class="fullscreen-loader__text">{{ text }}</p>
         </div>
 

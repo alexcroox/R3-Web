@@ -6,12 +6,12 @@
             <i class="fa fa-user-circle-o my-missions__icon" aria-hidden="true"></i>
 
             <!-- // TODO: locale -->
-            <h3 class="margin__bottom--medium">
-                Enter your
-                <a :href="playerIdGif" class="text-link text-link--with-underline" target="_blank">
-                    {{ $t('arma-player-id') }}
-                </a>
-                to filter your missions
+            <h3 class="margin__bottom--medium" v-html="$t('enter-filter-missions',
+                {
+                    'url': playerIdGif,
+                    'class': 'text-link text-link--with-underline',
+                    'target': '_blank'
+                })">
             </h3>
 
             <p class="margin__bottom--large">
@@ -86,7 +86,7 @@
 
                 searchQuery: '',
                 savingPlayerId: false,
-                saveButtonText: 'Save',
+                saveButtonText: ucfirst(this.$t('save')),
                 newPlayerId: 0,
                 noPlayerMissions: false,
                 playerId: this.$cookie.get('player-id'),
@@ -107,13 +107,13 @@
                 this.savingPlayerId = false
                 this.playerId = 0
                 this.$cookie.delete('player-id')
-                this.saveButtonText = 'Save'
+                this.saveButtonText = ucfirst(this.$t('save'))
             },
 
             savePlayerId () {
 
                 this.savingPlayerId = true
-                this.saveButtonText = 'Saving'
+                this.saveButtonText = ucfirst(this.$t('saving'))
                 console.log('Saving player id', this.newPlayerId)
 
                 // Save player ID for 3 years
