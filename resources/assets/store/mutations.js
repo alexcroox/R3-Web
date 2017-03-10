@@ -30,4 +30,8 @@ export const mutations = {
     setPreferenceLanguage(state, locale) {
         state.preference.locale = locale
     },
+
+    setPreferencePlayerId(state, playerId) {
+        state.preference.playerId = playerId
+    },
 }

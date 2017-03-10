@@ -17,17 +17,16 @@ Vue.prototype.$locale = {
 
     change (lang) {
 
-        console.log('Changing locale', lang)
-        Vue.config.lang = lang
+        if (lang != null) {
+            console.log('Changing locale', lang)
+            Vue.config.lang = lang
+        }
     },
 
     current () {
         return Vue.config.lang
     }
 }
-
-import VueCookie from 'vue-cookie'
-Vue.use(VueCookie);
 
 import VueRouter from 'vue-router'
 import router from 'routes'
@@ -53,20 +52,10 @@ new Vue({
 
         init() {
 
-            // Store user's language preference
-            this.$store.commit('setPreferenceLanguage', this.getLocalePreference())
-
             // Global var set in home.blade.php
             this.$store.commit('setSettings', settings)
 
             this.setLocale()
-        },
-
-        getLocalePreference() {
-
-            let savedLocale = this.$cookie.get('locale')
-
-            return (savedLocale) ? savedLocale : 'en'
         },
 
         setLocale(locale) {

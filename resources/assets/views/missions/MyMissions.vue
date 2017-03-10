@@ -89,7 +89,7 @@
                 saveButtonText: ucfirst(this.$t('save')),
                 newPlayerId: 0,
                 noPlayerMissions: false,
-                playerId: this.$cookie.get('player-id'),
+                playerId: this.$store.state.preference.playerId,
                 listColumns: ['mission', 'terrain', 'length', 'players', 'played'],
                 playerIdGif,
             }
@@ -106,7 +106,7 @@
 
                 this.savingPlayerId = false
                 this.playerId = 0
-                this.$cookie.delete('player-id')
+                this.$store.commit('setPreferencePlayerId', 0)
                 this.saveButtonText = ucfirst(this.$t('save'))
             },
 
@@ -116,8 +116,8 @@
                 this.saveButtonText = ucfirst(this.$t('saving'))
                 console.log('Saving player id', this.newPlayerId)
 
-                // Save player ID for 3 years
-                this.$cookie.set('player-id', this.newPlayerId, { expires: '3Y' });
+                // Save player ID to localstorage
+                this.$store.commit('setPreferencePlayerId', this.newPlayerId)
                 this.playerId = this.newPlayerId
             },
 

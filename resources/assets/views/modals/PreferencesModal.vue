@@ -73,7 +73,7 @@
 
                 languages: this.formatLanguages(),
 
-                locale: this.$store.state.preference.locale,
+                locale: this.$locale.current(),
             }
         },
 
@@ -103,8 +103,6 @@
                 this.locale = valObject.value
 
                 this.$store.commit('setPreferenceLanguage', valObject.value)
-
-                this.$cookie.set('locale', this.locale, { expires: '3Y' });
 
                 this.$locale.change(this.locale)
             },
