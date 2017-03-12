@@ -39,6 +39,7 @@ class MissionController extends Controller
                     ->where('missions.hidden', 0)
                     ->where('infantry.player_id', '<>', '_SP_AI_')
                     ->groupBy('missions.id')
+                    ->orderBy('created_at', 'desc')
                     ->get();
 
         Carbon::setLocale(config('app.locale'));
