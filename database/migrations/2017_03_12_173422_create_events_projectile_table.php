@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEventsTable extends Migration
+class CreateEventsProjectileTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,19 @@ class CreateEventsTable extends Migration
      */
     public function up()
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('events_projectile', function (Blueprint $table) {
 
             $table->integer('mission');
-            $table->string('type', 50);
-            $table->smallInteger('entity_a');
-            $table->smallInteger('entity_b')->default(0);
-            $table->string('key_data', 100)->nullable();
-            $table->string('extra_data', 2000)->nullable();
             $table->integer('mission_time');
+            $table->string('type', 30);
+            $table->smallInteger('entity_attacker');
+            $table->float('x', 6, 1);
+            $table->float('y', 6, 1);
+            $table->string('projectile_name', 50);
 
             $table->index('mission');
-            $table->index('entity_a');
-            $table->index('entity_b');
+            $table->index('mission_time');
+            $table->index('entity_attacker');
         });
     }
 
@@ -36,6 +36,6 @@ class CreateEventsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('events_projectile');
     }
 }
