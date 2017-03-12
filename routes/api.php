@@ -26,6 +26,10 @@ Route::group(['prefix' => 'missions'], function () {
     Route::get('/{id}', 'MissionController@fetchOne');
 });
 
+Route::group(['prefix' => 'events'], function () {
+    Route::get('/{id}', 'EventController@fetchAllMissionEvents');
+});
+
 Route::group(['prefix' => 'shares'], function () {
     Route::get('/', 'ShareController@fetchAll');
     Route::post('/', 'ShareController@store');
