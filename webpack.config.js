@@ -55,7 +55,8 @@ module.exports = {
             styles: path.resolve(assetsSrcDir, 'assets/style'),
             images: path.resolve(assetsSrcDir, 'assets/images'),
             components: path.resolve(assetsSrcDir, 'components'),
-            views: path.resolve(assetsSrcDir, 'views')
+            views: path.resolve(assetsSrcDir, 'views'),
+            playback: path.resolve(assetsSrcDir, 'playback'),
         }
     },
     devServer: {

@@ -12,10 +12,12 @@
     import router from 'routes'
     import _each from 'lodash.foreach'
     import _map from 'lodash.map'
-    import _find from 'lodash.map'
+    import _find from 'lodash.find'
 
     import LeafletMap from 'components/LeafletMap.vue'
     import FullScreenLoader from 'components/FullScreenLoader.vue'
+
+    import Playback from 'playback/index'
 
     export default {
         components: {
@@ -28,14 +30,16 @@
         data () {
             return {
                 foundTerrain: false,
-                playbackData: {},
+                missionEvents: [],
                 terrainConfig: {},
                 missionId: this.urlData.params.id,
+                missionData: {},
                 tileDomain: {
                     static: 'https://r3tiles-a.titanmods.xyz',
                     dynamic: 'https://r3tiles-{s}.titanmods.xyz' // sub domain support for faster loading (non http/2 servers)
                 },
                 loading: true,
+                initiatedPlayback: false,
                 loadingStages: {
                     terrain: {
                         complete: false,
@@ -106,7 +110,9 @@
                 axios.get(`/missions/${this.missionId}`)
                     .then(response => {
 
-                        console.log('Got mission info', response.data);
+                        console.log('Got mission info', response.data)
+
+                        this.missionData = response.data
 
                         this.completeLoadingStage('missionInfo')
 
@@ -130,6 +136,8 @@
 
                         console.log('Got mission events', response.data.length);
 
+                        this.missionEvents = response.data
+
                         this.completeLoadingStage('missionEvents')
                     })
                     .catch(error => {
@@ -145,11 +153,7 @@
 
             completeLoadingStage (stageType) {
 
-                console.log('completing stage', stageType)
-
                 this.loadingStages[stageType].complete = true
-
-                console.log(this.loadingStages)
             },
         },
 
@@ -175,12 +179,21 @@
 
         watch: {
             unitName (name) {
-                document.title = (!this.playbackData.missionName)? `Mission Playback - ${this.unitName}` : `${this.playbackData.missionName} - ${this.unitName}`
+                document.title = (!this.missionData.name)? `Mission Playback - ${this.unitName}` : `${this.missionData.name} - ${this.unitName}`
             },
 
-            loadingStages (stages) {
-                console.log('loading stages changed')
-                this.loading = (_find(stages, function(stage) { return stage.complete === false; })) ? false : true
+            loadingStages: {
+                handler: function () {
+
+                    this.loading = (_find(this.loadingStages, ['complete', false ])) ? true : false
+
+                    if (!this.loading && !this.initiatedPlayback) {
+
+                        this.initiatedPlayback = true
+                        this.playback = new Playback(this.missionData, this.missionEvents)
+                    }
+                },
+                deep: true
             },
         },
     }

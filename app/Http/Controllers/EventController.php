@@ -57,6 +57,7 @@ class EventController extends Controller
             $sortedEvents = $flattenedEvents->sortBy(function($event) {
                 return (int) $event->mission_time;
             });
+            $sortedEvents = $sortedEvents->flatten();
 
             return $sortedEvents->all();
         });
