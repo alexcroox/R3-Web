@@ -12,6 +12,7 @@
     import router from 'routes'
     import _each from 'lodash.foreach'
     import _map from 'lodash.map'
+    import _find from 'lodash.map'
 
     import LeafletMap from 'components/LeafletMap.vue'
     import FullScreenLoader from 'components/FullScreenLoader.vue'
@@ -36,16 +37,16 @@
                 },
                 loading: true,
                 loadingStages: {
-                    map: {
-                        active: true,
-                        text: 'Loading map'
+                    terrain: {
+                        complete: false,
+                        text: 'Loading terrain'
                     },
                     missionInfo: {
-                        active: false,
+                        complete: false,
                         text: 'Loading mission'
                     },
                     missionEvents: {
-                        active: false,
+                        complete: false,
                         text: 'Loading events'
                     },
                 }
@@ -61,10 +62,6 @@
 
             this.getTerrainInfo()
             this.fetchMissionInfo()
-
-            setTimeout(() => {
-                this.changeLoadingStage('missionInfo')
-            }, 5000);
         },
 
         methods: {
@@ -88,6 +85,8 @@
 
                         this.terrainConfig = response.data
                         this.foundTerrain = true
+
+                        this.completeLoadingStage('terrain')
                     })
                     .catch(error => {
                         console.error('Error fetching terrain config', error)
@@ -108,24 +107,50 @@
                     .then(response => {
 
                         console.log('Got mission info', response.data);
-                        //this.$store.commit('setMissionList', response.data)
+
+                        this.completeLoadingStage('missionInfo')
+
+                        this.fetchMissionEvents()
                     })
                     .catch(error => {
+
                         console.error('Error fetching mission info', error)
-                        this.errorReturnToMissionList('That mission cannot be found!')
+
+                        if (error.response.status == 403)
+                            this.errorReturnToMissionList('That mission is still in progress')
+                        else
+                            this.errorReturnToMissionList('That mission cannot be found!')
                     })
             },
 
-            changeLoadingStage (stageType) {
+            fetchMissionEvents () {
 
-                // Set all current stages to false
-                _.map(this.loadingStages, stage => {
+                axios.get(`/events/${this.missionId}`)
+                    .then(response => {
 
-                    return stage.active = false
-                });
+                        console.log('Got mission events', response.data.length);
 
-                this.loadingStages[stageType].active = true
-            }
+                        this.completeLoadingStage('missionEvents')
+                    })
+                    .catch(error => {
+
+                        console.error('Error fetching mission events', error)
+
+                        if (error.response.status == 403)
+                            this.errorReturnToMissionList('That mission is still in progress')
+                        else
+                            this.errorReturnToMissionList('Error loading mission events')
+                    })
+            },
+
+            completeLoadingStage (stageType) {
+
+                console.log('completing stage', stageType)
+
+                this.loadingStages[stageType].complete = true
+
+                console.log(this.loadingStages)
+            },
         },
 
         computed: {
@@ -140,7 +165,7 @@
 
                 _each(this.loadingStages, stage => {
 
-                    if (stage.active)
+                    if (!stage.complete)
                         activeText = stage.text
                 })
 
@@ -149,9 +174,14 @@
         },
 
         watch: {
-            unitName: function (name) {
+            unitName (name) {
                 document.title = (!this.playbackData.missionName)? `Mission Playback - ${this.unitName}` : `${this.playbackData.missionName} - ${this.unitName}`
-            }
+            },
+
+            loadingStages (stages) {
+                console.log('loading stages changed')
+                this.loading = (_find(stages, function(stage) { return stage.complete === false; })) ? false : true
+            },
         },
     }
 </script>

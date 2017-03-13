@@ -12,7 +12,7 @@ use Setting;
 class MissionController extends Controller
 {
     private $selectPlayerCount = "COUNT(distinct infantry.player_id) as player_count, GROUP_CONCAT(infantry.player_id SEPARATOR ',') as raw_player_list";
-    private $selectLastEventTimestamp = '(SELECT p.added_on FROM infantry_positions p WHERE p.mission = missions.id ORDER BY p.mission_time DESC LIMIT 1) as last_event_timestamp';
+    private $selectLastEventTimestamp = '(SELECT p.added_on FROM infantry_positions p WHERE p.mission = missions.id ORDER BY p.added_on DESC LIMIT 1) as last_event_timestamp';
 
     /**
      * @SWG\Get(
@@ -60,7 +60,7 @@ class MissionController extends Controller
             $mission->length_human = humanTimeDifference($lastEventTime, $missionStart);
             $mission->played_human = humanEventOccuredFromNow($missionStart);
 
-            $mission->in_progress_block = ($mission->minutes_since_last_event < Setting::get('minutesMissionEndBlock', 2))? true : false;
+            $mission->in_progress_block = ($mission->minutes_since_last_event < (int) Setting::get('minutesMissionEndBlock', 2)) ? true : false;
 
             // Generate and save a slug if required
             $mission->slug = $this->generateSlug($mission);
@@ -141,20 +141,9 @@ class MissionController extends Controller
                     ->limit(1)
                     ->get();
 
-        if($mission && count($mission)) {
-            // Do some additional validation to check if the mission is in progress or not
-            $currentTime = Carbon::now(config('app.timezone'));
-            $lastEventTime = Carbon::parse($mission[0]->last_event_timestamp);
-            $lastEventTime->setTimezone(config('app.timezone'));
-
-            $differenceInMinutes = $currentTime->diffInMinutes($lastEventTime);
-
-            if($differenceInMinutes >= config('r3.minutes_mission_end_block'))
-                return response()->json($mission);
-            else
-                return response()->json(['error' => 'Mission not finished'], 406);
-        } else {
+        if($mission)
+            return response()->json($mission);
+        else
             return response()->json(['error' => 'Not Found'], 404);
-        }
     }
 }

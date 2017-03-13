@@ -13,20 +13,16 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::group(['prefix' => 'settings'], function () {
     Route::get('/', 'SettingController@fetchAll');
 });
 
 Route::group(['prefix' => 'missions'], function () {
     Route::get('/', 'MissionController@fetchAllVisible');
-    Route::get('/{id}', 'MissionController@fetchOne');
+    Route::get('/{id}', 'MissionController@fetchOne')->middleware('checkMissionEnded');
 });
 
-Route::group(['prefix' => 'events'], function () {
+Route::group(['prefix' => 'events', 'middleware' => 'checkMissionEnded'], function () {
     Route::get('/{id}', 'EventController@fetchAllMissionEvents');
 });
 

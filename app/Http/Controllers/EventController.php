@@ -7,10 +7,15 @@ use App\EventDowned;
 use App\EventGetInOut;
 use App\EventMissile;
 use App\EventProjectile;
+use App\InfantryPosition;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+
+use Setting;
+use Carbon\Carbon;
 
 class EventController extends Controller
 {
@@ -29,41 +34,48 @@ class EventController extends Controller
      */
     public function fetchAllMissionEvents($missionId)
     {
-        $events = collect();
+        return Cache::remember('events:{$missionId}', '1440', function () use ($missionId) {
 
-        $connectionEvents = EventConnection::where('mission', $missionId)
-           ->orderBy('mission_time', 'asc')
-           ->get();
+            $events = collect();
 
-        $events->push($connectionEvents);
+            $connectionEvents = EventConnection::where('mission', $missionId)->get();
+            $events->push($connectionEvents);
 
-        $downedEvents = EventDowned::where('mission', $missionId)
-           ->orderBy('mission_time', 'asc')
-           ->get();
+            $downedEvents = EventDowned::where('mission', $missionId)->get();
+            $events->push($downedEvents);
 
-        $events->push($downedEvents);
+            $getInOutEvents = EventGetInOut::where('mission', $missionId)->get();
+            $events->push($getInOutEvents);
 
-        $getInOutEvents = EventGetInOut::where('mission', $missionId)
-           ->orderBy('mission_time', 'asc')
-           ->get();
+            $missileEvents = EventMissile::where('mission', $missionId)->get();
+            $events->push($missileEvents);
 
-        $events->push($getInOutEvents);
+            $projectileEvents = EventProjectile::where('mission', $missionId)->get();
+            $events->push($projectileEvents);
 
-        $missileEvents = EventMissile::where('mission', $missionId)
-           ->orderBy('mission_time', 'asc')
-           ->get();
+            $flattenedEvents = $events->flatten();
+            $sortedEvents = $flattenedEvents->sortBy(function($event) {
+                return (int) $event->mission_time;
+            });
 
-        $events->push($missileEvents);
+            return $sortedEvents->all();
+        });
+    }
 
-        $projectileEvents = EventProjectile::where('mission', $missionId)
-           ->orderBy('mission_time', 'asc')
-           ->get();
+    public static function missionFinished($missionId)
+    {
+        $getLastMissionEvent = InfantryPosition::where('mission', $missionId)
+               ->orderBy('added_on', 'desc')
+               ->first();
 
-        $events->push($projectileEvents);
+        Carbon::setLocale(config('app.locale'));
+        $currentTime = Carbon::now(config('app.timezone'));
 
-        $flattenedEvents = $events->flatten();
-        $sortedEvents = $flattenedEvents->sortBy('mission_time');
+        $lastEventTime = Carbon::parse($getLastMissionEvent->added_on);
+        $lastEventTime->setTimezone(config('app.timezone'));
 
-        return $sortedEvents->all();
+        $minutesSinceLastEvent = $lastEventTime->diffInMinutes($currentTime);
+
+        return ($minutesSinceLastEvent < (int) Setting::get('minutesMissionEndBlock', 2)) ? false : true;
     }
 }

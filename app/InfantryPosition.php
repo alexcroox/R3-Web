@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 
-class VehiclePosition extends Model
+class InfantryPosition extends Model
 {
     public $timestamps = false;
 
