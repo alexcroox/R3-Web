@@ -2,7 +2,6 @@ node_modules
 tiles
 *nogrid.png
 .zip
-dist/cache
 dist/config/r3.local.php
 dist/config/titanmods.xyz.php
 dist/config.php
