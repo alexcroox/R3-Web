@@ -30,10 +30,10 @@
         data () {
             return {
                 foundTerrain: false,
-                missionEvents: [],
+                missionData: { positions: {} },
                 terrainConfig: {},
                 missionId: this.urlData.params.id,
-                missionData: {},
+                missionInfo: {},
                 tileDomain: {
                     static: 'https://r3tiles-a.titanmods.xyz',
                     dynamic: 'https://r3tiles-{s}.titanmods.xyz' // sub domain support for faster loading (non http/2 servers)
@@ -53,16 +53,41 @@
                         complete: false,
                         text: 'Loading events'
                     },
+                    vehicles: {
+                        complete: false,
+                        text: 'Loading vehicles'
+                    },
+                    vehiclePositions: {
+                        complete: false,
+                        text: 'Loading vehicle movements'
+                    },
+                    infantry: {
+                        complete: false,
+                        text: 'Loading infantry'
+                    },
+                    infantryPositions: {
+                        complete: false,
+                        text: 'Loading infantry movements'
+                    }
                 }
             }
         },
 
         created () {
 
-            console.log('urlData', this.urlData)
-
             if (this.urlData.params.terrain == null)
                 return this.errorReturnToMissionList('No terrain specified in URL!?')
+
+            // If any of our api calls return 403 it's because the mission hasn't finished
+            axios.interceptors.response.use(response => {
+                return response;
+            }, error => {
+
+                if (error.response.status == 403)
+                    return this.errorReturnToMissionList('That mission is still in progress')
+                else
+                    return Promise.reject(error);
+            });
 
             this.getTerrainInfo()
             this.fetchMissionInfo()
@@ -112,20 +137,21 @@
 
                         console.log('Got mission info', response.data)
 
-                        this.missionData = response.data
+                        this.missionInfo = response.data
 
                         this.completeLoadingStage('missionInfo')
 
                         this.fetchMissionEvents()
+                        this.fetchInfantry()
+                        this.fetchInfantryPositions()
+                        this.fetchVehicles()
+                        this.fetchVehiclePositions()
                     })
                     .catch(error => {
 
                         console.error('Error fetching mission info', error)
 
-                        if (error.response.status == 403)
-                            this.errorReturnToMissionList('That mission is still in progress')
-                        else
-                            this.errorReturnToMissionList('That mission cannot be found!')
+                        this.errorReturnToMissionList('That mission cannot be found!')
                     })
             },
 
@@ -136,7 +162,7 @@
 
                         console.log('Got mission events', response.data.length);
 
-                        this.missionEvents = response.data
+                        this.missionData.events = response.data
 
                         this.completeLoadingStage('missionEvents')
                     })
@@ -144,10 +170,83 @@
 
                         console.error('Error fetching mission events', error)
 
-                        if (error.response.status == 403)
-                            this.errorReturnToMissionList('That mission is still in progress')
-                        else
-                            this.errorReturnToMissionList('Error loading mission events')
+                        this.errorReturnToMissionList('Error loading mission events')
+                    })
+            },
+
+            fetchInfantry () {
+
+                axios.get(`/infantry/${this.missionId}`)
+                    .then(response => {
+
+                        console.log('Got infantry', response.data.length);
+
+                        this.missionData.infantry = response.data
+
+                        this.completeLoadingStage('infantry')
+                    })
+                    .catch(error => {
+
+                        console.error('Error fetching mission infantry', error)
+
+                        this.errorReturnToMissionList('Error loading mission infantry')
+                    })
+            },
+
+            fetchVehicles () {
+
+                axios.get(`/vehicles/${this.missionId}`)
+                    .then(response => {
+
+                        console.log('Got vehicles', response.data.length);
+
+                        this.missionData.vehicles = response.data
+
+                        this.completeLoadingStage('vehicles')
+                    })
+                    .catch(error => {
+
+                        console.error('Error fetching mission vehicles', error)
+
+                        this.errorReturnToMissionList('Error loading mission vehicles')
+                    })
+            },
+
+            fetchInfantryPositions () {
+
+                axios.get(`/positions/infantry/${this.missionId}`)
+                    .then(response => {
+
+                        console.log('Got infantry positions', response.data.length);
+
+                        this.missionData.positions.infantry = response.data
+
+                        this.completeLoadingStage('infantryPositions')
+                    })
+                    .catch(error => {
+
+                        console.error('Error fetching mission infantryPositions', error)
+
+                        this.errorReturnToMissionList('Error loading mission infantryPositions')
+                    })
+            },
+
+            fetchVehiclePositions () {
+
+                axios.get(`/positions/vehicle/${this.missionId}`)
+                    .then(response => {
+
+                        console.log('Got vehicle positions', response.data.length);
+
+                        this.missionData.positions.vehicles = response.data
+
+                        this.completeLoadingStage('vehiclePositions')
+                    })
+                    .catch(error => {
+
+                        console.error('Error fetching mission vehiclePositions', error)
+
+                        this.errorReturnToMissionList('Error loading mission vehiclePositions')
                     })
             },
 
@@ -179,7 +278,7 @@
 
         watch: {
             unitName (name) {
-                document.title = (!this.missionData.name)? `Mission Playback - ${this.unitName}` : `${this.missionData.name} - ${this.unitName}`
+                document.title = (!this.missionInfo.name)? `Mission Playback - ${this.unitName}` : `${this.missionInfo.name} - ${this.unitName}`
             },
 
             loadingStages: {
@@ -190,7 +289,7 @@
                     if (!this.loading && !this.initiatedPlayback) {
 
                         this.initiatedPlayback = true
-                        this.playback = new Playback(this.missionData, this.missionEvents)
+                        this.playback = new Playback(this.missionInfo, this.missionData)
                     }
                 },
                 deep: true

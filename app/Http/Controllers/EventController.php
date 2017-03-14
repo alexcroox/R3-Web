@@ -7,7 +7,6 @@ use App\EventDowned;
 use App\EventGetInOut;
 use App\EventMissile;
 use App\EventProjectile;
-use App\InfantryPosition;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +33,7 @@ class EventController extends Controller
      */
     public function fetchAllMissionEvents($missionId)
     {
-        return Cache::remember('events:{$missionId}', '1440', function () use ($missionId) {
+        return Cache::remember("events:{$missionId}", '1440', function () use ($missionId) {
 
             $events = collect();
 
@@ -61,22 +60,5 @@ class EventController extends Controller
 
             return $sortedEvents->all();
         });
-    }
-
-    public static function missionFinished($missionId)
-    {
-        $getLastMissionEvent = InfantryPosition::where('mission', $missionId)
-               ->orderBy('added_on', 'desc')
-               ->first();
-
-        Carbon::setLocale(config('app.locale'));
-        $currentTime = Carbon::now(config('app.timezone'));
-
-        $lastEventTime = Carbon::parse($getLastMissionEvent->added_on);
-        $lastEventTime->setTimezone(config('app.timezone'));
-
-        $minutesSinceLastEvent = $lastEventTime->diffInMinutes($currentTime);
-
-        return ($minutesSinceLastEvent < (int) Setting::get('minutesMissionEndBlock', 2)) ? false : true;
     }
 }

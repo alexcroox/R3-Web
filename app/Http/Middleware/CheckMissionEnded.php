@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\MissionController;
 
 class CheckMissionEnded
 {
@@ -16,7 +16,7 @@ class CheckMissionEnded
      */
     public function handle($request, Closure $next)
     {
-        if (EventController::missionFinished($request->id))
+        if (MissionController::missionFinished($request->id))
             return $next($request);
         else
             return response()->json(['error' => 'Mission not finished'], 403);

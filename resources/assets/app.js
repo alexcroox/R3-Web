@@ -13,6 +13,10 @@ Object.keys(settings.locales).forEach(function(lang) {
 Vue.config.lang = 'en'
 Vue.config.fallbackLang = 'en'
 
+Vue.config.missingHandler = (lang, key, vm) => {
+    // handle translation missing
+}
+
 Vue.prototype.$locale = {
 
     change (lang) {

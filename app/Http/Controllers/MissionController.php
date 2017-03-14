@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mission;
+use App\InfantryPosition;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -145,5 +147,22 @@ class MissionController extends Controller
             return response()->json($mission);
         else
             return response()->json(['error' => 'Not Found'], 404);
+    }
+
+    public static function missionFinished($missionId)
+    {
+        $getLastMissionEvent = InfantryPosition::where('mission', $missionId)
+               ->orderBy('added_on', 'desc')
+               ->first();
+
+        Carbon::setLocale(config('app.locale'));
+        $currentTime = Carbon::now(config('app.timezone'));
+
+        $lastEventTime = Carbon::parse($getLastMissionEvent->added_on);
+        $lastEventTime->setTimezone(config('app.timezone'));
+
+        $minutesSinceLastEvent = $lastEventTime->diffInMinutes($currentTime);
+
+        return ($minutesSinceLastEvent < (int) Setting::get('minutesMissionEndBlock', 2)) ? false : true;
     }
 }

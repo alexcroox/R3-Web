@@ -26,6 +26,18 @@ Route::group(['prefix' => 'events', 'middleware' => 'checkMissionEnded'], functi
     Route::get('/{id}', 'EventController@fetchAllMissionEvents');
 });
 
+Route::group(['prefix' => 'infantry'], function () {
+    Route::get('/{id}', 'InfantryController@fetchAll');
+});
+
+Route::group(['prefix' => 'vehicles'], function () {
+    Route::get('/{id}', 'VehicleController@fetchAll');
+});
+
+Route::group(['prefix' => 'positions', 'middleware' => 'checkMissionEnded'], function () {
+    Route::get('/{type}/{id}', 'PositionController@fetchAll');
+});
+
 Route::group(['prefix' => 'shares'], function () {
     Route::get('/', 'ShareController@fetchAll');
     Route::post('/', 'ShareController@store');
