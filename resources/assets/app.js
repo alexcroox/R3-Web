@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import axios from 'http'
 
+import 'styles/index.styl'
+
 Vue.use(VueI18n)
 
 // Setup our language strings

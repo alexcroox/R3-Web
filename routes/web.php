@@ -16,9 +16,14 @@ Route::get('{all}', function () {
     $mappingAliases = file_get_contents('https://r3tiles-a.titanmods.xyz/config.json');
     $locales = file_get_contents('https://titanmods.xyz/r3/locale/config.json');
 
+    // Get the webpack assets and ensure vendor.js loads first
+    $assetsJson = file_get_contents(public_path() . '/assets.json');
+    $assets = json_decode($assetsJson);
+
     return view('home', [
         'settings' => Setting::all(),
         'mappingAliases' => $mappingAliases,
-        'locales' => $locales
+        'locales' => $locales,
+        'assets' => $assets
     ]);
 })->where('all', '.*');

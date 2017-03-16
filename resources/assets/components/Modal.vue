@@ -37,7 +37,7 @@
 </script>
 
 <style lang="stylus">
-    @import '~styles/index.styl'
+    @import '~styles/config/variables.styl'
 
     $modalBorderRaduis = 4px
     $modalWidthNormal = 800px

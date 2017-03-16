@@ -5,8 +5,7 @@
 </template>
 
 <style lang="stylus">
-
-    @import '~styles/index.styl'
+    @import '~styles/config/variables.styl'
 
     .table-list
         text-align left

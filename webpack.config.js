@@ -1,22 +1,43 @@
 var path = require('path')
 var webpack = require('webpack')
+var AssetsPlugin = require('assets-webpack-plugin')
+var ExtractTextPlugin = require("extract-text-webpack-plugin")
 
 var assetsSrcDir = path.resolve(__dirname, './resources/assets');
 
 module.exports = {
-    entry: path.resolve(assetsSrcDir, 'app.js'),
-    output: {
-        path: path.resolve(__dirname, './public'),
-        publicPath: '/',
-        filename: 'build.js'
+    entry: {
+        app: path.resolve(assetsSrcDir, 'app.js')
     },
+    output: {
+        path: path.resolve(__dirname, './public/assets'),
+        publicPath: '/assets/',
+        filename: '[name].[chunkhash].js'
+    },
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            minChunks: function (module) {
+               return module.context && module.context.indexOf('node_modules') !== -1;
+            }
+        }),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new AssetsPlugin({
+            filename: 'assets.json',
+            path: path.resolve(__dirname, './public')
+        }),
+        new ExtractTextPlugin('[name].[chunkhash].css')
+    ],
     module: {
         rules: [{
             test: /\.vue$/,
             loader: 'vue-loader',
             options: {
                 loaders: {
-                    'stylus': 'vue-style-loader!css-loader!stylus-loader',
+                    stylus: ExtractTextPlugin.extract({
+                      use: ['css-loader', 'stylus-loader'],
+                      fallback: 'vue-style-loader'
+                    })
                 },
             }
         }, {
@@ -31,12 +52,7 @@ module.exports = {
             }
         }, {
             test: /\.styl$/,
-            use: [
-                'style-loader',
-                'css-loader', {
-                    loader: 'stylus-loader'
-                },
-            ]
+            loader: ExtractTextPlugin.extract('css-loader!stylus-loader')
         }, {
             test: /\.css$/,
             loader: 'style-loader!css-loader'

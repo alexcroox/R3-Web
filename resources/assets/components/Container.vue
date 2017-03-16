@@ -18,7 +18,7 @@
 </script>
 
 <style lang="stylus">
-    @import '~styles/index.styl'
+    @import '~styles/config/variables.styl'
 
     .container
         padding 0 $sidePadding

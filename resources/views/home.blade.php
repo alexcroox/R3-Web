@@ -8,6 +8,7 @@
     <title>{{ config('r3.unit_name') }}</title>
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700" rel="stylesheet">
+    <link href="<?php echo $assets->app->css ?>" rel="stylesheet">
   </head>
   <body>
 
@@ -28,7 +29,13 @@
             ?>
         };
     </script>
-    <script src="/build.js"></script>
+
+    <script defer src="<?php echo $assets->vendor->js ?>"></script>
+
+    <?php foreach($assets as $assetName => $assetPath):
+        if($assetName == "vendor") continue; ?>
+        <script defer src="<?php echo $assetPath->js ?>"></script>
+    <?php endforeach; ?>
 
   </body>
 </html>

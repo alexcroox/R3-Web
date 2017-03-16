@@ -13,3 +13,4 @@ Homestead.yaml
 yarn.lock
 composer.lock
 npm-debug.log
+stats.json

@@ -32,7 +32,6 @@
 </script>
 
 <style lang="stylus">
-    @import '~styles/index.styl'
 
     .list-search__container
         padding-top 25px

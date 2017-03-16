@@ -43,7 +43,8 @@
 </script>
 
 <style lang="stylus">
-    @import '~styles/index.styl'
+    @import '~styles/config/variables.styl'
+    @import '~styles/config/typography.styl'
 
     .input-select
         buttonLabelsMetaContent()

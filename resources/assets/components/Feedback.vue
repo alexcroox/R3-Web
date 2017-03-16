@@ -38,7 +38,7 @@
 </script>
 
 <style lang="stylus">
-    @import '~styles/index.styl'
+    @import '~styles/config/variables.styl'
 
     .feedback
         padding 10px 15px

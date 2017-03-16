@@ -100,7 +100,7 @@
 </script>
 
 <style lang="stylus">
-    @import '~styles/index.styl'
+    @import '~styles/config/variables.styl'
 
     header
         background $navBackgroundColor
