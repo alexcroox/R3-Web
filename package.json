@@ -23,6 +23,8 @@
     "leaflet-rastercoords": "^1.0.2",
     "lodash.find": "^4.6.0",
     "lodash.foreach": "^4.5.0",
+    "lodash.groupby": "^4.6.0",
+    "lodash.keyby": "^4.6.0",
     "lodash.map": "^4.6.0",
     "moment": "^2.17.1",
     "vue": "^2.1.0",

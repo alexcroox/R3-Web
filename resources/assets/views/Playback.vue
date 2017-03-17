@@ -18,6 +18,8 @@
     import FullScreenLoader from 'components/FullScreenLoader.vue'
 
     import Playback from 'playback/index'
+    import Infantry from 'playback/infantry'
+    import Vehicles from 'playback/vehicles'
 
     export default {
         components: {
@@ -110,7 +112,7 @@
                 axios.get(`${this.tileDomain.static}/${matchedTerrain}/config.json`)
                     .then(response => {
 
-                        console.log('Got terrain config', response.data);
+                        console.log('Playback: Got terrain config', response.data);
 
                         this.terrainConfig = response.data
                         this.foundTerrain = true
@@ -135,11 +137,13 @@
                 axios.get(`/missions/${this.missionId}`)
                     .then(response => {
 
-                        console.log('Got mission info', response.data)
+                        console.log('Playback: Got mission info', response.data)
 
                         this.missionInfo = response.data
 
                         this.completeLoadingStage('missionInfo')
+
+                        this.playback = new Playback(this.missionInfo)
 
                         this.fetchMissionEvents()
                         this.fetchInfantry()
@@ -160,7 +164,7 @@
                 axios.get(`/events/${this.missionId}`)
                     .then(response => {
 
-                        console.log('Got mission events', response.data.length);
+                        console.log('Playback: Got mission events', response.data.length);
 
                         this.missionData.events = response.data
 
@@ -179,11 +183,13 @@
                 axios.get(`/infantry/${this.missionId}`)
                     .then(response => {
 
-                        console.log('Got infantry', response.data.length);
+                        console.log('Playback: Got infantry', response.data.length);
 
-                        this.missionData.infantry = response.data
+                        let data = response.data
 
-                        this.completeLoadingStage('infantry')
+                        Infantry.loadEntities(data).then(() => {
+                            this.completeLoadingStage('infantry')
+                        })
                     })
                     .catch(error => {
 
@@ -198,11 +204,13 @@
                 axios.get(`/vehicles/${this.missionId}`)
                     .then(response => {
 
-                        console.log('Got vehicles', response.data.length);
+                        console.log('Playback: Got vehicles', response.data.length);
 
-                        this.missionData.vehicles = response.data
+                        let data = response.data
 
-                        this.completeLoadingStage('vehicles')
+                        Vehicles.loadEntities(data).then(() => {
+                            this.completeLoadingStage('vehicles')
+                        })
                     })
                     .catch(error => {
 
@@ -217,11 +225,13 @@
                 axios.get(`/positions/infantry/${this.missionId}`)
                     .then(response => {
 
-                        console.log('Got infantry positions', response.data.length);
+                        console.log('Playback: Got infantry positions', response.data.length);
 
-                        this.missionData.positions.infantry = response.data
+                        let data = response.data
 
-                        this.completeLoadingStage('infantryPositions')
+                        Infantry.loadPositions(data).then(() => {
+                            this.completeLoadingStage('infantryPositions')
+                        })
                     })
                     .catch(error => {
 
@@ -236,11 +246,13 @@
                 axios.get(`/positions/vehicle/${this.missionId}`)
                     .then(response => {
 
-                        console.log('Got vehicle positions', response.data.length);
+                        console.log('Playback: Got vehicle positions', response.data.length);
 
-                        this.missionData.positions.vehicles = response.data
+                        let data = response.data
 
-                        this.completeLoadingStage('vehiclePositions')
+                        Infantry.loadPositions(data).then(() => {
+                            this.completeLoadingStage('vehiclePositions')
+                        })
                     })
                     .catch(error => {
 
@@ -289,7 +301,6 @@
                     if (!this.loading && !this.initiatedPlayback) {
 
                         this.initiatedPlayback = true
-                        this.playback = new Playback(this.missionInfo, this.missionData)
                     }
                 },
                 deep: true

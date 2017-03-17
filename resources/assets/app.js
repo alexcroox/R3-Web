@@ -24,7 +24,7 @@ Vue.prototype.$locale = {
     change (lang) {
 
         if (lang != null) {
-            console.log('Changing locale', lang)
+            console.log('App: Changing locale', lang)
             Vue.config.lang = lang
         }
     },

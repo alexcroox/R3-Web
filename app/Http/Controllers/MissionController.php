@@ -14,7 +14,18 @@ use Setting;
 class MissionController extends Controller
 {
     private $selectPlayerCount = "COUNT(distinct infantry.player_id) as player_count, GROUP_CONCAT(infantry.player_id SEPARATOR ',') as raw_player_list";
-    private $selectLastEventTimestamp = '(SELECT p.added_on FROM infantry_positions p WHERE p.mission = missions.id ORDER BY p.added_on DESC LIMIT 1) as last_event_timestamp';
+
+    private $selectLastEventTimestamp = "
+        GREATEST(
+            (SELECT added_on FROM infantry_positions WHERE mission = missions.id ORDER BY added_on DESC LIMIT 1),
+            (SELECT added_on FROM vehicle_positions WHERE mission = missions.id ORDER BY added_on DESC LIMIT 1)
+        ) AS last_event_timestamp";
+
+    private $selectTotalMissionTime = "
+        GREATEST(
+            (SELECT mission_time FROM infantry_positions WHERE mission = missions.id ORDER BY mission_time DESC LIMIT 1),
+            (SELECT mission_time FROM vehicle_positions WHERE mission = missions.id ORDER BY mission_time DESC LIMIT 1)
+        ) AS total_mission_time";
 
     /**
      * @SWG\Get(
@@ -134,7 +145,8 @@ class MissionController extends Controller
                     ->select(
                         'missions.*',
                         DB::raw($this->selectPlayerCount),
-                        DB::raw($this->selectLastEventTimestamp)
+                        DB::raw($this->selectLastEventTimestamp),
+                        DB::raw($this->selectTotalMissionTime)
                     )
                     ->leftJoin('infantry', 'infantry.mission', '=', 'missions.id')
                     ->where('missions.hidden', 0)

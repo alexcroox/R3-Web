@@ -1,13 +1,9 @@
 
 class Playback {
 
-    constructor (missionData, eventData) {
+    constructor (missionData) {
         this.missionData = missionData
-        this.eventData = eventData
-    }
-
-    returnNumEvents () {
-        return this.eventData.length
+        this.maxTime = missionData.total_mission_time
     }
 }
 
