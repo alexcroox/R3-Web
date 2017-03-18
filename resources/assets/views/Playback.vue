@@ -4,6 +4,8 @@
         <full-screen-loader v-if="loading" :text="currentLoadingStage"></full-screen-loader>
 
         <leaflet-map v-if="foundTerrain" :terrainConfig="terrainConfig" :tileDomain="tileDomain"></leaflet-map>
+
+        <slider v-if="!loading" :min="sliderMin" :max="sliderMax"></slider>
     </div>
 </template>
 
@@ -16,6 +18,7 @@
 
     import LeafletMap from 'components/LeafletMap.vue'
     import FullScreenLoader from 'components/FullScreenLoader.vue'
+    import Slider from 'components/Slider.vue'
 
     import Playback from 'playback/index'
     import Infantry from 'playback/infantry'
@@ -24,7 +27,8 @@
     export default {
         components: {
             LeafletMap,
-            FullScreenLoader
+            FullScreenLoader,
+            Slider
         },
 
         props: ['urlData'],
@@ -36,6 +40,8 @@
                 terrainConfig: {},
                 missionId: this.urlData.params.id,
                 missionInfo: {},
+                sliderMin: 0,
+                sliderMax: 0,
                 tileDomain: {
                     static: 'https://r3tiles-a.titanmods.xyz',
                     dynamic: 'https://r3tiles-{s}.titanmods.xyz' // sub domain support for faster loading (non http/2 servers)
@@ -140,6 +146,8 @@
                         console.log('Playback: Got mission info', response.data)
 
                         this.missionInfo = response.data
+
+                        this.sliderMax = this.missionInfo.total_mission_time
 
                         this.completeLoadingStage('missionInfo')
 

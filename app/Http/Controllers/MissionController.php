@@ -152,8 +152,7 @@ class MissionController extends Controller
                     ->where('missions.hidden', 0)
                     ->where('missions.id', $id)
                     ->groupBy('missions.id')
-                    ->limit(1)
-                    ->get();
+                    ->first();
 
         if($mission)
             return response()->json($mission);
