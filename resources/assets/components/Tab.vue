@@ -30,6 +30,7 @@
 
 <style lang="stylus">
     @import '~styles/config/variables.styl'
+    @import '~styles/config/typography.styl'
 
     .tab__container
         border-bottom 1px solid #E7EFF0

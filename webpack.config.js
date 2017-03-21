@@ -67,6 +67,7 @@ module.exports = {
             http: path.resolve(assetsSrcDir, 'http.js'),
             routes: path.resolve(assetsSrcDir, 'routes.js'),
             filters: path.resolve(assetsSrcDir, 'filters.js'),
+            toastr: path.resolve(assetsSrcDir, 'toastr.js'),
             eventBus: path.resolve(assetsSrcDir, 'eventBus.js'),
             styles: path.resolve(assetsSrcDir, 'assets/style'),
             images: path.resolve(assetsSrcDir, 'assets/images'),

@@ -119,6 +119,8 @@
                 // Save player ID to localstorage
                 this.$store.commit('setPreferencePlayerId', this.newPlayerId)
                 this.playerId = this.newPlayerId
+
+                this.$toastr.success('Your player ID has been saved')
             },
 
             ucfirst,

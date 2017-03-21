@@ -30,46 +30,45 @@
         mounted () {
 
             this.scrubber = document.getElementById('slider__rail')
-            noUiSlider.create(this.scrubber, this.config);
+            noUiSlider.create(this.scrubber, this.config)
+
+            console.log('Slider: min', this.min)
+            console.log('Slider: max', this.max)
+
+            this.scrubber.noUiSlider.set(100)
+            document.querySelector('.slider__handle').innerHTML = 'test'
         }
     }
 </script>
 
 <style lang="stylus">
 
-    .slider
-        left 50%
-        right 10px
-        bottom 10px
-        height 36px
-        overflow hidden
-        position absolute
-        background rgba(0,0,0,.5)
-        z-index 2
-
-    #slider__rail
-        position absolute
-        top 9px
-        left 120px
-        right 60px
+    .slider__base
+        width 100%
+        height 100%
+        position relative
+        background #FFF
 
     .slider__handle
         padding 8px 0 0 9px
         font-size 12px
         font-weight 500
         transform translateZ(0)
-        box-shadow none
-        border none
-        background none
-        border-radius 0
+        position relative
         width 8px
         left -4px
+        height 28px
+        top -6px
         color #FFF
+        z-index 1
 
     .slider__handle:hover
         cursor col-resize
 
     .slider__handle:after
+        content ''
+        display block
+        position absolute
         width 2px
         background #FFF
         height 22px
@@ -80,12 +79,21 @@
         display none
 
     .slider__origin
-    .slider__target
-        transform translateZ(0)
-        border none
-        border-radius 0px
+        position absolute
+        right 0
+        top 0
+        left 0
+        bottom 0
         background #030303
-        box-shadow none !important
+
+    .slider__target
+        position absolute
+        top 9px
+        left 120px
+        right 60px
+        transform translateZ(0)
+        background #030303
+        height 18px
 
     .slider__connect
         background #FFF

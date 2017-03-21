@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import axios from 'http'
+import miniToastr from 'toastr'
 
 import 'styles/index.styl'
 
@@ -33,6 +34,8 @@ Vue.prototype.$locale = {
         return Vue.config.lang
     }
 }
+
+Vue.prototype.$toastr = miniToastr.miniToastr
 
 import VueRouter from 'vue-router'
 import router from 'routes'

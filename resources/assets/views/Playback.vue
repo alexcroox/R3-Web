@@ -5,7 +5,9 @@
 
         <leaflet-map v-if="foundTerrain" :terrainConfig="terrainConfig" :tileDomain="tileDomain"></leaflet-map>
 
-        <slider v-if="!loading" :min="sliderMin" :max="sliderMax"></slider>
+        <map-box class="timeline" v-if="!loading">
+            <slider v-if="!loading" :min="sliderMin" :max="sliderMax"></slider>
+        </map-box>
     </div>
 </template>
 
@@ -19,6 +21,7 @@
     import LeafletMap from 'components/LeafletMap.vue'
     import FullScreenLoader from 'components/FullScreenLoader.vue'
     import Slider from 'components/Slider.vue'
+    import MapBox from 'components/MapBox.vue'
 
     import Playback from 'playback/index'
     import Infantry from 'playback/infantry'
@@ -29,7 +32,8 @@
         components: {
             LeafletMap,
             FullScreenLoader,
-            Slider
+            Slider,
+            MapBox
         },
 
         props: ['urlData'],
@@ -250,4 +254,12 @@
         bottom 0px
         left 0px
         z-index 1
+</style>
+
+<style lang="stylus" scoped>
+    .timeline
+        left 50%
+        right 10px
+        bottom 10px
+        height 36px
 </style>
