@@ -26,6 +26,7 @@
     "lodash.groupby": "^4.6.0",
     "lodash.keyby": "^4.6.0",
     "lodash.map": "^4.6.0",
+    "mini-toastr": "^0.6.3",
     "moment": "^2.17.1",
     "nouislider": "^9.2.0",
     "vue": "^2.1.0",

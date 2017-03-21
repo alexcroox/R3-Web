@@ -22,6 +22,7 @@
 
     import _each from 'lodash.foreach'
     import { ucfirst } from 'filters'
+    import miniToastr from 'mini-toastr'
 
     export default {
         components: {
@@ -37,6 +38,11 @@
 
                 listColumns: ['mission', 'terrain', 'length', 'players', 'played'],
             }
+        },
+
+        mounted () {
+
+            miniToastr.success('message', 'title')
         },
 
         methods: {

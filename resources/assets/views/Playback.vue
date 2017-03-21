@@ -23,6 +23,7 @@
     import Playback from 'playback/index'
     import Infantry from 'playback/infantry'
     import Vehicles from 'playback/vehicles'
+    import Events from 'playback/events'
 
     export default {
         components: {
@@ -39,7 +40,7 @@
                 missionData: { positions: {} },
                 terrainConfig: {},
                 missionId: this.urlData.params.id,
-                missionInfo: {},
+                missionName: {},
                 sliderMin: 0,
                 sliderMax: 0,
                 tileDomain: {
@@ -103,7 +104,10 @@
 
         methods: {
 
-            errorReturnToMissionList (errorText) {
+            errorReturnToMissionList (errorText, errorDetail) {
+
+                if (errorDetail != null)
+                    console.error(errorDetail);
 
                 router.push({ name: 'missions.list', params: { error: errorText } })
             },
@@ -140,134 +144,55 @@
 
             fetchMissionInfo () {
 
-                axios.get(`/missions/${this.missionId}`)
-                    .then(response => {
+                Playback.load(this.missionId).then(missionInfo => {
 
-                        console.log('Playback: Got mission info', response.data)
+                    this.sliderMax = missionInfo.total_mission_time
+                    this.missionName = missionInfo.name
 
-                        this.missionInfo = response.data
+                    this.completeLoadingStage('missionInfo')
 
-                        this.sliderMax = this.missionInfo.total_mission_time
+                    this.fetchMissionEvents()
+                    this.fetchInfantry()
+                    this.fetchInfantryPositions()
+                    this.fetchVehicles()
+                    this.fetchVehiclePositions()
 
-                        this.completeLoadingStage('missionInfo')
-
-                        this.playback = new Playback(this.missionInfo)
-
-                        this.fetchMissionEvents()
-                        this.fetchInfantry()
-                        this.fetchInfantryPositions()
-                        this.fetchVehicles()
-                        this.fetchVehiclePositions()
-                    })
-                    .catch(error => {
-
-                        console.error('Error fetching mission info', error)
-
-                        this.errorReturnToMissionList('That mission cannot be found!')
-                    })
+                }).catch(error => this.errorReturnToMissionList('That mission cannot be found!', error))
             },
 
             fetchMissionEvents () {
 
-                axios.get(`/events/${this.missionId}`)
-                    .then(response => {
-
-                        console.log('Playback: Got mission events', response.data.length);
-
-                        this.missionData.events = response.data
-
-                        this.completeLoadingStage('missionEvents')
-                    })
-                    .catch(error => {
-
-                        console.error('Error fetching mission events', error)
-
-                        this.errorReturnToMissionList('Error loading mission events')
-                    })
+                Events.load(this.missionId)
+                    .then(response => this.completeLoadingStage('missionEvents'))
+                    .catch(error => this.errorReturnToMissionList('Error loading mission events'))
             },
 
             fetchInfantry () {
 
-                axios.get(`/infantry/${this.missionId}`)
-                    .then(response => {
-
-                        console.log('Playback: Got infantry', response.data.length);
-
-                        let data = response.data
-
-                        Infantry.loadEntities(data).then(() => {
-                            this.completeLoadingStage('infantry')
-                        })
-                    })
-                    .catch(error => {
-
-                        console.error('Error fetching mission infantry', error)
-
-                        this.errorReturnToMissionList('Error loading mission infantry')
-                    })
+                Infantry.loadEntities(this.missionId)
+                    .then(response => this.completeLoadingStage('infantry'))
+                    .catch(error => this.errorReturnToMissionList('Error loading mission infantry'))
             },
 
             fetchVehicles () {
 
-                axios.get(`/vehicles/${this.missionId}`)
-                    .then(response => {
-
-                        console.log('Playback: Got vehicles', response.data.length);
-
-                        let data = response.data
-
-                        Vehicles.loadEntities(data).then(() => {
-                            this.completeLoadingStage('vehicles')
-                        })
-                    })
-                    .catch(error => {
-
-                        console.error('Error fetching mission vehicles', error)
-
-                        this.errorReturnToMissionList('Error loading mission vehicles')
-                    })
+                Vehicles.loadEntities(this.missionId)
+                    .then(response => this.completeLoadingStage('vehicles'))
+                    .catch(error => this.errorReturnToMissionList('Error loading mission vehicles'))
             },
 
             fetchInfantryPositions () {
 
-                axios.get(`/positions/infantry/${this.missionId}`)
-                    .then(response => {
-
-                        console.log('Playback: Got infantry positions', response.data.length);
-
-                        let data = response.data
-
-                        Infantry.loadPositions(data).then(() => {
-                            this.completeLoadingStage('infantryPositions')
-                        })
-                    })
-                    .catch(error => {
-
-                        console.error('Error fetching mission infantryPositions', error)
-
-                        this.errorReturnToMissionList('Error loading mission infantryPositions')
-                    })
+                Infantry.loadPositions(this.missionId)
+                    .then(response => this.completeLoadingStage('infantryPositions'))
+                    .catch(error => this.errorReturnToMissionList('Error loading mission infantryPositions'))
             },
 
             fetchVehiclePositions () {
 
-                axios.get(`/positions/vehicle/${this.missionId}`)
-                    .then(response => {
-
-                        console.log('Playback: Got vehicle positions', response.data.length);
-
-                        let data = response.data
-
-                        Infantry.loadPositions(data).then(() => {
-                            this.completeLoadingStage('vehiclePositions')
-                        })
-                    })
-                    .catch(error => {
-
-                        console.error('Error fetching mission vehiclePositions', error)
-
-                        this.errorReturnToMissionList('Error loading mission vehiclePositions')
-                    })
+                Vehicles.loadPositions(this.missionId)
+                    .then(response => this.completeLoadingStage('vehiclePositions'))
+                    .catch(error => this.errorReturnToMissionList('Error loading mission vehiclePositions'))
             },
 
             completeLoadingStage (stageType) {
@@ -298,7 +223,7 @@
 
         watch: {
             unitName (name) {
-                document.title = (!this.missionInfo.name)? `Mission Playback - ${this.unitName}` : `${this.missionInfo.name} - ${this.unitName}`
+                document.title = (!this.missionName)? `Mission Playback - ${this.unitName}` : `${this.missionName} - ${this.unitName}`
             },
 
             loadingStages: {
