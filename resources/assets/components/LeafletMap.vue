@@ -8,6 +8,7 @@
     import L from 'leaflet'
     import 'leaflet/dist/leaflet.css'
     import RasterCoords from 'leaflet-rastercoords'
+    import axios from 'http'
 
     import errorTile from 'images/map/error-tile.png'
 
@@ -60,6 +61,7 @@
                 this.setView([this.terrainConfig.height / 2, this.terrainConfig.width / 2], this.terrainConfig.initZoom)
 
                 this.loadTiles()
+                this.loadPoi()
             },
 
             loadTiles () {
@@ -80,6 +82,20 @@
 
                 this.map.setView(this.rc.unproject(pos), zoom);
             },
+
+            loadPoi () {
+
+                axios.get(`${this.tileDomain.static}/${this.terrainConfig.name}/poi.json`)
+                    .then(response => {
+
+                        let poiData = response.data
+
+                        console.log('poi data', poiData)
+                    })
+                    .catch(error => {
+                        console.warn(`${this.terrainConfig.name} has no POI, would you like to <a href="">add some?</a>`)
+                    })
+            }
         }
     }
 </script>

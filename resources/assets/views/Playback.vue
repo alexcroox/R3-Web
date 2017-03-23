@@ -283,12 +283,12 @@
                     if (!stillLoading && !this.initiatedPlayback) {
 
                         let timeSpentLoading = moment().diff(this.startTime, 'seconds')
-                        let minLoadingTime = 5
+                        let minLoadingTime = 3
 
                         console.log('Playback: Time spent loading', timeSpentLoading)
 
                         // If we've seen the loading screen for long enough lets immediately proceeed
-                        // Otherwise wait until 5 seconds has passed
+                        // Otherwise wait until x seconds has passed
                         if (timeSpentLoading >= minLoadingTime)
                             this.initPlayback()
                         else
