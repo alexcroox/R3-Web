@@ -31,10 +31,13 @@
         background #FFF
         padding 50px $sidePadding
         margin-left $sidePadding
-        margin-right sidePadding
+        margin-right $sidePadding
 
         @media (max-width $mobileBreakPoint)
-            padding $sidePaddingMobile
+            padding-left $sidePaddingMobile
+            padding-right $sidePaddingMobile
+            margin-left $sidePaddingMobile
+            margin-right $sidePaddingMobile
 
     .container--center
         margin 60px auto

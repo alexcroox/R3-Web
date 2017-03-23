@@ -4,42 +4,6 @@
     </div>
 </template>
 
-<script>
-    import noUiSlider from 'nouislider'
-
-    export default {
-
-        props: ['min', 'max'],
-
-        data () {
-            return {
-                config: {
-                    start: this.min,
-                    animate: false,
-                    connect: 'lower',
-                    step: 1,
-                    range: {
-                        'min': this.min,
-                        'max': this.max
-                    },
-                    cssPrefix: 'slider__'
-                },
-            }
-        },
-
-        mounted () {
-
-            this.scrubber = document.getElementById('slider__rail')
-            noUiSlider.create(this.scrubber, this.config)
-
-            console.log('Slider: min', this.min)
-            console.log('Slider: max', this.max)
-
-            this.scrubber.noUiSlider.set(100)
-            document.querySelector('.slider__handle').innerHTML = 'test'
-        }
-    }
-</script>
 
 <style lang="stylus">
 
@@ -78,6 +42,10 @@
     .slider__handle:before
         display none
 
+    .slider__handle--left-time
+        text-indent -58px
+        color #000
+
     .slider__origin
         position absolute
         right 0
@@ -92,7 +60,7 @@
         left 120px
         right 60px
         transform translateZ(0)
-        background #030303
+        background rgba(0,0,0,.8)
         height 18px
 
     .slider__connect

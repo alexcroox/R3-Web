@@ -9,6 +9,7 @@
         <div slot="body">
 
             <h3>{{ $t('terrain-missing') }}</h3>
+
             <p class="margin__top--small">
                 {{ $t('automated-tiler') }}
                 <br><br>
@@ -22,6 +23,7 @@
             </p>
 
             <h3 class="margin__top--large">{{ $t('vehicle-wrong-icon') }}</h3>
+
             <p class="margin__top--small">
                 {{ $t('automated-icons') }}
                 <br><br>
@@ -35,6 +37,7 @@
             </p>
 
             <h3 class="margin__top--large">{{ $t('any-other-issues') }}</h3>
+
             <p class="margin__top--small">
                 <span v-html="$t('file-issue',
                 {

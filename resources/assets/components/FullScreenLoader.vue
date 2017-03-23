@@ -2,6 +2,9 @@
     <div class="fullscreen-loader">
 
         <div class="fullscreen-loader__content">
+            <h1 class="fullscreen-loader__title">{{ title }}</h1>
+            <p v-if="title != ''" class="fullscreen-loader__sub-title">{{ subTitle }}</p>
+
             <span class="fullscreen-loader__icon"></span>
 
             <p class="fullscreen-loader__text">{{ text }}</p>
@@ -13,7 +16,7 @@
 <script>
     export default {
 
-        props: ['text'],
+        props: ['text', 'title', 'subTitle'],
 
         watch: {
 
@@ -38,6 +41,19 @@
         justify-content center
         text-align center
         z-index 50
+
+    .fullscreen-loader__title
+        display block
+        font-size 30px
+        color #FFF
+        letter-spacing 0.05em
+
+    .fullscreen-loader__sub-title
+        text-transform uppercase
+        margin-bottom 70px
+        margin-top 10px
+        font-weight 500
+        color #AAA
 
     .fullscreen-loader__icon
         width 17px

@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <container v-if="!playerId" box="true" class="align__text--center margin__top--huge">
+        <container v-if="!playerId" box="true" class="align__text--center margin__top--huge container--no-player-id">
 
             <i class="fa fa-user-circle-o my-missions__icon" aria-hidden="true"></i>
 
@@ -164,9 +164,16 @@
     }
 </script>
 
-<style lang="stylus">
+<style scoped lang="stylus">
+    .container--no-player-id
+        @media (max-width 600px)
+            text-align left !important
+
     .my-missions__icon
         font-size  70px
         color  #6ab73b
         margin-bottom 30px
+
+        @media (max-width 600px)
+            display none
 </style>

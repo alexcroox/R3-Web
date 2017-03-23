@@ -1,12 +1,34 @@
 <template>
     <div class="playback__container">
 
-        <full-screen-loader v-if="loading" :text="currentLoadingStage"></full-screen-loader>
+        <transition name="fade">
+            <full-screen-loader v-if="loading" :text="currentLoadingStage" :title="missionName" :subTitle="terrainConfig.name"></full-screen-loader>
+        </transition>
 
         <leaflet-map v-if="foundTerrain" :terrainConfig="terrainConfig" :tileDomain="tileDomain"></leaflet-map>
 
-        <map-box class="timeline" v-if="!loading">
-            <slider v-if="!loading" :min="sliderMin" :max="sliderMax"></slider>
+        <map-box class="timeline" :hidden="loading">
+
+            <button class="timeline__play" @click="togglePlay">
+                <i v-if="!paused" class="fa fa-pause"></i>
+                <i v-if="paused" class="fa fa-play"></i>
+            </button>
+
+            <div class="timeline__speed__container">
+                <button class="timeline__speed" :class="{ 'timeline__speed--active': currentSpeed == 5 }" @click="changeSpeed(5)">
+                    5x
+                </button>
+
+                <button class="timeline__speed" :class="{ 'timeline__speed--active': currentSpeed == 10 }" @click="changeSpeed(10)">
+                    10x
+                </button>
+
+                <button class="timeline__speed" :class="{ 'timeline__speed--active': currentSpeed == 30 }" @click="changeSpeed(30)">
+                    30x
+                </button>
+            </div>
+
+            <slider></slider>
         </map-box>
     </div>
 </template>
@@ -17,6 +39,7 @@
     import _each from 'lodash.foreach'
     import _map from 'lodash.map'
     import _find from 'lodash.find'
+    import moment from 'moment'
 
     import LeafletMap from 'components/LeafletMap.vue'
     import FullScreenLoader from 'components/FullScreenLoader.vue'
@@ -29,6 +52,7 @@
     import Events from 'playback/events'
 
     export default {
+
         components: {
             LeafletMap,
             FullScreenLoader,
@@ -41,12 +65,11 @@
         data () {
             return {
                 foundTerrain: false,
-                missionData: { positions: {} },
                 terrainConfig: {},
                 missionId: this.urlData.params.id,
-                missionName: {},
-                sliderMin: 0,
-                sliderMax: 0,
+                missionName: '',
+                currentSpeed: 5,
+                paused: true,
                 tileDomain: {
                     static: 'https://r3tiles-a.titanmods.xyz',
                     dynamic: 'https://r3tiles-{s}.titanmods.xyz' // sub domain support for faster loading (non http/2 servers)
@@ -106,6 +129,11 @@
             this.fetchMissionInfo()
         },
 
+        mounted () {
+
+            this.startTime = moment()
+        },
+
         methods: {
 
             errorReturnToMissionList (errorText, errorDetail) {
@@ -113,7 +141,7 @@
                 if (errorDetail != null)
                     console.error(errorDetail);
 
-                router.push({ name: 'missions.list', params: { error: errorText } })
+                //router.push({ name: 'missions.list', params: { error: errorText } })
             },
 
             getTerrainInfo () {
@@ -150,8 +178,8 @@
 
                 Playback.load(this.missionId).then(missionInfo => {
 
-                    this.sliderMax = missionInfo.total_mission_time
-                    this.missionName = missionInfo.name
+                    Playback.initScrubber(0, missionInfo.total_mission_time)
+                    this.missionName = missionInfo.display_name
 
                     this.completeLoadingStage('missionInfo')
 
@@ -203,6 +231,23 @@
 
                 this.loadingStages[stageType].complete = true
             },
+
+            togglePlay () {
+
+                Playback.toggle()
+            },
+
+            changeSpeed (newSpeed) {
+
+                this.currentSpeed = newSpeed
+                Playback.changeSpeed(this.currentSpeed)
+            },
+
+            initPlayback () {
+
+                this.initiatedPlayback = true
+                this.loading = false
+            },
         },
 
         computed: {
@@ -226,18 +271,32 @@
         },
 
         watch: {
-            unitName (name) {
+            unitName () {
                 document.title = (!this.missionName)? `Mission Playback - ${this.unitName}` : `${this.missionName} - ${this.unitName}`
             },
 
             loadingStages: {
                 handler: function () {
 
-                    this.loading = (_find(this.loadingStages, ['complete', false ])) ? true : false
+                    let stillLoading = (_find(this.loadingStages, ['complete', false ])) ? true : false;
 
-                    if (!this.loading && !this.initiatedPlayback) {
+                    if (!stillLoading && !this.initiatedPlayback) {
 
-                        this.initiatedPlayback = true
+                        let timeSpentLoading = moment().diff(this.startTime, 'seconds')
+                        let minLoadingTime = 5
+
+                        console.log('Playback: Time spent loading', timeSpentLoading)
+
+                        // If we've seen the loading screen for long enough lets immediately proceeed
+                        // Otherwise wait until 5 seconds has passed
+                        if (timeSpentLoading >= minLoadingTime)
+                            this.initPlayback()
+                        else
+                            setTimeout(this.initPlayback, Math.round((minLoadingTime - timeSpentLoading) * 1000))
+
+                    } else {
+
+                        this.loading = stillLoading
                     }
                 },
                 deep: true
@@ -254,6 +313,39 @@
         bottom 0px
         left 0px
         z-index 1
+
+    .timeline__play
+        color #FFF
+        position absolute
+        display block
+        left 10px
+        top 9px
+
+    .timeline__play:hover
+        opacity .8
+        cursor pointer
+
+    .timeline__speed__container
+        position absolute
+        left 35px
+        top 8px
+
+    .timeline__speed
+        display inline-block
+        color #AAA
+        font-size 14px
+        font-weight 700
+        margin-right 4px
+
+    .timeline__speed:last-child
+        margin-right 0
+
+    .timeline__speed--active
+        color #FFF
+
+    .timeline__speed:hover
+        color #EEE
+        cursor pointer
 </style>
 
 <style lang="stylus" scoped>
@@ -262,4 +354,15 @@
         right 10px
         bottom 10px
         height 36px
+
+        @media (max-width 900px)
+            left 10px
+
+    .fade-enter-active, .fade-leave-active
+        transition opacity 1s
+
+    .fade-enter
+    .fade-leave-to
+        opacity 0
+
 </style>

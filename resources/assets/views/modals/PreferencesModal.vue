@@ -10,6 +10,21 @@
 
             <p class="margin__top--medium">{{ $t('customise-r3-experience') }}</p>
 
+            <h3 class="margin__top--large">{{ ucfirst($t('playback-speed')) }}</h3>
+
+            <p class="margin__top--small">{{ $t('playback-speed-explain') }}</p>
+
+            <p>
+
+                <input-select
+                    :options="playbackSpeeds"
+                    :value="existingPlaybackSpeed"
+                    @changed="onSpeedChange"
+                    placeholder="Select speed"
+                    class="margin__top--medium margin__bottom--medium">
+                </input-select>
+            </p>
+
             <h3 class="margin__top--large">{{ ucfirst($t('language')) }}</h3>
 
             <p>
@@ -74,6 +89,8 @@
                 languages: this.formatLanguages(),
 
                 locale: this.$locale.current(),
+
+                playbackSpeeds: [5,10,30],
             }
         },
 
@@ -107,6 +124,16 @@
                 this.$locale.change(this.locale)
             },
 
+            onSpeedChange (valObject) {
+
+                this.locale = valObject.value
+
+                this.$store.commit('setPreferenceLanguage', valObject.value)
+
+                this.$locale.change(this.locale)
+            },
+
+
             ucfirst,
         },
 
@@ -117,6 +144,11 @@
                 let locale = this.locale
 
                 return _find(this.languages, (l) => { return l.value == locale });
+            },
+
+            existingPlaybackSpeed () {
+
+                return 10
             },
 
             missingStringsForCurrentLocale () {

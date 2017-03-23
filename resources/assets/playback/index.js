@@ -1,9 +1,17 @@
 import axios from 'http'
+import noUiSlider from 'nouislider'
 
 class Playback {
 
     constructor () {
         this.missionId = 0
+        this.maxTime = 0
+        this.scrubberConfig = {
+            animate: false,
+            connect: 'lower',
+            step: 1,
+            cssPrefix: 'slider__'
+        }
     }
 
     load (missionId) {
@@ -27,6 +35,31 @@ class Playback {
                     reject(error)
                 })
         })
+    }
+
+    initScrubber (min, max) {
+
+        console.log('Playback: init scrubber')
+
+        this.maxTime = max
+
+        this.scrubberConfig.range = {
+            'min': 0,
+            'max': this.maxTime
+        }
+
+        this.scrubberConfig.start = 0
+
+        this.scrubber = document.getElementById('slider__rail')
+        noUiSlider.create(this.scrubber, this.scrubberConfig)
+    }
+
+    changeSpeed (speed) {
+
+    }
+
+    toggle () {
+
     }
 }
 
