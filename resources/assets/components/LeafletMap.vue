@@ -8,9 +8,10 @@
     import L from 'leaflet'
     import 'leaflet/dist/leaflet.css'
     import RasterCoords from 'leaflet-rastercoords'
-    import axios from 'http'
 
     import errorTile from 'images/map/error-tile.png'
+
+    import Poi from 'playback/poi'
 
     export default {
         props: ['terrainConfig', 'tileDomain'],
@@ -85,16 +86,8 @@
 
             loadPoi () {
 
-                axios.get(`${this.tileDomain.static}/${this.terrainConfig.name}/poi.json`)
-                    .then(response => {
-
-                        let poiData = response.data
-
-                        console.log('poi data', poiData)
-                    })
-                    .catch(error => {
-                        console.warn(`${this.terrainConfig.name} has no POI, would you like to <a href="">add some?</a>`)
-                    })
+                let poi = new Poi(this.terrainConfig, this.map, this.rc, this.tileDomain)
+                poi.load()
             }
         }
     }
