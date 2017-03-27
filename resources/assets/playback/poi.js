@@ -6,8 +6,9 @@ import gameToMapPos from './gameToMapPos'
 
 class Poi {
 
-    constructor (terrainConfig, map, rc, tileDomain) {
+    constructor (terrainConfig, map, rc, tileDomain, iconDomain) {
         this.tileDomain = tileDomain
+        this.iconDomain = iconDomain
         this.map = map
         this.rc = rc
         this.terrainConfig = terrainConfig
@@ -35,17 +36,22 @@ class Poi {
 
             let lg
 
+            // Legacy POI had height markers
+            if(item.type == "mount")
+                return cb()
+
             // Setup layer group for the type so we can toggle it's visibility based on zoom levels
-            if (this.layers[item.type] === null) {
+            if (this.layers[item.type] != null) {
+
+                lg = this.layers[item.type]
+
+            } else {
 
                 lg = new L.featureGroup([])
 
                 lg.addTo(this.map)
 
                 this.layers[item.type] = lg
-
-            } else {
-                lg = this.layers[item.type]
             }
 
             // In previous versions of R3 we had support for rock areas etc
@@ -57,7 +63,7 @@ class Poi {
             let iconAnchor = [15, 15]
 
             let poiIcon = L.icon({
-                iconUrl: `${this.tileDomain.static}/${poiIconName}.png`,
+                iconUrl: `${this.iconDomain}/${poiIconName}.png`,
                 iconSize: iconSize,
                 iconAnchor: iconAnchor,
                 className: `poi-image--${item.type}`
@@ -70,7 +76,7 @@ class Poi {
                 clickable: false
             }).bindTooltip(item.label, {
                 permanent: true,
-                className: `poi poi--poi.type`,
+                className: `map__label__poi map__label__poi--${item.type}`,
                 offset: poiOffset
             });
 

@@ -2,10 +2,20 @@
     <div class="playback__container">
 
         <transition name="fade">
-            <full-screen-loader v-if="loading" :text="currentLoadingStage" :title="missionName" :subTitle="terrainConfig.name"></full-screen-loader>
+            <full-screen-loader
+                v-if="loading"
+                :text="currentLoadingStage"
+                :title="missionName"
+                :subTitle="terrainConfig.name">
+            </full-screen-loader>
         </transition>
 
-        <leaflet-map v-if="foundTerrain" :terrainConfig="terrainConfig" :tileDomain="tileDomain"></leaflet-map>
+        <leaflet-map
+            v-if="foundTerrain"
+            :terrainConfig="terrainConfig"
+            :tileDomain="tileDomain"
+            :iconDomain="iconDomain">
+        </leaflet-map>
 
         <map-box class="timeline" :hidden="loading">
 
@@ -15,15 +25,24 @@
             </button>
 
             <div class="timeline__speed__container">
-                <button class="timeline__speed" :class="{ 'timeline__speed--active': currentSpeed == 5 }" @click="changeSpeed(5)">
+                <button
+                    class="timeline__speed"
+                    :class="{ 'timeline__speed--active': currentSpeed == 5 }"
+                    @click="changeSpeed(5)">
                     5x
                 </button>
 
-                <button class="timeline__speed" :class="{ 'timeline__speed--active': currentSpeed == 10 }" @click="changeSpeed(10)">
+                <button
+                    class="timeline__speed"
+                    :class="{ 'timeline__speed--active': currentSpeed == 10 }"
+                    @click="changeSpeed(10)">
                     10x
                 </button>
 
-                <button class="timeline__speed" :class="{ 'timeline__speed--active': currentSpeed == 30 }" @click="changeSpeed(30)">
+                <button
+                    class="timeline__speed"
+                    :class="{ 'timeline__speed--active': currentSpeed == 30 }"
+                    @click="changeSpeed(30)">
                     30x
                 </button>
             </div>
@@ -74,6 +93,7 @@
                     static: 'https://r3tiles-a.titanmods.xyz',
                     dynamic: 'https://r3tiles-{s}.titanmods.xyz' // sub domain support for faster loading (non http/2 servers)
                 },
+                iconDomain: 'https://r3icons.titanmods.xyz',
                 loading: true,
                 initiatedPlayback: false,
                 loadingStages: {

@@ -37,6 +37,10 @@ module.exports = {
                     stylus: ExtractTextPlugin.extract({
                       use: ['css-loader', 'stylus-loader'],
                       fallback: 'vue-style-loader'
+                    }),
+                    css: ExtractTextPlugin.extract({
+                      use: ['css-loader'],
+                      fallback: 'vue-style-loader'
                     })
                 },
             }
