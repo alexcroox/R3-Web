@@ -13,6 +13,7 @@
 
         <input
             type="text"
+            ref="input"
             :value="value"
             class="input-text"
             :placeholder="placeholder"
@@ -32,6 +33,7 @@
         v-else
         :value="value"
         type="text"
+        ref="input"
         class="input-text"
         :placeholder="placeholder"
         :class="{
@@ -71,6 +73,7 @@
 
             focus () {
                 this.inputFocused = true
+                this.$emit('focus', this.$refs.input)
             },
 
             blur () {

@@ -17,7 +17,7 @@
                 v-model="link"
                 :lightBackground="true"
                 :full="true"
-                @focus="focusShareInput"
+                @focussed="focusShareInput($event)"
                 class="margin__top--large">
             </input-text>
 
@@ -55,7 +55,9 @@
                 this.show = false
             },
 
-            focusShareInput () {
+            focusShareInput (test) {
+
+                console.warn(test)
 
                 this.$refs.url.select()
             },
