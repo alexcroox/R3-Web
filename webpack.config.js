@@ -36,11 +36,11 @@ module.exports = {
                 loaders: {
                     stylus: ExtractTextPlugin.extract({
                       use: ['css-loader', 'stylus-loader'],
-                      fallback: 'vue-style-loader'
+                      fallback: ['vue-style-loader', 'style-loader']
                     }),
                     css: ExtractTextPlugin.extract({
                       use: ['css-loader'],
-                      fallback: 'vue-style-loader'
+                      fallback: ['style-loader']
                     })
                 },
             }
@@ -58,8 +58,11 @@ module.exports = {
             test: /\.styl$/,
             loader: ExtractTextPlugin.extract('css-loader!stylus-loader')
         }, {
-            test: /\.css$/,
-            loader: 'style-loader!css-loader'
+            test: /\.css/,
+            loader: ExtractTextPlugin.extract({
+                use: ['css-loader'],
+                fallback: ['style-loader']
+            })
         }, {
             test: /\.(eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
             loader: 'url-loader'

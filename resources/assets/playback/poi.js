@@ -12,7 +12,7 @@ class Poi {
         this.map = map
         this.rc = rc
         this.terrainConfig = terrainConfig
-        this.layers = []
+        this.layers = {}
     }
 
     load () {
@@ -76,7 +76,8 @@ class Poi {
                 clickable: false
             }).bindTooltip(item.label, {
                 permanent: true,
-                className: `map__label__poi map__label__poi--${item.type}`,
+                direction: 'right',
+                className: `map__label map__label__poi map__label__poi--${item.type}`,
                 offset: poiOffset
             });
 
@@ -84,12 +85,12 @@ class Poi {
 
             cb()
 
-        }).done(error => {
+        }, error => {
 
             if (error)
                 return console.warn('POI: Error parsing', error)
 
-            this.map.on('zoomend', this.filterZoomLayers)
+            this.map.on('zoomend', this.filterZoomLayers.bind(this))
 
             this.filterZoomLayers()
         });
@@ -102,7 +103,7 @@ class Poi {
 
         _each(this.layers, (layer, type) => {
 
-            if (zoom < 4 && (type != 'namecitycapital' && type != 'namecity' && type != 'mount'))
+            if (zoom < 4 && (type != 'namecitycapital' && type != 'namecity' && type != 'airport'))
                 this.map.removeLayer(this.layers[type])
 
             if (zoom > 3)

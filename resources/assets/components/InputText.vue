@@ -5,16 +5,22 @@
             'input-text__wrap--focus': inputFocused,
             'input-text__wrap--inline': inline,
             'input-text__wrap--no-background': noBackground,
-            'input-text__wrap--bold': bold
+            'input-text__wrap--bold': bold,
+            'input-text__wrap--full': full
         }">
 
         <i v-if="icon" :class="['fa', 'input-text__icon', faIcon]" aria-hidden="true"></i>
 
         <input
             type="text"
+            :value="value"
             class="input-text"
             :placeholder="placeholder"
-            :class="{ 'input-text--short': short }"
+            :class="{
+                'input-text--short': short,
+                'input-text--light': lightBackground,
+                'input-text--full': full
+            }"
             @keyup="$emit('keyup', $event.target.value)"
             @keyup.enter="$emit('enter', $event.target.value)"
             @focus="focus"
@@ -24,10 +30,15 @@
 
     <input
         v-else
+        :value="value"
         type="text"
         class="input-text"
         :placeholder="placeholder"
-        :class="{ 'input-text--short': short }"
+        :class="{
+            'input-text--short': short,
+            'input-text--light': lightBackground,
+            'input-text--full': full
+        }"
         @keyup="$emit('keyup', $event.target.value)"
         @keyup.enter="$emit('enter', $event.target.value)"
         @focus="focus"
@@ -38,7 +49,17 @@
 <script>
     export default {
 
-        props: ['value', 'icon', 'noBackground', 'placeholder', 'inline', 'bold', 'short'],
+        props: [
+            'value',
+            'icon',
+            'noBackground',
+            'placeholder',
+            'inline',
+            'bold',
+            'short',
+            'lightBackground',
+            'full',
+        ],
 
         data () {
             return {
@@ -89,6 +110,9 @@
     .input-text:placeholder
         color #B1B9C0
 
+    .input-text--light
+        background #FFF
+
     .input-text__wrap--bold .input-text
         font-size 16px
         font-weight 500
@@ -100,7 +124,7 @@
         z-index 1
         position absolute
         left 20px
-        top 17px
+        top 16px
         font-size 20px
         color $bodyTextSecondaryColor
 
@@ -113,7 +137,7 @@
     .input-text__wrap--with-icon .input-text
         z-index 0
         position relative
-        padding-left 45px
+        padding-left 55px
 
     .input-text__wrap--no-background .input-text__icon
         top auto
@@ -138,5 +162,8 @@
 
     .input-text--short
         width 250px
+
+    .input-text--full
+        width 100%
 
 </style>

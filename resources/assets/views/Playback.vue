@@ -48,7 +48,17 @@
             </div>
 
             <slider></slider>
+
+            <button class="timeline__share" @click="share">
+                <i class="fa fa-share-alt"></i>
+            </button>
+
+            <button class="timeline__fullscreen" @click="fullscreen">
+                <i class="fa fa-arrows-alt"></i>
+            </button>
         </map-box>
+
+        <share-modal :link="shareLink"></share-modal>
     </div>
 </template>
 
@@ -59,11 +69,14 @@
     import _map from 'lodash.map'
     import _find from 'lodash.find'
     import moment from 'moment'
+    import screenfull from 'screenfull'
+    import bus from 'eventBus'
 
     import LeafletMap from 'components/LeafletMap.vue'
     import FullScreenLoader from 'components/FullScreenLoader.vue'
     import Slider from 'components/Slider.vue'
     import MapBox from 'components/MapBox.vue'
+    import ShareModal from 'views/modals/ShareModal.vue'
 
     import Playback from 'playback/index'
     import Infantry from 'playback/infantry'
@@ -76,7 +89,8 @@
             LeafletMap,
             FullScreenLoader,
             Slider,
-            MapBox
+            MapBox,
+            ShareModal,
         },
 
         props: ['urlData'],
@@ -88,6 +102,7 @@
                 missionId: this.urlData.params.id,
                 missionName: '',
                 currentSpeed: 5,
+                shareLink: '',
                 paused: true,
                 tileDomain: {
                     static: 'https://r3tiles-a.titanmods.xyz',
@@ -151,7 +166,13 @@
 
         mounted () {
 
+            console.log(this.urlData)
+
             this.startTime = moment()
+
+            bus.$on('paused', (paused) => {
+                this.paused = paused
+            })
         },
 
         methods: {
@@ -268,6 +289,18 @@
                 this.initiatedPlayback = true
                 this.loading = false
             },
+
+            share () {
+
+                this.shareLink = 'https://google.com'
+                bus.$emit('showShareModal')
+            },
+
+            fullscreen () {
+
+                if (screenfull.enabled)
+                    screenfull.toggle()
+            },
         },
 
         computed: {
@@ -366,6 +399,22 @@
     .timeline__speed:hover
         color #EEE
         cursor pointer
+
+    .timeline__share
+    .timeline__fullscreen
+        color #FFF
+        position absolute
+        display block
+        right 37px
+        top 9px
+
+        &:hover
+            opacity .8
+            cursor pointer
+
+    .timeline__fullscreen
+        right 10px
+
 </style>
 
 <style lang="stylus" scoped>

@@ -6,7 +6,6 @@
 
 <script>
     import L from 'leaflet'
-    import 'leaflet/dist/leaflet.css'
     import RasterCoords from 'leaflet-rastercoords'
 
     import errorTile from 'images/map/error-tile.png'
@@ -100,6 +99,8 @@
 </script>
 
 <style lang="stylus">
+    @import '~leaflet/dist/leaflet.css'
+
     #map
         position relative
         width 100%
@@ -119,6 +120,8 @@
         font-weight bold
         margin-top 4px
         padding 0 0 0 10px
+        border none
+        background none
         position absolute
         user-select none
         pointer-events none

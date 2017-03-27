@@ -8,7 +8,7 @@
 
         <div slot="body">
 
-            <p class="margin__top--medium">{{ $t('customise-r3-experience') }}</p>
+            <p>{{ $t('customise-r3-experience') }}</p>
 
             <h3 class="margin__top--large">{{ ucfirst($t('playback-speed')) }}</h3>
 
@@ -58,7 +58,6 @@
 </template>
 
 <script>
-    import 'font-awesome/css/font-awesome.css'
     import 'styles/components/margin.styl'
     import 'styles/components/text-link.styl'
 

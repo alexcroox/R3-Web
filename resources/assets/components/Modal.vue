@@ -119,7 +119,7 @@
         font-size 21px
 
     .modal__body
-        padding 20px 40px 40px 40px
+        padding 30px 40px 40px 40px
         border-radius 0 0 $modalBorderRaduis $modalBorderRaduis
         background $backgroundPrimaryColor
 

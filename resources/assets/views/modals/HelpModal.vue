@@ -61,7 +61,6 @@
 </template>
 
 <script>
-    import 'font-awesome/css/font-awesome.css'
     import 'styles/components/margin.styl'
     import 'styles/components/text-link.styl'
 

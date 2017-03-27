@@ -1,5 +1,6 @@
 import axios from 'http'
 import noUiSlider from 'nouislider'
+import bus from 'eventBus'
 
 class Playback {
 
@@ -12,6 +13,7 @@ class Playback {
             step: 1,
             cssPrefix: 'slider__'
         }
+        this.paused = false
     }
 
     load (missionId) {
@@ -60,6 +62,7 @@ class Playback {
 
     toggle () {
 
+        bus.$emit('paused', this.paused)
     }
 }
 

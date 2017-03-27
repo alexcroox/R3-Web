@@ -7,6 +7,7 @@
 
     <title>{{ config('r3.unit_name') }}</title>
 
+    <script src="https://use.fontawesome.com/6985a99f44.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700" rel="stylesheet">
     <link href="<?php echo $assets->app->css ?>" rel="stylesheet">
   </head>

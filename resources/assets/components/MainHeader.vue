@@ -78,7 +78,6 @@
 </template>
 
 <script>
-    import 'font-awesome/css/font-awesome.css'
     import { ucfirst } from 'filters'
 
     import HelpModal from 'views/modals/HelpModal.vue'
