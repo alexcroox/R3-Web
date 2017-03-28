@@ -7,6 +7,7 @@
             @mousemove="updateRail" @touchmove="updateRail"
             @mouseup="stopSlide" @touchend="stopSlide">
 
+                <div class="speed-slider__fake-rail"></div>
                 <div class="speed-slider__rail" :style="percentageWidth"></div>
 
         </div>
@@ -93,8 +94,7 @@
 
     .speed-slider
         width 50px
-        height 5px
-        background #000
+        height 25px
         position relative
         display inline-block
         display flex
@@ -103,11 +103,18 @@
     .speed-slider:hover
         cursor e-resize
 
+    .speed-slider__fake-rail
+        height 5px
+        background rgba(0,0,0,.8)
+        position relative
+        width 100%
+        z-index 1
+
     .speed-slider__rail
         width 0%
         border-right 3px solid #FFF
-        top -3px
-        bottom -3px
+        top 3px
+        bottom 3px
         position absolute
         z-index 2
 
