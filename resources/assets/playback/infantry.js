@@ -6,7 +6,12 @@ class Infantry {
 
     constructor () {
         this.entities = {}
-        this.positions = []
+        this.positions = {}
+        this.layer
+    }
+
+    injectMap (map) {
+        this.map = map
     }
 
     loadEntities (missionId) {
@@ -55,6 +60,26 @@ class Infantry {
                     reject()
                 })
         })
+    }
+
+    processTime (missionTime) {
+
+        return new Promise((resolve, reject) => {
+
+            if (this.positions[missionTime] != null) {
+
+                console.log(this.positions[missionTime])
+
+                resolve()
+
+            } else {
+                resolve()
+            }
+        })
+    }
+
+    clearMarkers () {
+
     }
 }
 

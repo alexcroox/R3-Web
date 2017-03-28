@@ -1,9 +1,10 @@
 import axios from 'http'
+import _groupBy from 'lodash.groupby'
 
 class Events {
 
     constructor () {
-        this.list = []
+        this.list = {}
     }
 
     load (missionId) {
@@ -15,7 +16,7 @@ class Events {
 
                     console.log('Events: Got mission events', response.data.length)
 
-                    this.list = response.data
+                    this.list = _groupBy(response.data, (event) => { return event.mission_time })
 
                     resolve()
                 })

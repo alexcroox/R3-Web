@@ -6,7 +6,7 @@ class Vehicles {
 
     constructor () {
         this.entities = {}
-        this.positions = []
+        this.positions = {}
     }
 
     loadEntities (missionId) {

@@ -2,22 +2,19 @@ import axios from 'http'
 import { each as λeach } from 'contra'
 import _each from 'lodash.foreach'
 import L from 'leaflet'
+
 import gameToMapPos from './gameToMapPos'
+import Map from './map'
 
 class Poi {
 
-    constructor (terrainConfig, map, rc, tileDomain, iconDomain) {
-        this.tileDomain = tileDomain
-        this.iconDomain = iconDomain
-        this.map = map
-        this.rc = rc
-        this.terrainConfig = terrainConfig
+    constructor () {
         this.layers = {}
     }
 
     load () {
 
-        axios.get(`${this.tileDomain.static}/${this.terrainConfig.name}/poi.json`)
+        axios.get(`${Map.tileDomain.static}/${Map.terrainConfig.name}/poi.json`)
             .then(response => {
 
                 let data = response.data
@@ -26,7 +23,7 @@ class Poi {
                     this.addToMap(data)
             })
             .catch(error => {
-                console.warn(`POI: ${this.terrainConfig.name} has no town labels, would you like to <a href="">add some?</a>`, error)
+                console.warn(`POI: ${Map.terrainConfig.name} has no town labels, would you like to <a href="">add some?</a>`, error)
             })
     }
 
@@ -49,7 +46,7 @@ class Poi {
 
                 lg = new L.featureGroup([])
 
-                lg.addTo(this.map)
+                lg.addTo(Map.handler)
 
                 this.layers[item.type] = lg
             }
@@ -63,15 +60,15 @@ class Poi {
             let iconAnchor = [15, 15]
 
             let poiIcon = L.icon({
-                iconUrl: `${this.iconDomain}/${poiIconName}.png`,
+                iconUrl: `${Map.iconDomain}/${poiIconName}.png`,
                 iconSize: iconSize,
                 iconAnchor: iconAnchor,
                 className: `poi-image--${item.type}`
             });
 
-            let pos = gameToMapPos({ x: item.x, y: item.y}, this.terrainConfig.height, this.terrainConfig.doubleSize);
+            let pos = gameToMapPos({ x: item.x, y: item.y}, Map.terrainConfig.height, Map.terrainConfig.doubleSize);
 
-            let poiLabel = L.marker(this.rc.unproject([pos[0], pos[1]]), {
+            let poiLabel = L.marker(Map.rc.unproject([pos[0], pos[1]]), {
                 icon: poiIcon,
                 clickable: false
             }).bindTooltip(item.label, {
@@ -90,7 +87,7 @@ class Poi {
             if (error)
                 return console.warn('POI: Error parsing', error)
 
-            this.map.on('zoomend', this.filterZoomLayers.bind(this))
+            Map.handler.on('zoomend', this.filterZoomLayers.bind(this))
 
             this.filterZoomLayers()
         });
@@ -99,17 +96,17 @@ class Poi {
     // To avoid clutter hide smaller town names at higher zoom levels
     filterZoomLayers () {
 
-        let zoom = this.map.getZoom()
+        let zoom = Map.handler.getZoom()
 
         _each(this.layers, (layer, type) => {
 
             if (zoom < 4 && (type != 'namecitycapital' && type != 'namecity' && type != 'airport'))
-                this.map.removeLayer(this.layers[type])
+                Map.handler.removeLayer(this.layers[type])
 
             if (zoom > 3)
-                this.layers[type].addTo(this.map)
+                this.layers[type].addTo(Map.handler)
         });
     }
 }
 
-export default Poi
+export default new Poi

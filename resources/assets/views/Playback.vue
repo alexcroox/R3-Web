@@ -11,10 +11,7 @@
         </transition>
 
         <leaflet-map
-            v-if="foundTerrain"
-            :terrainConfig="terrainConfig"
-            :tileDomain="tileDomain"
-            :iconDomain="iconDomain">
+            :terrainConfig="terrainConfig">
         </leaflet-map>
 
         <map-box class="timeline" :hidden="loading">
@@ -24,30 +21,9 @@
                 <i v-if="paused" class="fa fa-play"></i>
             </button>
 
-            <div class="timeline__speed__container">
-                <button
-                    class="timeline__speed"
-                    :class="{ 'timeline__speed--active': currentSpeed == 5 }"
-                    @click="changeSpeed(5)">
-                    5x
-                </button>
+            <speed-slider :speed="currentSpeed" @change="changeSpeed"></speed-slider>
 
-                <button
-                    class="timeline__speed"
-                    :class="{ 'timeline__speed--active': currentSpeed == 10 }"
-                    @click="changeSpeed(10)">
-                    10x
-                </button>
-
-                <button
-                    class="timeline__speed"
-                    :class="{ 'timeline__speed--active': currentSpeed == 30 }"
-                    @click="changeSpeed(30)">
-                    30x
-                </button>
-            </div>
-
-            <slider></slider>
+            <time-slider></time-slider>
 
             <button class="timeline__share" @click="share">
                 <i class="fa fa-share-alt"></i>
@@ -74,11 +50,13 @@
 
     import LeafletMap from 'components/LeafletMap.vue'
     import FullScreenLoader from 'components/FullScreenLoader.vue'
-    import Slider from 'components/Slider.vue'
+    import TimeSlider from 'components/TimeSlider.vue'
+    import SpeedSlider from 'components/SpeedSlider.vue'
     import MapBox from 'components/MapBox.vue'
     import ShareModal from 'views/modals/ShareModal.vue'
 
     import Playback from 'playback/index'
+    import Map from 'playback/map'
     import Infantry from 'playback/infantry'
     import Vehicles from 'playback/vehicles'
     import Events from 'playback/events'
@@ -88,7 +66,8 @@
         components: {
             LeafletMap,
             FullScreenLoader,
-            Slider,
+            TimeSlider,
+            SpeedSlider,
             MapBox,
             ShareModal,
         },
@@ -200,6 +179,8 @@
                         this.terrainConfig = response.data
                         this.foundTerrain = true
 
+                        Map.render(this.terrainConfig, this.tileDomain, this.iconDomain)
+
                         this.completeLoadingStage('terrain')
                     })
                     .catch(error => {
@@ -288,6 +269,8 @@
 
                 this.initiatedPlayback = true
                 this.loading = false
+
+                Playback.play()
             },
 
             share () {
@@ -376,28 +359,6 @@
 
     .timeline__play:hover
         opacity .8
-        cursor pointer
-
-    .timeline__speed__container
-        position absolute
-        left 35px
-        top 8px
-
-    .timeline__speed
-        display inline-block
-        color #AAA
-        font-size 14px
-        font-weight 700
-        margin-right 4px
-
-    .timeline__speed:last-child
-        margin-right 0
-
-    .timeline__speed--active
-        color #FFF
-
-    .timeline__speed:hover
-        color #EEE
         cursor pointer
 
     .timeline__share
