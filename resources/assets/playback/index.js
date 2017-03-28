@@ -79,7 +79,7 @@ class Playback {
         let date = new Date(null)
         date.setSeconds(this.currentMissionTime)
 
-        $('.slider__handle').text(date.toISOString().substr(11, 8))
+        $('.slider__handle').html('<span class="slider__time">' + date.toISOString().substr(11, 8) + '</span>')
 
         // Show current mission time left or right of the scrubber handle
         if (parseInt($('.slider__origin').css('left')) > 70)

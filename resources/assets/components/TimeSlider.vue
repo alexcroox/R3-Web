@@ -1,7 +1,5 @@
 <template>
-    <div class="slider">
-        <div id="slider__rail"></div>
-    </div>
+    <div id="slider__rail"></div>
 </template>
 
 
@@ -46,6 +44,10 @@
         text-indent -58px
         color #000
 
+    .slider__time
+        user-select none
+        pointer-events none
+
     .slider__origin
         position absolute
         right 0
@@ -55,13 +57,11 @@
         background #030303
 
     .slider__target
-        position absolute
-        top 9px
-        left 120px
-        right 60px
+        display inline-block
         transform translateZ(0)
         background rgba(0,0,0,.8)
         height 18px
+        flex-grow 1
 
     .slider__connect
         background #FFF

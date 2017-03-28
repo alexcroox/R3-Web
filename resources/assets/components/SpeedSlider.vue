@@ -1,11 +1,17 @@
 <template>
-    <div
-        class="speed-slider"
-        @mousedown="updateRail" @touchstart="updateRail"
-        @mousemove="updateRail" @touchmove="updateRail"
-        @mouseup="updateRail" @touchend="updateRail" @mouseleave="updateRail"
-    >
-        <div class="speed-slider__rail" ref="rail"></div>
+    <div class="speed-slider__container">
+        <div
+            class="speed-slider"
+            ref="container"
+            @mousedown="startSlide" @touchstart="startSlide"
+            @mousemove="updateRail" @touchmove="updateRail"
+            @mouseup="stopSlide" @touchend="stopSlide">
+
+                <div class="speed-slider__rail" :style="percentageWidth"></div>
+
+        </div>
+
+        <div class="speed-slider__info">{{ displaySpeed }}</div>
     </div>
 </template>
 
@@ -13,29 +19,65 @@
 
     export default {
 
-        props: ['speed'],
+        props: ['speed', 'min', 'max'],
+
+        data () {
+            return {
+                targetDifference: 0,
+                sliding: false
+            }
+        },
+
+        mounted () {
+
+            this.targetDifference = (this.speed / (this.max - this.min))
+        },
+
+        computed: {
+
+            percentageWidth () {
+
+                let percentage = this.targetDifference * 100
+
+                return {
+                    width: `${percentage}%`
+                }
+            },
+
+            displaySpeed () {
+
+                let calculatedSpeed = Math.round((this.max - this.min) * this.targetDifference)
+
+                if (calculatedSpeed < this.min)
+                    calculatedSpeed = this.min
+
+                this.$emit('change', calculatedSpeed)
+
+                return `${calculatedSpeed}x`
+            }
+        },
 
         methods: {
 
             updateRail (event) {
 
-                console.log(event)
+                if (!this.sliding)
+                    return
 
-                let percentage = ((((event.clientX - this.$refs.container.offsetLeft) / this.$refs.container.offsetWidth)).toFixed(2))
+                let railOffset = event.offsetX + this.$refs.container.offsetLeft
 
-                this.$refs.rail.style.width = (percentage * 100) + '%'
-
-                console.log('Speed: value', (percentage * 100))
+                this.targetDifference = ((((railOffset - this.$refs.container.offsetLeft) / this.$refs.container.offsetWidth)).toFixed(2))
             },
 
             startSlide (event) {
 
+                this.sliding = true
                 this.updateRail(event)
             },
 
             stopSlide (event) {
 
-                this.updateRail(event)
+                this.sliding = false
             },
         },
 
@@ -45,21 +87,38 @@
 
 <style lang="stylus">
 
+    .speed-slider__container
+        display flex
+        align-items center
+
     .speed-slider
-        position absolute
-        left 35px
-        top 8px
-        width 100px
-        height 25px
+        width 50px
+        height 5px
         background #000
         position relative
+        display inline-block
+        display flex
+        align-items center
+
+    .speed-slider:hover
+        cursor e-resize
 
     .speed-slider__rail
         width 0%
-        height 100%
-        background-color #FFF
-        top 0px
-        left 0px
+        border-right 3px solid #FFF
+        top -3px
+        bottom -3px
         position absolute
-        cursor pointer
+        z-index 2
+
+    .speed-slider__info
+        display inline-block
+        margin-left 5px
+        color #FFF
+        font-size 13px
+        font-weight 700
+        width 23px
+        user-select none
+        pointer-events none
+
 </style>

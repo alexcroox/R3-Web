@@ -17,19 +17,25 @@
         <map-box class="timeline" :hidden="loading">
 
             <button class="timeline__play" @click="togglePlay">
-                <i v-if="!paused" class="fa fa-pause"></i>
-                <i v-if="paused" class="fa fa-play"></i>
+                <i v-if="!paused" class="fa fa-fw fa-pause"></i>
+                <i v-if="paused" class="fa fa-fw fa-play"></i>
             </button>
 
-            <speed-slider :speed="currentSpeed" @change="changeSpeed"></speed-slider>
+            <speed-slider
+                class="margin__left--small"
+                :speed="currentSpeed"
+                :min="speedRange.min"
+                :max="speedRange.max"
+                @change="changeSpeed">
+            </speed-slider>
 
-            <time-slider></time-slider>
+            <time-slider class="margin__left--small margin__right--small"></time-slider>
 
             <button class="timeline__share" @click="share">
                 <i class="fa fa-share-alt"></i>
             </button>
 
-            <button class="timeline__fullscreen" @click="fullscreen">
+            <button class="timeline__fullscreen margin__left--small" @click="fullscreen">
                 <i class="fa fa-arrows-alt"></i>
             </button>
         </map-box>
@@ -80,7 +86,11 @@
                 terrainConfig: {},
                 missionId: this.urlData.params.id,
                 missionName: '',
-                currentSpeed: 5,
+                currentSpeed: 10,
+                speedRange: {
+                    min: 1,
+                    max: 31
+                },
                 shareLink: '',
                 paused: true,
                 tileDomain: {
@@ -261,6 +271,8 @@
 
             changeSpeed (newSpeed) {
 
+                console.log('Playback: new speed', newSpeed)
+
                 this.currentSpeed = newSpeed
                 Playback.changeSpeed(this.currentSpeed)
             },
@@ -352,10 +364,8 @@
 
     .timeline__play
         color #FFF
-        position absolute
-        display block
-        left 10px
-        top 9px
+        display inline-block
+        font-size 19px
 
     .timeline__play:hover
         opacity .8
@@ -364,17 +374,12 @@
     .timeline__share
     .timeline__fullscreen
         color #FFF
-        position absolute
-        display block
-        right 37px
-        top 9px
+        display inline-block
+        font-size 19px
 
         &:hover
             opacity .8
             cursor pointer
-
-    .timeline__fullscreen
-        right 10px
 
 </style>
 
@@ -384,6 +389,9 @@
         right 10px
         bottom 10px
         height 36px
+        display flex
+        align-items center
+        padding 0 10px
 
         @media (max-width 900px)
             left 10px
