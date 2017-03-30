@@ -248,7 +248,11 @@
             fetchInfantryPositions () {
 
                 Infantry.loadPositions(this.missionId)
-                    .then(response => this.completeLoadingStage('infantryPositions'))
+                    .then(response => {
+
+                        Infantry.initMapLayer()
+                        this.completeLoadingStage('infantryPositions')
+                    })
                     .catch(error => this.errorReturnToMissionList('Error loading mission infantryPositions'))
             },
 

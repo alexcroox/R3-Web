@@ -1,6 +1,10 @@
 import _keyBy from 'lodash.keyby'
 import _groupBy from 'lodash.groupby'
+import { each as λeach } from 'contra'
 import axios from 'http'
+import L from 'leaflet'
+
+import Map from './map'
 
 class Infantry {
 
@@ -8,10 +12,6 @@ class Infantry {
         this.entities = {}
         this.positions = {}
         this.layer
-    }
-
-    injectMap (map) {
-        this.map = map
     }
 
     loadEntities (missionId) {
@@ -48,8 +48,7 @@ class Infantry {
 
                     console.log('Infantry: Got infantry positions', response.data.length);
 
-                    // Group positional data by mission time
-                    this.positions = _groupBy(response.data, (pos) => { return pos.mission_time })
+                    this.positions = response.data
 
                     resolve()
                 })
@@ -64,18 +63,46 @@ class Infantry {
 
     processTime (missionTime) {
 
-        return new Promise((resolve, reject) => {
+        if (this.positions.hasOwnProperty(missionTime)) {
 
-            if (this.positions[missionTime] != null) {
+            λeach(this.positions[missionTime], posData => {
 
-                console.log(this.positions[missionTime])
+                this.updateEntityPosition(posData)
+            })
 
-                resolve()
+        } else {
 
-            } else {
-                resolve()
-            }
-        })
+        }
+    }
+
+    updateEntityPosition (posData) {
+
+        // Do we know of this entity? If not ignore
+        if (!this.entities.hasOwnProperty(posData.entity_id)) {
+            console.warn('Infantry: unknown entity', posData.entity_id)
+            return
+        }
+
+        let entity = this.entities(posData.entity_id)
+
+        // Has this entity ever been on the map?
+        if (!entity.hasOwnProperty('layer')) {
+
+            this.addEntityToMap(posData)
+        } else {
+
+            // Has this entity been on the map, but isn't right now?
+            if (!this.layer.hasLayer(entity.layer))
+                this.layer.addLayer(entity.layer)
+
+            // Update entity position
+        }
+    }
+
+    initMapLayer () {
+
+        this.layer = new L.LayerGroup()
+        this.layer.addTo(Map.handler)
     }
 
     clearMarkers () {

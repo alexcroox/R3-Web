@@ -3,9 +3,9 @@
         <div
             class="speed-slider"
             ref="container"
-            @mousedown="startSlide" @touchstart="startSlide"
-            @mousemove="updateRail" @touchmove="updateRail"
-            @mouseup="stopSlide" @touchend="stopSlide">
+            @mousedown="startSlide"
+            @mousemove="updateRail"
+            @mouseup="stopSlide">
 
                 <div class="speed-slider__fake-rail"></div>
                 <div class="speed-slider__rail" :style="percentageWidth"></div>
@@ -66,6 +66,8 @@
                     return
 
                 let railOffset = event.offsetX + this.$refs.container.offsetLeft
+
+                console.log(event)
 
                 this.targetDifference = ((((railOffset - this.$refs.container.offsetLeft) / this.$refs.container.offsetWidth)).toFixed(2))
             },
