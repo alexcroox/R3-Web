@@ -3,7 +3,7 @@ import { each as λeach } from 'contra'
 import _each from 'lodash.foreach'
 import L from 'leaflet'
 
-import gameToMapPos from './gameToMapPos'
+import { gameToMapPosX, gameToMapPosY } from './helpers/gameToMapPos'
 import Map from './map'
 
 class Poi {
@@ -55,7 +55,6 @@ class Poi {
             // Therefore we still use L.icon in case a need to show icons along
             // side the labels arises again
             let poiIconName = 'blank'
-            let poiOffset = [0, 0]
             let iconSize = [30, 30]
             let iconAnchor = [15, 15]
 
@@ -66,16 +65,14 @@ class Poi {
                 className: `poi-image--${item.type}`
             });
 
-            let pos = gameToMapPos({ x: item.x, y: item.y}, Map.terrainConfig.height, Map.terrainConfig.doubleSize);
+            item.x = gameToMapPosX(item.x)
+            item.y = gameToMapPosY(item.y)
 
-            let poiLabel = L.marker(Map.rc.unproject([pos[0], pos[1]]), {
+            let poiLabel = L.marker(Map.rc.unproject([item.x, item.y]), {
                 icon: poiIcon,
                 clickable: false
             }).bindTooltip(item.label, {
-                permanent: true,
-                direction: 'right',
-                className: `map__label map__label__poi map__label__poi--${item.type}`,
-                offset: poiOffset
+                className: `map__label map__label__poi map__label__poi--${item.type}`
             });
 
             lg.addLayer(poiLabel)

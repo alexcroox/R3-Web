@@ -29,7 +29,10 @@ class PositionController extends Controller
     {
         return Cache::remember("positions:{$type}:{$missionId}", '1440', function () use ($type, $missionId) {
 
-            $positions = DB::table("{$type}_positions")->select('entity_id', 'x', 'y', 'direction', 'key_frame', 'mission_time')->where('mission', $missionId)->get();
+            $positions = DB::table("{$type}_positions")
+                ->select('entity_id', 'x', 'y', 'direction', 'key_frame', 'mission_time')
+                ->where('mission', $missionId)
+                ->get();
 
             $groupedPositions = $positions->groupBy('mission_time');
 

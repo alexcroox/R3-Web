@@ -22,6 +22,7 @@
     "contra": "^1.9.4",
     "leaflet": "^1.0.3",
     "leaflet-rastercoords": "^1.0.2",
+    "lodash.defaults": "^4.2.0",
     "lodash.find": "^4.6.0",
     "lodash.foreach": "^4.5.0",
     "lodash.groupby": "^4.6.0",

@@ -2,7 +2,13 @@ import L from 'leaflet'
 import RasterCoords from 'leaflet-rastercoords'
 import errorTile from 'images/map/error-tile.png'
 
-import Poi from 'playback/poi'
+import Poi from './poi'
+
+// Defaults for our tooltips
+L.Tooltip.mergeOptions({
+    direction: 'right',
+    permanent: true,
+})
 
 class Map {
 
@@ -10,8 +16,17 @@ class Map {
 
         this.hander = {}
         this.zooming = false
-        this.rc = null // Raster coordinates, used for mapping game to browser positions
         this.currentZoom = 0
+
+        // Raster coordinates, used for mapping game to browser positions
+        this.rc = null
+
+        // Defaults for our map markers
+        this.iconMarkerDefaults = {
+            iconSize: [30, 30],
+            iconAnchor: [15, 15],
+            iconUrl: ''
+        }
     }
 
     render (terrainConfig, tileDomain, iconDomain) {
@@ -19,6 +34,8 @@ class Map {
         this.terrainConfig = terrainConfig
         this.tileDomain = tileDomain
         this.iconDomain = iconDomain
+
+        this.iconMarkerDefaults.iconUrl = iconDomain
 
         console.log('Map: Rendering ', this.terrainConfig.name)
 

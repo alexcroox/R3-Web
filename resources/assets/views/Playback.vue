@@ -86,7 +86,7 @@
                 terrainConfig: {},
                 missionId: this.urlData.params.id,
                 missionName: '',
-                currentSpeed: 10,
+                currentSpeed: 5,
                 speedRange: {
                     min: 1,
                     max: 31

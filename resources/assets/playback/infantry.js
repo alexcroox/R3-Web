@@ -1,10 +1,13 @@
 import _keyBy from 'lodash.keyby'
 import _groupBy from 'lodash.groupby'
+import _defaults from 'lodash.defaults'
 import { each as λeach } from 'contra'
+import _each from 'lodash.foreach'
 import axios from 'http'
 import L from 'leaflet'
 
 import Map from './map'
+import { gameToMapPosX, gameToMapPosY } from './helpers/gameToMapPos'
 
 class Infantry {
 
@@ -50,7 +53,19 @@ class Infantry {
 
                     this.positions = response.data
 
-                    resolve()
+                    // Pre-map all game points to map points to save processing time later
+                    λeach(this.positions, (timeGroup, timeGroupCallback) => {
+
+                        λeach(timeGroup, (pos, posCallback) => {
+
+                            pos.x = gameToMapPosX(pos.x)
+                            pos.y = gameToMapPosY(pos.y)
+
+                            posCallback()
+
+                        }, error => timeGroupCallback())
+
+                    }, error => resolve())
                 })
                 .catch(error => {
 
@@ -65,7 +80,7 @@ class Infantry {
 
         if (this.positions.hasOwnProperty(missionTime)) {
 
-            λeach(this.positions[missionTime], posData => {
+            _each(this.positions[missionTime], posData => {
 
                 this.updateEntityPosition(posData)
             })
@@ -83,20 +98,40 @@ class Infantry {
             return
         }
 
-        let entity = this.entities(posData.entity_id)
+        let entity = this.entities[posData.entity_id]
 
         // Has this entity ever been on the map?
-        if (!entity.hasOwnProperty('layer')) {
+        if (!entity.hasOwnProperty('layer'))
+            this.addEntityToMap(entity)
 
-            this.addEntityToMap(posData)
-        } else {
+        // Has this entity been on the map, but isn't right now?
+        if (!this.layer.hasLayer(entity.layer))
+            this.layer.addLayer(entity.layer)
 
-            // Has this entity been on the map, but isn't right now?
-            if (!this.layer.hasLayer(entity.layer))
-                this.layer.addLayer(entity.layer)
+        // Update entity position
+        entity.layer.setLatLng(Map.rc.unproject([posData.x, posData.y]))
+    }
 
-            // Update entity position
-        }
+    addEntityToMap (entity) {
+
+        let entityClass = 'iconMan'
+        let entityFaction = 'west'
+
+        // Our unit marker image
+        let icon = L.icon(_defaults({
+            iconUrl: `${Map.iconMarkerDefaults.iconUrl}/${entityClass}-${entityFaction}.png`
+        }, Map.iconMarkerDefaults))
+
+        // Create the marker, we aren't going to add it to the map
+        // just yet so the position isn't important
+        entity.layer = L.marker([0,0], {
+            icon,
+            clickable: false,
+            rotationAngle: 0,
+            rotationOrigin: '50% 50%'
+        }).bindTooltip(`${entity.class}`, {
+            className: `map__label map__label__infantry`
+        })
     }
 
     initMapLayer () {

@@ -38,7 +38,11 @@
         user-select none
         pointer-events none
         white-space nowrap
+        box-shadow none
         z-index 6
+
+    .map__label:before
+        display none
 
     .map__label__poi
         padding 0
