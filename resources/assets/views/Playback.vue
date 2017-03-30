@@ -17,8 +17,9 @@
         <map-box class="timeline" :hidden="loading">
 
             <button class="timeline__play" @click="togglePlay">
-                <i v-if="!paused" class="fa fa-fw fa-pause"></i>
-                <i v-if="paused" class="fa fa-fw fa-play"></i>
+                <i v-if="!paused && !ended" class="fa fa-fw fa-pause"></i>
+                <i v-if="paused && !ended" class="fa fa-fw fa-play"></i>
+                <i v-if="ended" class="fa fa-fw fa-repeat"></i>
             </button>
 
             <speed-slider
@@ -93,6 +94,7 @@
                 },
                 shareLink: '',
                 paused: true,
+                ended: false,
                 tileDomain: {
                     static: 'https://r3tiles-a.titanmods.xyz',
                     dynamic: 'https://r3tiles-{s}.titanmods.xyz' // sub domain support for faster loading (non http/2 servers)
@@ -161,6 +163,10 @@
 
             bus.$on('paused', (paused) => {
                 this.paused = paused
+            })
+
+            bus.$on('ended', (ended) => {
+                this.ended = ended
             })
         },
 

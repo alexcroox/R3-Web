@@ -3,7 +3,6 @@ import noUiSlider from 'nouislider'
 import bus from 'eventBus'
 import $ from 'cash-dom'
 import _each from 'lodash.foreach'
-import { each as λeach } from 'contra'
 
 import Map from './map'
 import Infantry from './infantry'
@@ -28,6 +27,7 @@ class Playback {
             cssPrefix: 'slider__'
         }
         this.paused = true
+        this.ended = false
     }
 
     load (missionId) {
@@ -98,6 +98,9 @@ class Playback {
         Infantry.clearMarkers()
         //this.controllers.vehicles.clearMarkers()
 
+        this.ended = false
+        bus.$emit('ended', this.ended)
+
         if (this.paused)
             this.play()
     }
@@ -109,13 +112,18 @@ class Playback {
         // If we increase the speed too much chances are the browser can't
         // keep up with the rendering so we need to start skipping events entirely
         // TODO: Need to avoid skipping events, just positional updates
-        if (this.speed == 60)
+        if (this.speed > 30)
             this.timeJump = 5
         else
             this.timeJump = 1
     }
 
     toggle () {
+
+        if (this.ended) {
+            this.skipTime(0)
+            return
+        }
 
         if (this.paused)
             this.play()
@@ -128,8 +136,10 @@ class Playback {
         console.log('Playback: playing...')
 
         this.paused = false
+        this.ended = false
 
         bus.$emit('paused', this.paused)
+        bus.$emit('ended', this.ended)
 
         this.animationLoop()
     }
@@ -141,6 +151,14 @@ class Playback {
         this.paused = true
 
         bus.$emit('paused', this.paused)
+    }
+
+    end () {
+
+        this.pause()
+
+        this.ended = true
+        bus.$emit('ended', this.ended)
     }
 
     processAllEvents () {
@@ -174,7 +192,7 @@ class Playback {
             this.updateScrubber()
 
             if (this.currentMissionTime >= this.maxMissionTime)
-                this.pause()
+                this.end()
             else
                 this.processAllEvents()
 

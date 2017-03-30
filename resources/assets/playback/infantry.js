@@ -1,7 +1,6 @@
 import _keyBy from 'lodash.keyby'
 import _groupBy from 'lodash.groupby'
 import _defaults from 'lodash.defaults'
-import { each as λeach } from 'contra'
 import _each from 'lodash.foreach'
 import axios from 'http'
 import L from 'leaflet'
@@ -54,18 +53,18 @@ class Infantry {
                     this.positions = response.data
 
                     // Pre-map all game points to map points to save processing time later
-                    λeach(this.positions, (timeGroup, timeGroupCallback) => {
+                    _each(this.positions, timeGroup => {
 
-                        λeach(timeGroup, (pos, posCallback) => {
+                        _each(timeGroup, pos => {
 
                             pos.x = gameToMapPosX(pos.x)
                             pos.y = gameToMapPosY(pos.y)
 
-                            posCallback()
+                        })
 
-                        }, error => timeGroupCallback())
+                    })
 
-                    }, error => resolve())
+                    resolve()
                 })
                 .catch(error => {
 
@@ -110,6 +109,9 @@ class Infantry {
 
         // Update entity position
         entity.layer.setLatLng(Map.rc.unproject([posData.x, posData.y]))
+
+        // Update rotation
+        //entity.layer.setRotationAngle(posData.direction);
     }
 
     addEntityToMap (entity) {

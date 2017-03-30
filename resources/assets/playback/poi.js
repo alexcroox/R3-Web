@@ -1,5 +1,4 @@
 import axios from 'http'
-import { each as λeach } from 'contra'
 import _each from 'lodash.foreach'
 import L from 'leaflet'
 
@@ -29,13 +28,13 @@ class Poi {
 
     addToMap (data) {
 
-        λeach(data, (item, cb) => {
+        _each(data, item => {
 
             let lg
 
             // Legacy POI had height markers
             if(item.type == "mount")
-                return cb()
+                return
 
             // Setup layer group for the type so we can toggle it's visibility based on zoom levels
             if (this.layers[item.type] != null) {
@@ -77,17 +76,11 @@ class Poi {
 
             lg.addLayer(poiLabel)
 
-            cb()
+        })
 
-        }, error => {
+        Map.handler.on('zoomend', this.filterZoomLayers.bind(this))
 
-            if (error)
-                return console.warn('POI: Error parsing', error)
-
-            Map.handler.on('zoomend', this.filterZoomLayers.bind(this))
-
-            this.filterZoomLayers()
-        });
+        this.filterZoomLayers()
     }
 
     // To avoid clutter hide smaller town names at higher zoom levels
