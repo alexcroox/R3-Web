@@ -67,8 +67,6 @@
 
                         missionData.push(itemData)
                     });
-
-                    console.log('missionData', missionData)
                 }
 
                 return missionData

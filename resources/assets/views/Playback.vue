@@ -63,6 +63,7 @@
     import ShareModal from 'views/modals/ShareModal.vue'
 
     import Playback from 'playback/index'
+    import PlaybackTime from 'playback/time'
     import Map from 'playback/map'
     import Infantry from 'playback/infantry'
     import Vehicles from 'playback/vehicles'
@@ -87,7 +88,7 @@
                 terrainConfig: {},
                 missionId: this.urlData.params.id,
                 missionName: '',
-                currentSpeed: 5,
+                currentSpeed: 10,
                 speedRange: {
                     min: 1,
                     max: 31
@@ -216,7 +217,7 @@
 
                 Playback.load(this.missionId).then(missionInfo => {
 
-                    Playback.initScrubber(0, missionInfo.total_mission_time)
+                    PlaybackTime.initScrubber(0, missionInfo.total_mission_time)
                     this.missionName = missionInfo.display_name
 
                     this.completeLoadingStage('missionInfo')
@@ -276,7 +277,7 @@
 
             togglePlay () {
 
-                Playback.toggle()
+                PlaybackTime.toggle()
             },
 
             changeSpeed (newSpeed) {
@@ -284,7 +285,7 @@
                 console.log('Playback: new speed', newSpeed)
 
                 this.currentSpeed = newSpeed
-                Playback.changeSpeed(this.currentSpeed)
+                PlaybackTime.changeSpeed(this.currentSpeed)
             },
 
             initPlayback () {
@@ -292,7 +293,7 @@
                 this.initiatedPlayback = true
                 this.loading = false
 
-                Playback.play()
+                PlaybackTime.play()
             },
 
             share () {

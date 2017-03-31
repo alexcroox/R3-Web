@@ -1,12 +1,13 @@
 import _keyBy from 'lodash.keyby'
-import _groupBy from 'lodash.groupby'
 import _defaults from 'lodash.defaults'
 import _each from 'lodash.foreach'
 import axios from 'http'
 import L from 'leaflet'
+import 'leaflet-rotatedmarker'
 
 import Map from './map'
 import { gameToMapPosX, gameToMapPosY } from './helpers/gameToMapPos'
+import getFactionData from './helpers/getFactionData'
 
 class Infantry {
 
@@ -40,8 +41,6 @@ class Infantry {
     }
 
     loadPositions (missionId) {
-
-        console.log('loading positions', missionId)
 
         return new Promise((resolve, reject) => {
 
@@ -111,29 +110,31 @@ class Infantry {
         entity.layer.setLatLng(Map.rc.unproject([posData.x, posData.y]))
 
         // Update rotation
-        //entity.layer.setRotationAngle(posData.direction);
+        entity.layer.setRotationAngle(posData.direction);
     }
 
     addEntityToMap (entity) {
 
-        let entityClass = 'iconMan'
-        let entityFaction = 'west'
+        let entityIcon = entity.icon
+        let factionData = getFactionData(entity.faction)
 
         // Our unit marker image
         let icon = L.icon(_defaults({
-            iconUrl: `${Map.iconMarkerDefaults.iconUrl}/${entityClass}-${entityFaction}.png`
+            iconUrl: `${Map.iconMarkerDefaults.iconUrl}/${entityIcon}-${factionData.name}.png`
         }, Map.iconMarkerDefaults))
+
+        let marker = L.marker([0,0], { icon })
+
+        let label = (entity.player_id != "" && entity.player_id != "_SP_AI_") ? entity.name : false
+
+        if (label)
+            marker.bindTooltip(label, {
+                className: `map__label map__label__infantry`
+            })
 
         // Create the marker, we aren't going to add it to the map
         // just yet so the position isn't important
-        entity.layer = L.marker([0,0], {
-            icon,
-            clickable: false,
-            rotationAngle: 0,
-            rotationOrigin: '50% 50%'
-        }).bindTooltip(`${entity.class}`, {
-            className: `map__label map__label__infantry`
-        })
+        entity.layer = marker
     }
 
     initMapLayer () {

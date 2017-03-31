@@ -7,7 +7,14 @@ import Poi from './poi'
 // Defaults for our tooltips
 L.Tooltip.mergeOptions({
     direction: 'right',
-    permanent: true,
+    permanent: true
+})
+
+L.Marker.mergeOptions({
+    interactive: false,
+    keyboard: false,
+    rotationAngle: 0,
+    rotationOrigin: '50% 50%'
 })
 
 class Map {
@@ -64,8 +71,17 @@ class Map {
         // We need to set an initial view for the tiles to render (center of terrain)
         this.setView([this.terrainConfig.height / 2, this.terrainConfig.width / 2], this.terrainConfig.initZoom)
 
+        this.addHandlers()
         this.loadTiles()
         Poi.load()
+    }
+
+    addHandlers () {
+
+        this.handler.on('zoomstart', () => this.zooming = true)
+        this.handler.on('zoomend', () => this.zooming = false)
+
+        this.handler.on('dragstart', (e) => Playback.stopTrackingHighlightedUnit())
     }
 
     loadTiles () {
