@@ -85,8 +85,6 @@ class Infantry {
                 this.updateEntityPosition(posData)
             })
 
-        } else {
-
         }
     }
 
@@ -131,11 +129,13 @@ class Infantry {
         if(newAngle == entity.currentAngle)
             return
 
-        let smoothAngle = shortestRotation(entity.currentAngle, newAngle);
+        //let smoothAngle = shortestRotation(entity.currentAngle, newAngle);
 
-        entity.currentAngle = smoothAngle
+        //console.log(`${entity.currentAngle} - ${newAngle} - ${smoothAngle}`)
 
-        entity.layer.setRotationAngle(smoothAngle);
+        entity.currentAngle = newAngle
+
+        entity.layer.setRotationAngle(newAngle);
     }
 
     addEntityToMap (entity) {
@@ -165,6 +165,18 @@ class Infantry {
     isPlayer (entity) {
 
         return (entity.player_id != "" && entity.player_id != "_SP_AI_") ? true : false
+    }
+
+    // If the unit is on the map lets remove it as
+    // it is now in a vehicle
+    getIn (entityId) {
+
+        if (
+            this.entities.hasOwnProperty(entityId) &&
+            this.entities[entityId].hasOwnProperty('layer') &&
+            this.layer.hasLayer(this.entities[entityId].layer)
+        )
+            this.layer.removeLayer(this.entities[entityId].layer)
     }
 
     initMapLayer () {

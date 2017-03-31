@@ -1,6 +1,9 @@
 import axios from 'http'
 import bus from 'eventBus'
 
+import Infantry from './infantry'
+import Vehicles from './vehicles'
+
 class Playback {
 
     constructor () {
@@ -32,6 +35,39 @@ class Playback {
                     reject(error)
                 })
         })
+    }
+
+    findEntity (entityId, checkMap = false) {
+
+        if (Infantry.entities.hasOwnProperty(entityId)) {
+
+            if (!checkMap)
+                return Infantry.entities[entityId]
+
+            if (
+                Infantry.entities[entityId].hasOwnProperty('layer') &&
+                Infantry.layer.hasLayer(Infantry.entities[entityId].layer)
+            )
+                return Infantry.entities[entityId]
+            else
+                return false
+        }
+
+        if (Vehicles.entities.hasOwnProperty(entityId)) {
+
+            if (!checkMap)
+                return Vehicles.entities[entityId]
+
+            if (
+                Vehicles.entities[entityId].hasOwnProperty('layer') &&
+                Vehicles.layer.hasLayer(Vehicles.entities[entityId].layer)
+            )
+                return Vehicles.entities[entityId]
+            else
+                return false
+        }
+
+        return false
     }
 
     startHighlightingUnit (entityId) {

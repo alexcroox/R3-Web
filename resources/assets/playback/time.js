@@ -6,6 +6,7 @@ import _each from 'lodash.foreach'
 import Map from './map'
 import Infantry from './infantry'
 import Vehicles from './vehicles'
+import PlaybackEvents from './events'
 
 class PlaybackTime {
 
@@ -142,6 +143,7 @@ class PlaybackTime {
 
         Infantry.processTime(this.currentMissionTime)
         Vehicles.processTime(this.currentMissionTime)
+        PlaybackEvents.processTime(this.currentMissionTime)
 
         this.currentMissionTime += this.timeJump
     }

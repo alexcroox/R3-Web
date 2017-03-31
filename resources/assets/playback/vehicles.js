@@ -85,8 +85,6 @@ class Vehicles {
                 this.updateEntityPosition(posData)
             })
 
-        } else {
-
         }
     }
 
@@ -129,11 +127,11 @@ class Vehicles {
         if(newAngle == entity.currentAngle)
             return
 
-        let smoothAngle = shortestRotation(entity.currentAngle, newAngle);
+        //let smoothAngle = shortestRotation(entity.currentAngle, newAngle);
 
-        entity.currentAngle = smoothAngle
+        entity.currentAngle = newAngle
 
-        entity.layer.setRotationAngle(smoothAngle);
+        entity.layer.setRotationAngle(newAngle);
     }
 
     addEntityToMap (entity, driver) {
@@ -144,7 +142,7 @@ class Vehicles {
         // We need to store it's current faction to work out
         // if we need to change it's colour on the next position update
         // I.e if an enemy unit jumps in after
-        entity.currentFaction = driver.faction
+        entity.faction = driver.faction
 
         // Our unit marker image
         let icon = L.icon(_defaults({

@@ -31,7 +31,7 @@
         font 11px/22px "Helvetica Neue", Arial, Helvetica, sans-serif
         font-weight bold
         margin-top 4px
-        padding 0 0 0 10px
+        padding 0 0 0 20px
         border none
         background none
         position absolute
@@ -63,4 +63,34 @@
     .map__label__poi--airport
         color #607c4f
 
+    .map__label__infantry
+    .map__label__vehicle
+        font-size 11px
+        letter-spacing 0.03em
+        margin 0 0 0 -12px
+
+    .map__label--tracking
+        color #FFF
+        background rgba(0,0,0,.5)
+        padding 0 6px
+
+    .projectile__missile
+    .projectile__rocket
+    .projectile__grenade
+        transition all 0.7s
+
+    .projectile__missile
+        visibility hidden
+        animation missileLaunch 1s
+        animation-timing-function ease-in-out
+        transform-origin 50% 50%
+
+    @keyframes missileLaunch
+        0%
+            visibility visible
+            transform scale(0)
+        50%
+            transform scale(20)
+        100%
+            transform scale(0)
 </style>
