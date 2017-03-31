@@ -1,15 +1,15 @@
 
 # Arma 3 After Action Replay *Web* Component
 
-<p>
-    <a href="https://github.com/alexcroox/R3-Web/releases/latest">
-        <img src="https://img.shields.io/github/release/alexcroox/R3-Web.svg" alt="Project Version">
-    </a>    
+
+<a href="https://github.com/alexcroox/R3-Web/releases/latest">
+    <img src="https://img.shields.io/github/release/alexcroox/R3-Web.svg" alt="Project Version">
+</a>    
     
-    <a href="https://raw.githubusercontent.com/alexcroox/R3-Web/master/LICENSE">
-        <img src="https://img.shields.io/badge/license-MIT-red.svg" alt="Project License">
-    </a>
-</p>
+<a href="https://raw.githubusercontent.com/alexcroox/R3-Web/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-red.svg" alt="Project License">
+</a>
+
 
 Website component for the [game server side addon](https://github.com/alexcroox/R3) for capturing unit movement and behaviour to a database for After Action Replays online.
 
