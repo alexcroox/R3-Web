@@ -5,9 +5,11 @@ import axios from 'http'
 import L from 'leaflet'
 import 'leaflet-rotatedmarker'
 
+import Playback from './index'
 import Map from './map'
 import { gameToMapPosX, gameToMapPosY } from './helpers/gameToMapPos'
 import getFactionData from './helpers/getFactionData'
+import shortestRotation from './helpers/shortestRotation'
 
 class Infantry {
 
@@ -106,11 +108,34 @@ class Infantry {
         if (!this.layer.hasLayer(entity.layer))
             this.layer.addLayer(entity.layer)
 
+        let mapPosition = Map.rc.unproject([posData.x, posData.y])
+
         // Update entity position
-        entity.layer.setLatLng(Map.rc.unproject([posData.x, posData.y]))
+        entity.layer.setLatLng(mapPosition)
 
         // Update rotation
-        entity.layer.setRotationAngle(posData.direction);
+        this.setEntityRotation(entity, posData.direction)
+
+        // Let's move the view to the starting area
+        if (!Playback.centeredOnFirstPlayer && this.isPlayer(entity)) {
+
+            Map.setView(mapPosition, 4)
+            Playback.centeredOnFirstPlayer = true
+        }
+    }
+
+    setEntityRotation (entity, newAngle) {
+
+        // No point calculating for a rotation change if they are
+        // facing the same direction
+        if(newAngle == entity.currentAngle)
+            return
+
+        let smoothAngle = shortestRotation(entity.currentAngle, newAngle);
+
+        entity.currentAngle = smoothAngle
+
+        entity.layer.setRotationAngle(smoothAngle);
     }
 
     addEntityToMap (entity) {
@@ -125,7 +150,7 @@ class Infantry {
 
         let marker = L.marker([0,0], { icon })
 
-        let label = (entity.player_id != "" && entity.player_id != "_SP_AI_") ? entity.name : false
+        let label = (this.isPlayer(entity)) ? entity.name : false
 
         if (label)
             marker.bindTooltip(label, {
@@ -135,6 +160,11 @@ class Infantry {
         // Create the marker, we aren't going to add it to the map
         // just yet so the position isn't important
         entity.layer = marker
+    }
+
+    isPlayer (entity) {
+
+        return (entity.player_id != "" && entity.player_id != "_SP_AI_") ? true : false
     }
 
     initMapLayer () {

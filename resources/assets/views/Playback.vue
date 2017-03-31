@@ -266,7 +266,11 @@
             fetchVehiclePositions () {
 
                 Vehicles.loadPositions(this.missionId)
-                    .then(response => this.completeLoadingStage('vehiclePositions'))
+                    .then(response => {
+
+                        Vehicles.initMapLayer()
+                        this.completeLoadingStage('vehiclePositions')
+                    })
                     .catch(error => this.errorReturnToMissionList('Error loading mission vehiclePositions'))
             },
 

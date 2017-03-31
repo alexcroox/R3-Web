@@ -92,7 +92,7 @@
                 axios.get('/missions')
                     .then(response => {
 
-                        console.log('Got missions', response.data);
+                        //console.log('Got missions', response.data);
                         this.$store.commit('setMissionList', response.data)
                     })
                     .catch(error => {

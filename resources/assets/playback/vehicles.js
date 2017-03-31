@@ -9,6 +9,7 @@ import Map from './map'
 import Infantry from './infantry'
 import { gameToMapPosX, gameToMapPosY } from './helpers/gameToMapPos'
 import getFactionData from './helpers/getFactionData'
+import shortestRotation from './helpers/shortestRotation'
 
 class Vehicles {
 
@@ -118,7 +119,21 @@ class Vehicles {
         entity.layer.setLatLng(Map.rc.unproject([posData.x, posData.y]))
 
         // Update rotation
-        entity.layer.setRotationAngle(posData.direction);
+        this.setEntityRotation(entity, posData.direction)
+    }
+
+    setEntityRotation (entity, newAngle) {
+
+        // No point calculating for a rotation change if they are
+        // facing the same direction
+        if(newAngle == entity.currentAngle)
+            return
+
+        let smoothAngle = shortestRotation(entity.currentAngle, newAngle);
+
+        entity.currentAngle = smoothAngle
+
+        entity.layer.setRotationAngle(smoothAngle);
     }
 
     addEntityToMap (entity, driver) {

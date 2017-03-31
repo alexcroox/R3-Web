@@ -27,10 +27,24 @@ class PositionController extends Controller
      */
     public function fetchAll($type, $missionId)
     {
+        if($type != "infantry" && $type != "vehicle")
+            return response()->json(['error' => 'Position type not found'], 404);
+
         return Cache::remember("positions:{$type}:{$missionId}", '1440', function () use ($type, $missionId) {
 
+            switch($type) {
+
+                case "infantry":
+                    $keys = array('entity_id', 'x', 'y', 'direction', 'key_frame', 'mission_time');
+                    break;
+
+                case "vehicle":
+                    $keys = array('entity_id', 'x', 'y', 'z', 'direction', 'key_frame', 'driver', 'crew', 'cargo', 'mission_time');
+                    break;
+            }
+
             $positions = DB::table("{$type}_positions")
-                ->select('entity_id', 'x', 'y', 'direction', 'key_frame', 'mission_time')
+                ->select($keys)
                 ->where('mission', $missionId)
                 ->get();
 

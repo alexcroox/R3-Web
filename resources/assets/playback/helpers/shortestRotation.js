@@ -1,24 +1,21 @@
 // Find out which way we should re-rotate so the markers takes
 // the shortest path instead of doing a spinning dance every time
-const shortestRotation = function (oldRotation = 0, new) {
+const shortestRotation = function (oldAngle = 0, newAngle) {
 
-    let oldRotation, apparentRot
+    let apparentRotation = oldAngle % 360
 
-    apparentRot = oldRotation % 360
+    if (apparentRotation < 0)
+        apparentRotation += 360
 
-    if (apparentRot < 0)
-        apparentRot += 360
+    if (apparentRotation < 180 && (newAngle > (apparentRotation + 180)))
+        oldAngle -= 360
 
-    if (apparentRot < 180 && (newRotation > (apparentRot + 180)))
-        oldRotation -= 360
-
-    if (apparentRot >= 180 && (newRotation <= (apparentRot - 180)))
-        oldRotation += 360
+    if (apparentRotation >= 180 && (newAngle <= (apparentRotation - 180)))
+        oldAngle += 360
 
 
-    oldRotation += (newRotation - apparentRot)
-    return oldRotation;
-
+    oldAngle += (newAngle - apparentRotation)
+    return oldAngle;
 }
 
 export default shortestRotation

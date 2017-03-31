@@ -3,6 +3,7 @@ import RasterCoords from 'leaflet-rastercoords'
 import errorTile from 'images/map/error-tile.png'
 
 import Poi from './poi'
+import Playback from './index'
 
 // Defaults for our tooltips
 L.Tooltip.mergeOptions({
@@ -96,11 +97,12 @@ class Map {
     }
 
     // Move map viewport to certain position and zoom
-    setView (pos, zoom) {
+    // position must be pre-projected
+    setView (position, zoom) {
 
-        console.log(`LeafletMap: Setting zoom ${zoom} on pos `, pos)
+        console.log(`LeafletMap: Setting zoom ${zoom} on position `, position)
 
-        this.handler.setView(this.rc.unproject(pos), zoom)
+        this.handler.setView(position, zoom)
 
         this.currentZoom = zoom
     }

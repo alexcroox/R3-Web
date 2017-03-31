@@ -8,6 +8,7 @@ class Playback {
         this.missionId = 0
         this.highlightUnit = 0
         this.trackingHighlightedUnit = false
+        this.centeredOnFirstPlayer = false
     }
 
     load (missionId) {
