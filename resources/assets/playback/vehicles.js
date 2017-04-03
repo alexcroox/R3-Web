@@ -7,6 +7,7 @@ import 'leaflet-rotatedmarker'
 
 import Map from './map'
 import Infantry from './infantry'
+import Time from './time'
 import { gameToMapPosX, gameToMapPosY } from './helpers/gameToMapPos'
 import getFactionData from './helpers/getFactionData'
 import shortestRotation from './helpers/shortestRotation'
@@ -76,6 +77,42 @@ class Vehicles {
         })
     }
 
+    // Lets look over what we have on the map and decide
+    // if we need to remove anything
+    reviewExistingMarkers () {
+
+        _each(this.entities, entity => {
+
+            // If it's not on the map currently, ignore
+            if (!this.layer.hasLayer(entity.layer))
+                return
+
+            // Parachutes don't die currently so we need to remove
+            // them after a period of no movement
+            if (
+                entity.icon == 'iconParachute' &&
+                (Time.currentMissionTime - entity.missionTimeLastUpdated > (Time.speed * 5))
+            )
+                this.removeEntity(entity)
+
+            // Auto cleanup dead vehicles
+            // TODO make this optional
+            if (
+                entity.hasOwnProperty('dead') &&
+                entity.dead &&
+                Time.currentMissionTime - entity.missionTimeLastUpdated > (Time.speed * 5)
+            )
+                this.removeEntity(entity)
+        })
+    }
+
+    removeEntity (entity) {
+
+        console.warn('Vehicles: removing old layer', entity.icon)
+
+        this.layer.removeLayer(entity.layer)
+    }
+
     processTime (missionTime) {
 
         if (this.positions.hasOwnProperty(missionTime)) {
@@ -84,7 +121,6 @@ class Vehicles {
 
                 this.updateEntityPosition(posData)
             })
-
         }
     }
 
@@ -112,6 +148,9 @@ class Vehicles {
         // Has this entity been on the map, but isn't right now?
         if (!this.layer.hasLayer(entity.layer))
             this.layer.addLayer(entity.layer)
+
+        // Store when we last moved this unit so we can decide to clean up later
+        entity.missionTimeLastUpdated = posData.mission_time
 
         // Update entity position
         entity.layer.setLatLng(Map.rc.unproject([posData.x, posData.y]))

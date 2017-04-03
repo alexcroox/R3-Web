@@ -19,6 +19,7 @@ class PlaybackTime {
         this.then = Date.now()
         this.delta
         this.currentMissionTime = 0
+        this.lastCleanupMissionTime = 0
         this.scrubberConfig = {
             animate: false,
             connect: 'lower',
@@ -144,6 +145,17 @@ class PlaybackTime {
         Infantry.processTime(this.currentMissionTime)
         Vehicles.processTime(this.currentMissionTime)
         PlaybackEvents.processTime(this.currentMissionTime)
+
+        // Map cleanup functions
+        if (this.currentMissionTime > this.lastCleanupMissionTime + (this.speed * 5)) {
+
+            console.log('Time: performing map cleanup')
+
+            Vehicles.reviewExistingMarkers()
+            Infantry.reviewExistingMarkers()
+
+            this.lastCleanupMissionTime = this.currentMissionTime
+        }
 
         this.currentMissionTime += this.timeJump
     }

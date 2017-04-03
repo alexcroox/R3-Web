@@ -52,8 +52,13 @@ class PlaybackEvents {
                         break
 
                     case "killed":
+                    case "unconscious":
 
                         this.killed(event)
+
+                        break
+
+                    case "awake":
 
                         break
                 }
@@ -102,6 +107,7 @@ class PlaybackEvents {
 
             trackAnchorLine()
 
+            victim.dead = true
             victim.layer.setOpacity(0.4)
         }
     }

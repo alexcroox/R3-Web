@@ -70,7 +70,7 @@ class Map {
         this.handler.setMaxBounds(panningBounds)
 
         // We need to set an initial view for the tiles to render (center of terrain)
-        this.setView([this.terrainConfig.height / 2, this.terrainConfig.width / 2], this.terrainConfig.initZoom)
+        this.setView(this.rc.unproject([this.terrainConfig.height / 2, this.terrainConfig.width / 2]), this.terrainConfig.initZoom)
 
         this.addHandlers()
         this.loadTiles()
