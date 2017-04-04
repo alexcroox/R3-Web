@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+// :'(
+ini_set('max_execution_time', 300);
+ini_set('memory_limit','1600M');
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;

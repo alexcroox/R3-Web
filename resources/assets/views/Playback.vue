@@ -14,6 +14,8 @@
             :terrainConfig="terrainConfig">
         </leaflet-map>
 
+        <player-list v-if="playerList.length"></player-list>
+
         <map-box class="timeline" :hidden="loading">
 
             <button class="timeline__play" @click="togglePlay">
@@ -61,6 +63,7 @@
     import SpeedSlider from 'components/SpeedSlider.vue'
     import MapBox from 'components/MapBox.vue'
     import ShareModal from 'views/modals/ShareModal.vue'
+    import PlayerList from 'components/PlayerList.vue'
 
     import Playback from 'playback/index'
     import PlaybackTime from 'playback/time'
@@ -78,6 +81,7 @@
             SpeedSlider,
             MapBox,
             ShareModal,
+            PlayerList,
         },
 
         props: ['urlData'],
@@ -94,6 +98,7 @@
                     max: 31
                 },
                 shareLink: '',
+                playerList: [],
                 paused: true,
                 ended: false,
                 tileDomain: {
@@ -168,6 +173,10 @@
 
             bus.$on('ended', (ended) => {
                 this.ended = ended
+            })
+
+            bus.$on('playerList', (list) => {
+                this.playerList = list
             })
         },
 

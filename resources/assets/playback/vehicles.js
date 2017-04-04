@@ -32,6 +32,8 @@ class Vehicles {
 
                     this.entities = _keyBy(data, 'entity_id')
 
+                    console.log('Vehicles: entities', this.entities)
+
                     resolve()
                 })
                 .catch(error => {

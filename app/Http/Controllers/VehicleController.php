@@ -29,7 +29,7 @@ class VehicleController extends Controller
      */
     public function fetchAll($missionId)
     {
-        return Cache::remember('vehicle:{$missionId}', '1440', function () use ($missionId) {
+        return Cache::remember("vehicle:{$missionId}", '1440', function () use ($missionId) {
 
             return Vehicle::where('mission', $missionId)->get();
         });

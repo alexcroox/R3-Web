@@ -29,7 +29,7 @@ class InfantryController extends Controller
      */
     public function fetchAll($missionId)
     {
-        return Cache::remember('infantry:{$missionId}', '1440', function () use ($missionId) {
+        return Cache::remember("infantry:{$missionId}", '1440', function () use ($missionId) {
 
             return Infantry::where('mission', $missionId)->get();
         });
