@@ -16,13 +16,13 @@
 
             <p>
 
-                <input-select
+                <!--<input-select
                     :options="playbackSpeeds"
-                    :value="existingPlaybackSpeed"
-                    @changed="onSpeedChange"
+                    v-model="speed"
+                    @changed="speedChange"
                     placeholder="Select speed"
                     class="margin__top--medium margin__bottom--medium">
-                </input-select>
+                </input-select>-->
             </p>
 
             <h3 class="margin__top--large">{{ ucfirst($t('language')) }}</h3>
@@ -31,8 +31,8 @@
 
                 <input-select
                     :options="languages"
-                    :value="existingLanguage"
-                    @changed="onLanguageChange"
+                    v-model="locale"
+                    @changed="languageChange"
                     placeholder="Select language"
                     class="margin__top--medium margin__bottom--medium">
                 </input-select>
@@ -89,6 +89,8 @@
 
                 locale: this.$locale.current(),
 
+                speed: 30,
+
                 playbackSpeeds: [5,10,30],
             }
         },
@@ -107,29 +109,23 @@
 
                     langs.push({
                         "value": locale,
-                        "text": localeData.display
+                        "label": localeData.display
                     })
                 })
 
                 return langs
             },
 
-            onLanguageChange (valObject) {
+            languageChange (value) {
 
-                this.locale = valObject.value
+                this.$store.commit('setPreferenceLanguage', value)
 
-                this.$store.commit('setPreferenceLanguage', valObject.value)
-
-                this.$locale.change(this.locale)
+                this.$locale.change(value)
             },
 
-            onSpeedChange (valObject) {
+            speedChange (value) {
 
-                this.locale = valObject.value
 
-                this.$store.commit('setPreferenceLanguage', valObject.value)
-
-                this.$locale.change(this.locale)
             },
 
 
@@ -137,18 +133,6 @@
         },
 
         computed: {
-
-            existingLanguage () {
-
-                let locale = this.locale
-
-                return _find(this.languages, (l) => { return l.value == locale });
-            },
-
-            existingPlaybackSpeed () {
-
-                return 10
-            },
 
             missingStringsForCurrentLocale () {
 
