@@ -14,7 +14,7 @@
             :terrainConfig="terrainConfig">
         </leaflet-map>
 
-        <player-list v-if="playerList.length"></player-list>
+        <player-list v-if="!loading"></player-list>
 
         <map-box class="timeline" :hidden="loading">
 
