@@ -109,7 +109,6 @@ class Infantry {
 
                 this.updateEntityPosition(posData)
             })
-
         }
     }
 
@@ -205,6 +204,23 @@ class Infantry {
             this.layer.hasLayer(this.entities[entityId].layer)
         )
             this.layer.removeLayer(this.entities[entityId].layer)
+    }
+
+    getPlayers () {
+
+        return new Promise((resolve, reject) => {
+
+            let players = []
+
+            _each(this.entities, entity => {
+
+                // Is this unit a player?
+                if (this.isPlayer(entity))
+                    players.push(entity)
+            })
+
+            resolve(players)
+        })
     }
 
     initMapLayer () {

@@ -98,7 +98,6 @@
                     max: 31
                 },
                 shareLink: '',
-                playerList: [],
                 paused: true,
                 ended: false,
                 tileDomain: {
@@ -173,10 +172,6 @@
 
             bus.$on('ended', (ended) => {
                 this.ended = ended
-            })
-
-            bus.$on('playerList', (list) => {
-                this.playerList = list
             })
         },
 

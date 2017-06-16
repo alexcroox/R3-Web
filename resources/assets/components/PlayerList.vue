@@ -8,20 +8,68 @@
             Mission list
         </router-link>
 
-        <a @click="toggleHide" class="player-list__toggle-sticky" title="Toggle player list auto hide">
-            <i class="fa fa-thumb-tack"></i>
-        </a>
+        <button
+            @click="toggleHide"
+            class="player-list__toggle-sticky"
+            :class="{ 'player-list__toggle-sticky--enabled': !autoHide }"
+            title="Toggle player list auto hide">
+                <i class="fa fa-thumb-tack"></i>
+        </button>
 
         <div
             class="player-list"
             v-on:mouseleave="mouseLeave"
             v-on:mouseenter="mouseEnter">
+
+            <div v-for="faction in factions" class="player-list__faction">
+                <button
+                    @click="toggleFaction(faction.id)"
+                    class="player-list__expand-handle"
+                    :class="{ 'player-list__expand-handle--collapsed': faction.collapsed }">
+
+                    <span class="player-list__faction__name">{{ faction.meta.name }}</span>
+                </button>
+
+                <div
+                    v-if="!faction.collapsed"
+                    v-for="group in faction.groups"
+                    class="player-list__group">
+
+                    <button
+                        @click="toggleGroup(faction.id, group.name)"
+                        class="player-list__expand-handle player-list__expand-handle--group"
+                        :class="{ 'player-list__expand-handle--collapsed': group.collapsed }">
+
+                        <span class="player-list__group__name">{{ group.name }}</span>
+                    </button>
+
+                    <button
+                        v-if="!group.collapsed"
+                        v-for="player in group.members"
+                        class="player-list__group-member">
+
+                        <img :src="player.iconUrl" class="player-list__group-member__icon">
+                        {{ player.name }}
+                    </button>
+                </div>
+            </div>
+
         </div>
     </map-box>
 </template>
 
 <script>
+    import _find from 'lodash.find'
+    import _each from 'lodash.foreach'
+    import _sortBy from 'lodash.sortby'
+    import _keys from 'lodash.keys'
+
+    import bus from 'eventBus'
+
     import MapBox from 'components/MapBox.vue'
+    import getFactionData from 'playback/helpers/getFactionData'
+    import Infantry from 'playback/infantry'
+    import Vehicles from 'playback/vehicles'
 
     export default {
 
@@ -35,18 +83,100 @@
                 hidden: false,
                 hideTimer: null,
                 hideTime: 3, // seconds before player list fades out
+                factions: {}
             }
         },
 
         mounted () {
+
             this.startHideTimer()
+
+            // Keep updating the list of players
+            setInterval(this.prepListData, 3000)
+
+            setTimeout(this.prepListData, 1000)
         },
 
         methods: {
 
+            prepListData () {
+
+                Infantry.getPlayers()
+                    .then(infantryPlayers => {
+
+                        return new Promise(function(resolve, reject) {
+
+                            let playerList = infantryPlayers
+
+                            resolve(infantryPlayers)
+                        })
+                    })
+                    .then(playerList => {
+
+                        _each(playerList, player => {
+
+                            let factionData = getFactionData(player.faction)
+
+                            // Do we have this faction setup yet?
+                            if(!this.factions.hasOwnProperty(player.faction))
+                                this.$set(this.factions, player.faction, {
+                                    id: player.faction,
+                                    collapsed: false,
+                                    meta: factionData,
+                                    groups: {}
+                                })
+
+                            // Does this player's group exist yet?
+                            if (!this.factions[player.faction].groups.hasOwnProperty(player.group))
+                                this.$set(this.factions[player.faction].groups, player.group, {
+                                    collapsed: false,
+                                    name: player.group,
+                                    members: []
+                                })
+
+                            // Order groups alphabetically
+                            this.factions[player.faction].groups = this.orderGroups(this.factions[player.faction].groups)
+
+                            let groupMembers = this.factions[player.faction].groups[player.group].members
+
+                            player.iconUrl = `${this.$store.state.settings.iconBaseUrl}/${player.icon}-${factionData.name}-trim.png`
+
+                            // Add them to the group, if they aren't already there...
+                            if (_find(groupMembers, ['entity_id', 259]) === undefined)
+                                groupMembers.push(player);
+                        })
+                    })
+            },
+
+            orderGroups (groups) {
+
+                let keys = _sortBy(_keys(groups), (g) => { return g })
+
+                let orderedGroups = {};
+
+                _each(keys, (k) => {
+                    orderedGroups[k] = groups[k]
+                });
+
+                return orderedGroups
+            },
+
             toggleHide () {
 
                 this.autoHide = !this.autoHide
+
+                if (this.autoHide)
+                    this.startHideTimer()
+            },
+
+            toggleFaction (faction) {
+
+                this.$set(this.factions[faction], 'collapsed', !this.factions[faction].collapsed)
+            },
+
+            toggleGroup (faction, group) {
+
+                this.$set(this.factions[faction].groups[group], 'collapsed', !this.factions[faction].groups[group].collapsed)
             },
 
             mouseEnter () {
@@ -123,10 +253,14 @@
         padding 10px
         z-index 2
 
-    .player-list__toggle-sticky--inactive
+    .player-list__toggle-sticky:hover
+        color #DDD
+        cursor pointer
+
+    .player-list__toggle-sticky--enabled
         color #FFF
 
-    .player-list__container--hide .player-list__group__member img
+    .player-list__container--hide .player-list__group-member__icon
         opacity 0.3
 
     .player-list
@@ -138,6 +272,14 @@
         right 0
         left 0
 
+    .player-list button
+        color #FFF
+
+    .player-list__group
+        text-transform none
+        margin 5px 0 0 2px
+        font-size 13px
+
     .player-list__faction
     .player-list__group
         padding-left 13px
@@ -147,18 +289,16 @@
         position relative
         margin-bottom 10px
 
-    .player-list__faction
+    .player-list__faction__name
         text-transform uppercase
         letter-spacing 0.03em
-
-    .player-list__group
-        text-transform none
-        margin 5px 0 0 2px
-        font-size 13px
 
     .player-list__expand-handle
         color #FFF
         display block
+
+    .player-list__expand-handle:hover
+        cursor pointer
 
     .player-list__expand-handle:before
         left 0
@@ -169,10 +309,7 @@
         font-family FontAwesome
         color #CCC
 
-    .player-list__expand-handle--group:before
-        top 1px
-
-    .player-list__expand-handle--expanded:before
+    .player-list__expand-handle--collapsed:before
         content "\f0d7"
 
     .player-list__expand-handle--collapsed + .player-list__expand-list
@@ -188,6 +325,7 @@
         text-overflow ellipsis
         min-width 153px
         position relative
+        text-align left
 
     .player-list__group-member--tracking
         background #CCC
@@ -203,8 +341,9 @@
         100%
             background none
 
-    .player-list__group-member img
+    .player-list__group-member__icon
         display inline-block
         margin-right 5px
         width 12px
-        vertical-align sub</style>
+        vertical-align sub
+</style>
