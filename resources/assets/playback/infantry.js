@@ -141,12 +141,39 @@ class Infantry {
         // Update rotation
         this.setEntityRotation(entity, posData.direction)
 
+        // Highlight unit?
+        if (Playback.highlightUnit && Playback.highlightUnit == entity.entity_id) {
+
+            let tooltip =  entity.layer.getTooltip().getElement()
+            tooltip.classList.add('map__label--highlighted')
+
+            // Lets not continue panning to the unit if the user wants to look around the map
+            if (Playback.trackingHighlightedUnit) {
+
+                // Has the map view moved away from the tracked player? Lets bring it back into view
+                let point = Map.handler.latLngToLayerPoint(entity.layer.getLatLng())
+                let distance = point.distanceTo(Map.handler.latLngToLayerPoint(Map.handler.getCenter()))
+
+                if (distance > 200)
+                    Map.handler.panTo(Map.rc.unproject([posData.x, posData.y]))
+            }
+        }
+
         // Let's move the view to the starting area
         if (!Playback.centeredOnFirstPlayer && this.isPlayer(entity)) {
 
             Map.setView(mapPosition, 4)
             Playback.centeredOnFirstPlayer = true
         }
+    }
+
+    stopHighlightingUnit (entityId) {
+
+        if (!this.entities.hasOwnProperty(entityId))
+            return
+
+        let tooltip = this.entities[entityId].layer.getTooltip().getElement()
+        tooltip.classList.remove('map__label--highlighted')
     }
 
     setEntityRotation (entity, newAngle) {
@@ -180,7 +207,7 @@ class Infantry {
         let label = (this.isPlayer(entity)) ? entity.name : false
 
         if (label)
-            marker.bindTooltip(label, {
+            marker.bindTooltip(`<span class="map__label__text">${label}</span>`, {
                 className: `map__label map__label__infantry`
             })
 

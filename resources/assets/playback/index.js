@@ -72,11 +72,25 @@ class Playback {
 
     startHighlightingUnit (entityId) {
 
+        console.log('Tracking unit', entityId)
+
         this.highlightUnit = entityId
         this.trackingHighlightedUnit = true
     }
 
+    stopHighlightingUnit (entityId) {
+
+        console.log('No longer Tracking unit', entityId)
+
+        this.highlightUnit = 0
+        this.trackingHighlightedUnit = false
+
+        Infantry.stopHighlightingUnit(entityId)
+    }
+
     stopTrackingHighlightedUnit () {
+
+        console.log('Stopping map view tracking for unit')
 
         this.trackingHighlightedUnit = false
     }

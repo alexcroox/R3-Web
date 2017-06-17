@@ -172,7 +172,7 @@ class Vehicles {
 
         entity.currentAngle = newAngle
 
-        entity.layer.setRotationAngle(newAngle);
+        entity.layer.setRotationAngle(newAngle)
     }
 
     addEntityToMap (entity, driver) {

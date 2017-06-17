@@ -69,7 +69,10 @@
         letter-spacing 0.03em
         margin 0 0 0 -12px
 
-    .map__label--tracking
+    .map__label__text
+        display block
+
+    .map__label--highlighted .map__label__text
         color #FFF
         background rgba(0,0,0,.5)
         padding 0 6px

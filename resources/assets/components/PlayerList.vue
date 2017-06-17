@@ -46,7 +46,9 @@
                     <button
                         v-if="!group.collapsed"
                         v-for="player in group.members"
-                        class="player-list__group-member">
+                        class="player-list__group-member"
+                        :class="{ 'player-list__group-member--highlight': highlightUnit == player.entity_id }"
+                        @click="toggleFollowingUnit(player.entity_id)">
 
                         <img :src="player.iconUrl" class="player-list__group-member__icon">
                         {{ player.name }}
@@ -67,7 +69,9 @@
     import bus from 'eventBus'
 
     import MapBox from 'components/MapBox.vue'
+
     import getFactionData from 'playback/helpers/getFactionData'
+    import Playback from 'playback/index'
     import Infantry from 'playback/infantry'
     import Vehicles from 'playback/vehicles'
 
@@ -83,7 +87,8 @@
                 hidden: false,
                 hideTimer: null,
                 hideTime: 3, // seconds before player list fades out
-                factions: {}
+                factions: {},
+                highlightUnit: 0,
             }
         },
 
@@ -142,7 +147,7 @@
                             player.iconUrl = `${this.$store.state.settings.iconBaseUrl}/${player.icon}-${factionData.name}-trim.png`
 
                             // Add them to the group, if they aren't already there...
-                            if (_find(groupMembers, ['entity_id', 259]) === undefined)
+                            if (_find(groupMembers, ['entity_id', player.entity_id]) === undefined)
                                 groupMembers.push(player);
                         })
                     })
@@ -177,6 +182,21 @@
             toggleGroup (faction, group) {
 
                 this.$set(this.factions[faction].groups[group], 'collapsed', !this.factions[faction].groups[group].collapsed)
+            },
+
+            toggleFollowingUnit (entityId) {
+
+                if (this.highlightUnit == entityId) {
+                    Playback.stopHighlightingUnit(entityId)
+                    this.highlightUnit = 0
+                    return
+                }
+
+                if (this.highlightUnit)
+                    Playback.stopHighlightingUnit(entityId)
+
+                Playback.startHighlightingUnit(entityId)
+                this.highlightUnit = entityId
             },
 
             mouseEnter () {
@@ -272,9 +292,6 @@
         right 0
         left 0
 
-    .player-list button
-        color #FFF
-
     .player-list__group
         text-transform none
         margin 5px 0 0 2px
@@ -326,8 +343,9 @@
         min-width 153px
         position relative
         text-align left
+        vertical-align middle
 
-    .player-list__group-member--tracking
+    .player-list__group-member--highlight
         background #CCC
         color #000
 
@@ -345,5 +363,5 @@
         display inline-block
         margin-right 5px
         width 12px
-        vertical-align sub
+        vertical-align middle
 </style>
