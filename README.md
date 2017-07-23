@@ -30,6 +30,12 @@ An exact mirror of this repo [can be viewed here](https://titanmods.xyz/r3/ark/)
 3. Rename `config.template.php` to `config.php`, pay close attention to `DB_*`, `WEB_PATH` and timezone configurations
 4. Upload the files to your web server which matches the URL in `WEB_PATH` in `config.php`. Take note of `/.htaccess` in the download that may be hidden on your system before you upload.
 
+### Important information to get the most from R3
+
+1. Make sure you enable `gzip` on your web server. If you don't your users will be sat waiting for the playback to load for a long time, and downloading 100s MBs each time. This is very important.
+
+2. Ensure your MySQL server timezone matches that of your server / R3 config. If they aren't the same, missions may incorrectly auto hide or fail to show as in progress.
+
 ### Adding new Terrains
 
 R3 supports over [70 popular terrains](https://titanmods.xyz/r3/tiler). Just played a mission on a map that R3 doesn't yet support? Feel free to add it yourself and let every user of R3 benefit from it! Follow the [simple instructions here](https://github.com/alexcroox/R3-Web/wiki/Adding-new-terrains)
