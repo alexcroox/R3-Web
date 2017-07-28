@@ -38,7 +38,7 @@ An exact mirror of this repo [can be viewed here](https://titanmods.xyz/r3/ark/)
 
 ### Adding new Terrains
 
-R3 supports over [70 popular terrains](https://titanmods.xyz/r3/tiler). Just played a mission on a map that R3 doesn't yet support? Feel free to add it yourself and let every user of R3 benefit from it! Follow the [simple instructions here](https://github.com/alexcroox/R3-Web/wiki/Adding-new-terrains)
+R3 supports over [90 popular terrains](https://titanmods.xyz/r3/tiler). Just played a mission on a map that R3 doesn't yet support? Feel free to add it yourself and let every user of R3 benefit from it! Follow the [simple instructions here](https://github.com/alexcroox/R3-Web/wiki/Adding-new-terrains)
 
 ### Adding new vehicle icons
 
