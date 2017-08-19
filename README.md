@@ -46,7 +46,7 @@ Is a modded vehicle using the vanilla map icon instead of the correct shape and 
 
 ### Getting help
 
-You can find me (Titan) on [ACE3 Slack](https://slackin.ace3mod.com/) or feel free to create an issue here.
+You can find me (Titan) on the [R3 Discord](https://discord.gg/qcE3dRP) or feel free to create an issue here.
 
 ### Why not x framework/language
 
