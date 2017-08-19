@@ -4,11 +4,12 @@
 
 <a href="https://github.com/alexcroox/R3-Web/releases/latest">
     <img src="https://img.shields.io/github/release/alexcroox/R3-Web.svg" alt="Project Version">
-</a>    
+</a>   
     
 <a href="https://raw.githubusercontent.com/alexcroox/R3-Web/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-red.svg" alt="Project License">
 </a>
+
 
 
 Website component for the [game server side addon](https://github.com/alexcroox/R3) for capturing unit movement and behaviour to a database for After Action Replays online.
@@ -20,6 +21,11 @@ Being built along side the [addon component](https://github.com/alexcroox/R3) an
 ### Demo
 
 An exact mirror of this repo [can be viewed here](https://titanmods.xyz/r3/ark/) which contains replays from [ARK Group](http://ark-group.org/)
+
+
+<a href="https://discord.gg/qcE3dRP">
+    <img width="150" src="http://i0.kym-cdn.com/photos/images/original/001/243/213/52a.png" alt="Discord">
+</a>
 
 ### Install
 
