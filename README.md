@@ -20,7 +20,7 @@ Being built along side the [addon component](https://github.com/alexcroox/R3) an
 
 ### Demo
 
-An exact mirror of this repo [can be viewed here](https://titanmods.xyz/r3/ark/) which contains replays from [ARK Group](http://ark-group.org/)
+An exact mirror of this repo [can be viewed here](https://aar.ark-group.org) which contains replays from [ARK Group](http://ark-group.org/)
 
 ### Install
 
