@@ -56,8 +56,6 @@
 
                 if(this.$store.state.missions) {
 
-                    console.log('missions', this.$store.state.missions)
-
                     _each(this.$store.state.missions, (item) => {
 
                         if (!item) return
@@ -68,6 +66,7 @@
                         itemData.length = item.length_human
                         itemData.players = item.player_count
                         itemData.played = item.played_human
+                        itemData.terrain = item.terrain.toUpperCase()
 
                         missionData.push(itemData)
                     });

@@ -103,7 +103,7 @@
 
             missionUrl (entry) {
 
-                return `/${entry.id}/${entry.terrain}/${entry.slug}`
+                return `/${entry.id}/${entry.terrain.toLowerCase()}/${entry.slug}`
             },
 
             loadMission (event) {

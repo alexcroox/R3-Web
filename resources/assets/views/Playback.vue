@@ -150,6 +150,12 @@
                 return response;
             }, error => {
 
+                const originalRequest = error.config
+
+                // Ignore any requests to our terrain server
+                if (originalRequest.url.includes('r3tiles'))
+                    return Promise.reject(error);
+
                 if (error.response.status == 403)
                     return this.errorReturnToMissionList('That mission is still in progress')
                 else
@@ -175,6 +181,11 @@
             })
         },
 
+        beforeDestroy () {
+            // If we navigate away from playback lets stop our timers
+            PlaybackTime.end()
+        },
+
         methods: {
 
             errorReturnToMissionList (errorText, errorDetail) {
@@ -182,7 +193,7 @@
                 if (errorDetail != null)
                     console.error(errorDetail);
 
-                //router.push({ name: 'missions.list', params: { error: errorText } })
+                router.push({ name: 'missions.list', params: { error: errorText } })
             },
 
             getTerrainInfo () {
@@ -222,7 +233,7 @@
                 Playback.load(this.missionId).then(missionInfo => {
 
                     PlaybackTime.initScrubber(0, missionInfo.total_mission_time)
-                    this.missionName = missionInfo.display_name
+                    this.missionName = (missionInfo.display_name != "")? missionInfo.display_name : missionInfo.name
 
                     this.completeLoadingStage('missionInfo')
 

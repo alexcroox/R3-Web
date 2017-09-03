@@ -105,10 +105,12 @@ class MissionController extends Controller
     private function generateSlug($mission = null)
     {
 
-        if(!$mission || !$mission->display_name || $mission->slug)
+        if(!$mission || $mission->slug)
             return $mission->slug;
 
-        $slug = str_slug($mission->display_name);
+        $missionName = ($mission->display_name != "") ? $mission->display_name : $mission->name;
+
+        $slug = str_slug($missionName);
 
         Mission::whereId($mission->id)->update(['slug' => $slug]);
 
