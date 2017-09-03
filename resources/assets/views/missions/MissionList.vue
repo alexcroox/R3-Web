@@ -56,11 +56,15 @@
 
                 if(this.$store.state.missions) {
 
+                    console.log('missions', this.$store.state.missions)
+
                     _each(this.$store.state.missions, (item) => {
 
-                        let itemData = item;
+                        if (!item) return
 
-                        itemData.mission = item.display_name
+                        let itemData =  Object.assign({}, item)
+
+                        itemData.mission = (item.display_name != "")? item.display_name : item.name
                         itemData.length = item.length_human
                         itemData.players = item.player_count
                         itemData.played = item.played_human

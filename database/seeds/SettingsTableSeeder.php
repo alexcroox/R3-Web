@@ -21,5 +21,15 @@ class SettingsTableSeeder extends Seeder
             'key' => 'minutesMissionEndBlock',
             'value' => 2
         ]);
+
+        DB::table('settings')->insert([
+            'key' => 'minutesMinimumMission',
+            'value' => 5
+        ]);
+
+        DB::table('settings')->insert([
+            'key' => 'minimumMissionPlayers',
+            'value' => 1
+        ]);
     }
 }

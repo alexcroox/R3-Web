@@ -17,14 +17,14 @@ class MissionController extends Controller
 
     private $selectLastEventTimestamp = "
         GREATEST(
-            (SELECT added_on FROM infantry_positions WHERE mission = missions.id ORDER BY added_on DESC LIMIT 1),
-            (SELECT added_on FROM vehicle_positions WHERE mission = missions.id ORDER BY added_on DESC LIMIT 1)
+            IFNULL((SELECT added_on FROM infantry_positions WHERE mission = missions.id ORDER BY added_on DESC LIMIT 1), 0),
+            IFNULL((SELECT added_on FROM vehicle_positions WHERE mission = missions.id ORDER BY added_on DESC LIMIT 1), 0)
         ) AS last_event_timestamp";
 
     private $selectTotalMissionTime = "
         GREATEST(
-            (SELECT mission_time FROM infantry_positions WHERE mission = missions.id ORDER BY mission_time DESC LIMIT 1),
-            (SELECT mission_time FROM vehicle_positions WHERE mission = missions.id ORDER BY mission_time DESC LIMIT 1)
+            IFNULL((SELECT mission_time FROM infantry_positions WHERE mission = missions.id ORDER BY mission_time DESC LIMIT 1), 0),
+            IFNULL((SELECT mission_time FROM vehicle_positions WHERE mission = missions.id ORDER BY mission_time DESC LIMIT 1), 0)
         ) AS total_mission_time";
 
     /**
@@ -58,7 +58,7 @@ class MissionController extends Controller
         Carbon::setLocale(config('app.locale'));
         $currentTime = Carbon::now(config('app.timezone'));
 
-        foreach($missions as $mission) {
+        foreach($missions as $index => $mission) {
 
             // Generate extra data for consumption
             $lastEventTime = Carbon::parse($mission->last_event_timestamp);
@@ -79,12 +79,31 @@ class MissionController extends Controller
             $mission->slug = $this->generateSlug($mission);
 
             unset($mission->raw_player_list);
+
+            $isTooShort = $mission->length_in_minutes < (int) Setting::get('minutesMinimumMission', 2);
+            $notEnoughPlayers = $mission->player_count < (int) Setting::get('minimumMissionPlayers', 2);
+
+            // If the mission has finished, did it run for long enough and have enough players not to be auto hidden?
+            if(!$mission->in_progress_block && $isTooShort && $notEnoughPlayers) {
+                $this->hide($mission->id);
+                unset($missions[$index]);
+            }
         }
 
         return $missions;
     }
 
-    private function generateSlug($mission = null) {
+    public function hide($missionId = false)
+    {
+        if($missionId)
+            return DB::table('missions')
+                ->where('id', $missionId)
+                ->update(['hidden' => 1])
+                ->first();
+    }
+
+    private function generateSlug($mission = null)
+    {
 
         if(!$mission || !$mission->display_name || $mission->slug)
             return $mission->slug;
