@@ -1,7 +1,12 @@
 export const state = {
     settings: {},
     missions: [],
-    preference: {},
+    preference: {
+        locale: {
+            label: 'English',
+            value: 'en'
+        }
+    },
     stats: {
         summary: {},
         terrains: [],
@@ -28,6 +33,7 @@ export const mutations = {
     },
 
     setPreferenceLanguage(state, locale) {
+        console.warn('Locale changing', locale)
         state.preference.locale = locale
     },
 

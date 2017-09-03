@@ -107,6 +107,9 @@
 
             languageChange (option) {
 
+                if (!option)
+                    return
+
                 this.$store.commit('setPreferenceLanguage', option)
 
                 this.$locale.change(option.value)
@@ -124,6 +127,9 @@
         computed: {
 
             missingStringsForCurrentLocale () {
+
+                if (!this.locale)
+                    return false
 
                 return (this.$store.state.settings.locales[this.locale.value].missingStringCount > 0)? this.$store.state.settings.locales[this.locale.value].missingStringCount : false
             },
