@@ -20,12 +20,14 @@
 
     export default {
 
-        props: ['speed', 'min', 'max'],
+        props: ['speed'],
 
         data () {
             return {
                 targetDifference: 0,
-                sliding: false
+                sliding: false,
+                min: this.$store.state.settings.minimumPlaybackSpeed,
+                max: this.$store.state.settings.maximumPlaybackSpeed,
             }
         },
 
@@ -89,6 +91,7 @@
 
 
 <style lang="stylus">
+    @import '~styles/config/variables.styl'
 
     .speed-slider__container
         display flex
@@ -102,6 +105,9 @@
         display flex
         align-items center
 
+    .speed-slider__container--half-width .speed-slider
+        width 50%
+
     .speed-slider:hover
         cursor e-resize
 
@@ -112,6 +118,9 @@
         width 100%
         z-index 1
 
+    .speed-slider__container--alt .speed-slider__fake-rail
+        background $mainThemeColor
+
     .speed-slider__rail
         width 0%
         border-right 3px solid #FFF
@@ -119,6 +128,9 @@
         bottom 3px
         position absolute
         z-index 2
+
+    .speed-slider__container--alt .speed-slider__rail
+        border-right-color $bodyTextPrimaryColor
 
     .speed-slider__info
         display inline-block
@@ -129,5 +141,8 @@
         width 23px
         user-select none
         pointer-events none
+
+    .speed-slider__container--alt .speed-slider__info
+        color $bodyTextPrimaryColor
 
 </style>

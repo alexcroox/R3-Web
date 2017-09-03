@@ -34,4 +34,8 @@ export const mutations = {
     setPreferencePlayerId(state, playerId) {
         state.preference.playerId = playerId
     },
+
+    setPreferencePlaybackSpeed(state, speed) {
+        state.preference.playbackSpeed = speed
+    },
 }

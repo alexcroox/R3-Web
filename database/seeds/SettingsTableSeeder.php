@@ -31,5 +31,15 @@ class SettingsTableSeeder extends Seeder
             'key' => 'minimumMissionPlayers',
             'value' => 1
         ]);
+
+        DB::table('settings')->insert([
+            'key' => 'minimumPlaybackSpeed',
+            'value' => 1
+        ]);
+
+        DB::table('settings')->insert([
+            'key' => 'maximumPlaybackSpeed',
+            'value' => 31
+        ]);
     }
 }

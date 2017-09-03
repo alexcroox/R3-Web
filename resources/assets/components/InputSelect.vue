@@ -26,8 +26,8 @@
         methods: {
 
             onSelect (option) {
-                console.log('InputSelect changed', option.value)
-                this.$emit('changed', option.value)
+                console.log('InputSelect changed', option)
+                this.$emit('changed', option)
             }
         },
     }

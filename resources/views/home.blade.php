@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('r3.unit_name') }}</title>
+    <title><?php echo $settings['unitName'] ?></title>
 
     <script src="https://use.fontawesome.com/6985a99f44.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700" rel="stylesheet">

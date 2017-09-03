@@ -27,8 +27,6 @@
             <speed-slider
                 class="margin__left--small"
                 :speed="currentSpeed"
-                :min="speedRange.min"
-                :max="speedRange.max"
                 @change="changeSpeed">
             </speed-slider>
 
@@ -92,11 +90,7 @@
                 terrainConfig: {},
                 missionId: this.urlData.params.id,
                 missionName: '',
-                currentSpeed: 10,
-                speedRange: {
-                    min: 1,
-                    max: 31
-                },
+                currentSpeed: this.$store.state.preference.playbackSpeed || 10,
                 shareLink: '',
                 paused: true,
                 ended: false,

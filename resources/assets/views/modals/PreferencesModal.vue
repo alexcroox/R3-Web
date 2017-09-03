@@ -14,21 +14,15 @@
 
             <p class="margin__top--small">{{ $t('playback-speed-explain') }}</p>
 
-            <p>
-
-                <!--<input-select
-                    :options="playbackSpeeds"
-                    v-model="speed"
-                    @changed="speedChange"
-                    placeholder="Select speed"
-                    class="margin__top--medium margin__bottom--medium">
-                </input-select>-->
-            </p>
+            <speed-slider
+                class="margin__top--medium speed-slider__container--half-width speed-slider__container--alt"
+                :speed="speed"
+                @change="speedChange">
+            </speed-slider>
 
             <h3 class="margin__top--large">{{ ucfirst($t('language')) }}</h3>
 
             <p>
-
                 <input-select
                     :options="languages"
                     v-model="locale"
@@ -65,6 +59,7 @@
     import InputSelect from 'components/InputSelect.vue'
     import FormButton from 'components/FormButton.vue'
     import Feedback from 'components/Feedback.vue'
+    import SpeedSlider from 'components/SpeedSlider.vue'
 
     import bus from 'eventBus'
     import { ucfirst } from 'filters'
@@ -77,21 +72,15 @@
             Modal,
             InputSelect,
             FormButton,
-            Feedback
+            Feedback,
+            SpeedSlider
         },
 
         data () {
             return {
-
                 show: false,
-
                 languages: this.formatLanguages(),
-
-                locale: this.$locale.current(),
-
-                speed: 30,
-
-                playbackSpeeds: [5,10,30],
+                speed: this.$store.state.preference.playbackSpeed || 10,
             }
         },
 
@@ -116,16 +105,16 @@
                 return langs
             },
 
-            languageChange (value) {
+            languageChange (option) {
 
-                this.$store.commit('setPreferenceLanguage', value)
+                this.$store.commit('setPreferenceLanguage', option)
 
-                this.$locale.change(value)
+                this.$locale.change(option.value)
             },
 
             speedChange (value) {
 
-
+                this.$store.commit('setPreferencePlaybackSpeed', value)
             },
 
 
@@ -136,7 +125,11 @@
 
             missingStringsForCurrentLocale () {
 
-                return (this.$store.state.settings.locales[this.locale].missingStringCount > 0)? this.$store.state.settings.locales[this.locale].missingStringCount : false
+                return (this.$store.state.settings.locales[this.locale.value].missingStringCount > 0)? this.$store.state.settings.locales[this.locale.value].missingStringCount : false
+            },
+
+            locale () {
+                return this.$store.state.preference.locale
             },
         },
 
