@@ -23,6 +23,8 @@ class CreateMissionsTable extends Migration
             $table->float('day_time');
             $table->tinyInteger('hidden')->default(0);
             $table->string('addon_version', 10);
+            $table->timestamp('last_event_time');
+            $table->smallInteger('last_mission_time');
 
             $table->timestamps();
         });
