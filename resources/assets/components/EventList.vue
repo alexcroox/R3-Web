@@ -13,10 +13,15 @@
 <script>
     import Playback from 'playback/index'
     import PlaybackTime from 'playback/time'
+    import InputText from 'components/InputText.vue'
     import Map from 'playback/map'
     import bus from 'eventBus'
 
     export default {
+
+        components: {
+            InputText
+        },
 
         data () {
             return {
