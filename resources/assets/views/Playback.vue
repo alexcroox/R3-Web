@@ -226,7 +226,7 @@
 
                 Playback.load(this.missionId).then(missionInfo => {
 
-                    PlaybackTime.initScrubber(0, missionInfo.total_mission_time)
+                    PlaybackTime.initScrubber(0, missionInfo.last_mission_time)
                     this.missionName = (missionInfo.display_name != "")? missionInfo.display_name : missionInfo.name
 
                     this.completeLoadingStage('missionInfo')
@@ -307,6 +307,13 @@
                 this.loading = false
 
                 PlaybackTime.play()
+
+                setTimeout(function() {
+                    bus.$emit('notification', {
+                        message: 'R3 Test - Clafghan - Last Wednesday 19:05',
+                        type: 'info'
+                    })
+                }, 1000)
             },
 
             share () {

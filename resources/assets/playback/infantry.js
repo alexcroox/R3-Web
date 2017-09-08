@@ -32,6 +32,10 @@ class Infantry {
 
                     this.entities = _keyBy(data, 'entity_id')
 
+                    _each(this.entities, entity => {
+                        entity.isPlayer = this.isPlayer(entity)
+                    })
+
                     resolve()
                 })
                 .catch(error => {
@@ -144,7 +148,7 @@ class Infantry {
         // Highlight unit?
         if (Playback.highlightUnit && Playback.highlightUnit == entity.entity_id) {
 
-            let tooltip =  entity.layer.getTooltip().getElement()
+            let tooltip = entity.layer.getTooltip().getElement()
             tooltip.classList.add('map__label--highlighted')
 
             // Lets not continue panning to the unit if the user wants to look around the map
@@ -169,8 +173,12 @@ class Infantry {
 
     stopHighlightingUnit (entityId) {
 
+        console.log('Stopping highlighting')
+
         if (!this.entities.hasOwnProperty(entityId))
             return
+
+        console.log('now', entityId)
 
         let tooltip = this.entities[entityId].layer.getTooltip().getElement()
         tooltip.classList.remove('map__label--highlighted')

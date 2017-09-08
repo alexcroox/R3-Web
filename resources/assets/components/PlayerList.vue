@@ -57,6 +57,8 @@
             </div>
 
         </div>
+
+        <event-list></event-list>
     </map-box>
 </template>
 
@@ -69,6 +71,7 @@
     import bus from 'eventBus'
 
     import MapBox from 'components/MapBox.vue'
+    import EventList from 'components/EventList.vue'
 
     import getFactionData from 'playback/helpers/getFactionData'
     import Playback from 'playback/index'
@@ -79,6 +82,7 @@
 
         components: {
             MapBox,
+            EventList
         },
 
         data () {
@@ -88,7 +92,7 @@
                 hideTimer: null,
                 hideTime: 3, // seconds before player list fades out
                 factions: {},
-                highlightUnit: 0,
+                highlightUnit: 0
             }
         },
 
@@ -100,6 +104,10 @@
             setInterval(this.prepListData, 3000)
 
             setTimeout(this.prepListData, 1000)
+
+            bus.$on('followUnit', entityId => {
+                this.toggleFollowingUnit(entityId)
+            })
         },
 
         methods: {
@@ -186,16 +194,18 @@
 
             toggleFollowingUnit (entityId) {
 
-                if (this.highlightUnit == entityId) {
-                    Playback.stopHighlightingUnit(entityId)
+                if (Playback.highlightUnit == entityId) {
+                    Playback.stopHighlightingUnit(Playback.highlightUnit)
+                    Playback.highlightUnit = 0
                     this.highlightUnit = 0
                     return
                 }
 
-                if (this.highlightUnit)
-                    Playback.stopHighlightingUnit(entityId)
+                if (Playback.highlightUnit)
+                    Playback.stopHighlightingUnit(Playback.highlightUnit)
 
                 Playback.startHighlightingUnit(entityId)
+                Playback.highlightUnit = entityId
                 this.highlightUnit = entityId
             },
 
@@ -212,6 +222,8 @@
             },
 
             startHideTimer (timeout = this.hideTime) {
+
+                return;
 
                 this.hideTimer = setTimeout(() => {
 
@@ -288,7 +300,7 @@
         overflow hidden
         position absolute
         top 36px
-        bottom 0px
+        bottom 40%
         right 0
         left 0
 
@@ -364,4 +376,16 @@
         margin-right 5px
         width 12px
         vertical-align middle
+
+    .event-list
+        bottom 0
+        height $eventListHeight
+        position absolute
+        left 0
+        right 0
+        overflow hidden
+        padding 10px
+        border-top 1px solid #666
+
+
 </style>

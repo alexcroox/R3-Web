@@ -69,6 +69,9 @@ class PlaybackTime {
 
         this.currentMissionTime = Math.round(value)
 
+        if (this.currentMissionTime < 0)
+            this.currentMissionTime = 0
+
         console.log('Playback: skipping time', this.currentMissionTime)
 
         // Clear down the map of existing markers, ready to time warp...

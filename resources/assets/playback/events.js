@@ -10,6 +10,8 @@ import Infantry from './infantry'
 import Vehicles from './vehicles'
 import getFactionData from './helpers/getFactionData'
 
+import bus from 'eventBus'
+
 class PlaybackEvents {
 
     constructor () {
@@ -109,6 +111,30 @@ class PlaybackEvents {
 
             victim.dead = true
             victim.layer.setOpacity(0.4)
+
+            // If an AI was killed by a player or vice versa show notification
+            let type = (victim.isPlayer)? 'kill-player' : 'kill-ai'
+
+            // Position is used to focus on the victim if the event is clicked and
+            // we time travel to focus on the event
+            let position = victim.layer.getLatLng()
+            let entityId = (victim.isPlayer)? victim.entity_id : attacker.entity_id
+
+            let victimName = (victim.isPlayer)? victim.name : victim.class
+            let victimHighlightClass = (victim.isPlayer)? 'uppercase' : ''
+
+            let attackerName = (attacker.isPlayer)? attacker.name : attacker.class
+            let attackerHighlightClass = (attacker.isPlayer)? 'uppercase' : ''
+
+            bus.$emit('notification', {
+                message: `
+                    <span class="${victimHighlightClass}">${victimName}</span>
+                    was killed by
+                    <span class="${attackerHighlightClass}">${attackerName}</span>`,
+                type,
+                position,
+                entityId
+            })
         }
     }
 }

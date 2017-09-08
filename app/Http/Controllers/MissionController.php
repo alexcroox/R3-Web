@@ -15,18 +15,6 @@ class MissionController extends Controller
 {
     private $selectPlayerCount = "COUNT(distinct infantry.player_id) as player_count, GROUP_CONCAT(infantry.player_id SEPARATOR ',') as raw_player_list";
 
-    private $selectLastEventTimestamp = "
-        GREATEST(
-            IFNULL((SELECT added_on FROM infantry_positions WHERE mission = missions.id ORDER BY added_on DESC LIMIT 1), 0),
-            IFNULL((SELECT added_on FROM vehicle_positions WHERE mission = missions.id ORDER BY added_on DESC LIMIT 1), 0)
-        ) AS last_event_timestamp";
-
-    private $selectTotalMissionTime = "
-        GREATEST(
-            IFNULL((SELECT mission_time FROM infantry_positions WHERE mission = missions.id ORDER BY mission_time DESC LIMIT 1), 0),
-            IFNULL((SELECT mission_time FROM vehicle_positions WHERE mission = missions.id ORDER BY mission_time DESC LIMIT 1), 0)
-        ) AS total_mission_time";
-
     /**
      * @SWG\Get(
      *     tags={"Missions"},
@@ -45,8 +33,7 @@ class MissionController extends Controller
         $missions = DB::table('missions')
                     ->select(
                         'missions.*',
-                        DB::raw($this->selectPlayerCount),
-                        DB::raw($this->selectLastEventTimestamp)
+                        DB::raw($this->selectPlayerCount)
                     )
                     ->leftJoin('infantry', 'infantry.mission', '=', 'missions.id')
                     ->where('missions.hidden', 0)
@@ -61,14 +48,14 @@ class MissionController extends Controller
         foreach($missions as $index => $mission) {
 
             // Generate extra data for consumption
-            $lastEventTime = Carbon::parse($mission->last_event_timestamp);
+            $lastEventTime = Carbon::parse($mission->last_event_time);
             $lastEventTime->setTimezone(config('app.timezone'));
 
             $missionStart = Carbon::parse($mission->created_at);
             $missionStart->setTimezone(config('app.timezone'));
 
             $mission->player_list = explode(",", $mission->raw_player_list);
-            $mission->length_in_minutes = $missionStart->diffInMinutes($lastEventTime);
+            $mission->length_in_minutes = round($mission->last_mission_time / 60);
             $mission->minutes_since_last_event = $lastEventTime->diffInMinutes($currentTime);
             $mission->length_human = humanTimeDifference($lastEventTime, $missionStart);
             $mission->played_human = humanEventOccuredFromNow($missionStart);
@@ -165,9 +152,7 @@ class MissionController extends Controller
         $mission = DB::table('missions')
                     ->select(
                         'missions.*',
-                        DB::raw($this->selectPlayerCount),
-                        DB::raw($this->selectLastEventTimestamp),
-                        DB::raw($this->selectTotalMissionTime)
+                        DB::raw($this->selectPlayerCount)
                     )
                     ->leftJoin('infantry', 'infantry.mission', '=', 'missions.id')
                     ->where('missions.hidden', 0)
@@ -183,14 +168,15 @@ class MissionController extends Controller
 
     public static function missionFinished($missionId)
     {
-        $getLastMissionEvent = InfantryPosition::where('mission', $missionId)
-               ->orderBy('added_on', 'desc')
-               ->first();
+        $getLastMissionEvent = DB::table('missions')
+                    ->select('last_event_time')
+                    ->where('id', $missionId)
+                    ->first();
 
         Carbon::setLocale(config('app.locale'));
         $currentTime = Carbon::now(config('app.timezone'));
 
-        $lastEventTime = Carbon::parse($getLastMissionEvent->added_on);
+        $lastEventTime = Carbon::parse($getLastMissionEvent->last_event_time);
         $lastEventTime->setTimezone(config('app.timezone'));
 
         $minutesSinceLastEvent = $lastEventTime->diffInMinutes($currentTime);
