@@ -228,6 +228,7 @@
 
                     PlaybackTime.initScrubber(0, missionInfo.last_mission_time)
                     this.missionName = (missionInfo.display_name != "")? missionInfo.display_name : missionInfo.name
+                    this.missionPlayed = missionInfo.played_human
 
                     this.completeLoadingStage('missionInfo')
 
@@ -308,9 +309,9 @@
 
                 PlaybackTime.play()
 
-                setTimeout(function() {
+                setTimeout(() => {
                     bus.$emit('notification', {
-                        message: 'R3 Test - Clafghan - Last Wednesday 19:05',
+                        message: `${this.missionName} - ${this.terrainConfig.name} - ${this.missionPlayed}`,
                         type: 'info'
                     })
                 }, 1000)

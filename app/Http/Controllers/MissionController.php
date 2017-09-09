@@ -15,6 +15,11 @@ class MissionController extends Controller
 {
     private $selectPlayerCount = "COUNT(distinct infantry.player_id) as player_count, GROUP_CONCAT(infantry.player_id SEPARATOR ',') as raw_player_list";
 
+    public function __construct()
+    {
+        Carbon::setLocale(config('app.locale'));
+        $this->currentTime = Carbon::now(config('app.timezone'));
+    }
     /**
      * @SWG\Get(
      *     tags={"Missions"},
@@ -42,23 +47,13 @@ class MissionController extends Controller
                     ->orderBy('created_at', 'desc')
                     ->get();
 
-        Carbon::setLocale(config('app.locale'));
-        $currentTime = Carbon::now(config('app.timezone'));
-
         foreach($missions as $index => $mission) {
 
             // Generate extra data for consumption
-            $lastEventTime = Carbon::parse($mission->last_event_time);
-            $lastEventTime->setTimezone(config('app.timezone'));
-
-            $missionStart = Carbon::parse($mission->created_at);
-            $missionStart->setTimezone(config('app.timezone'));
+            $mission = $this->setHumanTimes($mission);
 
             $mission->player_list = explode(",", $mission->raw_player_list);
             $mission->length_in_minutes = round($mission->last_mission_time / 60);
-            $mission->minutes_since_last_event = $lastEventTime->diffInMinutes($currentTime);
-            $mission->length_human = humanTimeDifference($lastEventTime, $missionStart);
-            $mission->played_human = humanEventOccuredFromNow($missionStart);
 
             $mission->in_progress_block = ($mission->minutes_since_last_event < (int) Setting::get('minutesMissionEndBlock', 2)) ? true : false;
 
@@ -122,6 +117,21 @@ class MissionController extends Controller
         return Mission::orderBy('id', 'desc')->get();
     }
 
+    private function setHumanTimes($mission)
+    {
+        $lastEventTime = Carbon::parse($mission->last_event_time);
+        $lastEventTime->setTimezone(config('app.timezone'));
+
+        $missionStart = Carbon::parse($mission->created_at);
+        $missionStart->setTimezone(config('app.timezone'));
+
+        $mission->minutes_since_last_event = $lastEventTime->diffInMinutes($this->currentTime);
+        $mission->length_human = humanTimeDifference($lastEventTime, $missionStart);
+        $mission->played_human = humanEventOccuredFromNow($missionStart);
+
+        return $mission;
+    }
+
     /**
      * @SWG\Get(
      *     tags={"Missions"},
@@ -160,10 +170,12 @@ class MissionController extends Controller
                     ->groupBy('missions.id')
                     ->first();
 
-        if($mission)
+        if($mission) {
+            $mission = $this->setHumanTimes($mission);
             return response()->json($mission);
-        else
+        } else {
             return response()->json(['error' => 'Not Found'], 404);
+        }
     }
 
     public static function missionFinished($missionId)

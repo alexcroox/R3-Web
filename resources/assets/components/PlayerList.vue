@@ -16,49 +16,57 @@
                 <i class="fa fa-thumb-tack"></i>
         </button>
 
-        <div
-            class="player-list"
-            v-on:mouseleave="mouseLeave"
-            v-on:mouseenter="mouseEnter">
+        <vue-scrollbar class="player-list" :style="{ bottom: splitY + '%' }">
+            <div
+                v-on:mouseleave="mouseLeave"
+                v-on:mouseenter="mouseEnter">
 
-            <div v-for="faction in factions" class="player-list__faction">
-                <button
-                    @click="toggleFaction(faction.id)"
-                    class="player-list__expand-handle"
-                    :class="{ 'player-list__expand-handle--collapsed': faction.collapsed }">
-
-                    <span class="player-list__faction__name">{{ faction.meta.name }}</span>
-                </button>
-
-                <div
-                    v-if="!faction.collapsed"
-                    v-for="group in faction.groups"
-                    class="player-list__group">
-
+                <div v-for="faction in factions" class="player-list__faction">
                     <button
-                        @click="toggleGroup(faction.id, group.name)"
-                        class="player-list__expand-handle player-list__expand-handle--group"
-                        :class="{ 'player-list__expand-handle--collapsed': group.collapsed }">
+                        @click="toggleFaction(faction.id)"
+                        class="player-list__expand-handle"
+                        :class="{ 'player-list__expand-handle--collapsed': faction.collapsed }">
 
-                        <span class="player-list__group__name">{{ group.name }}</span>
+                        <span class="player-list__faction__name">{{ faction.meta.name }}</span>
                     </button>
 
-                    <button
-                        v-if="!group.collapsed"
-                        v-for="player in group.members"
-                        class="player-list__group-member"
-                        :class="{ 'player-list__group-member--highlight': highlightUnit == player.entity_id }"
-                        @click="toggleFollowingUnit(player.entity_id)">
+                    <div
+                        v-if="!faction.collapsed"
+                        v-for="group in faction.groups"
+                        class="player-list__group">
 
-                        <img :src="player.iconUrl" class="player-list__group-member__icon">
-                        {{ player.name }}
-                    </button>
+                        <button
+                            @click="toggleGroup(faction.id, group.name)"
+                            class="player-list__expand-handle player-list__expand-handle--group"
+                            :class="{ 'player-list__expand-handle--collapsed': group.collapsed }">
+
+                            <span class="player-list__group__name">{{ group.name }}</span>
+                        </button>
+
+                        <button
+                            v-if="!group.collapsed"
+                            v-for="player in group.members"
+                            class="player-list__group-member"
+                            :class="{ 'player-list__group-member--highlight': highlightUnit == player.entity_id }"
+                            @click="toggleFollowingUnit(player.entity_id)">
+
+                            <img :src="player.iconUrl" class="player-list__group-member__icon">
+                            {{ player.name }}
+                        </button>
+                    </div>
                 </div>
             </div>
+        </vue-scrollbar>
 
+        <div class="event-list-container" :style="{ height: splitY + '%' }">
+            <div
+                class="dragger"
+                @mousemove="dragMoveY"
+                @mouseup="dragEndY"
+                @mousedown.prevent="dragStartY"
+                @mouseleave="dragEndY"></div>
+            <event-list></event-list>
         </div>
-
-        <event-list></event-list>
     </map-box>
 </template>
 
@@ -69,6 +77,7 @@
     import _keys from 'lodash.keys'
 
     import bus from 'eventBus'
+    import VueScrollbar from 'vue2-scrollbar'
 
     import MapBox from 'components/MapBox.vue'
     import EventList from 'components/EventList.vue'
@@ -82,17 +91,20 @@
 
         components: {
             MapBox,
-            EventList
+            EventList,
+            VueScrollbar,
         },
 
         data () {
             return {
-                autoHide: true,
+                autoHide: false,
                 hidden: false,
                 hideTimer: null,
                 hideTime: 3, // seconds before player list fades out
                 factions: {},
-                highlightUnit: 0
+                highlightUnit: 0,
+                splitY: 30,
+                draggingY: false
             }
         },
 
@@ -223,8 +235,6 @@
 
             startHideTimer (timeout = this.hideTime) {
 
-                return;
-
                 this.hideTimer = setTimeout(() => {
 
                     if(this.autoHide)
@@ -232,12 +242,31 @@
 
                 }, timeout * 1000);
             },
+
+            dragStartY (e) {
+                this.draggingY = true
+                this.startY = e.pageY
+                this.startSplitY = this.splitY
+            },
+
+            dragMoveY (e) {
+                if (this.draggingY) {
+                    const dy = e.pageY - this.startY
+                    const totalHeight = this.$el.offsetHeight
+                    this.splitY = this.startSplitY + ~~(dy / totalHeight * 100)
+                }
+            },
+
+            dragEndY () {
+                this.draggingY = false
+            },
         },
     }
 </script>
 
 <style lang="stylus">
     @import '~styles/config/variables.styl'
+    @import '~styles/third-party/scrollbar.css'
 
     .player-list__container
         left 0
@@ -281,16 +310,17 @@
         position absolute
         top -3px
         right 2px
-        color #B7C0C6
+        color #ddd
         padding 10px
         z-index 2
+        opacity 0.4
 
     .player-list__toggle-sticky:hover
-        color #DDD
+        opacity 0.8
         cursor pointer
 
     .player-list__toggle-sticky--enabled
-        color #FFF
+        opacity 0.9
 
     .player-list__container--hide .player-list__group-member__icon
         opacity 0.3
@@ -303,6 +333,32 @@
         bottom 40%
         right 0
         left 0
+
+    .dragger
+        position absolute
+        top 0
+        left 0
+        right 0
+        height 4px
+
+    .dragger:after
+        content ''
+        height 1px
+        position absolute
+        top 0px
+        left 0
+        right 0
+        background #666
+
+    .dragger:hover
+        cursor ns-resize
+
+    .event-list-container
+        height 40%
+        bottom 0
+        position absolute
+        left 0
+        right 0
 
     .player-list__group
         text-transform none
@@ -325,6 +381,8 @@
     .player-list__expand-handle
         color #FFF
         display block
+        width 100%
+        text-align left
 
     .player-list__expand-handle:hover
         cursor pointer

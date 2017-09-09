@@ -1,5 +1,5 @@
 <template>
-    <div class="event-list">
+    <vue-scrollbar class="event-list">
         <button
             title="Jump back in time"
             v-for="m in messages"
@@ -7,20 +7,23 @@
             class="event"
             @click="jumpToEvent(m)"
             :class="[`event--${m.type}`]"></button>
-    </div>
+    </vue-scrollbar>
 </template>
 
 <script>
+    import VueScrollbar from 'vue2-scrollbar'
+    import bus from 'eventBus'
+
     import Playback from 'playback/index'
     import PlaybackTime from 'playback/time'
     import InputText from 'components/InputText.vue'
     import Map from 'playback/map'
-    import bus from 'eventBus'
 
     export default {
 
         components: {
-            InputText
+            InputText,
+            VueScrollbar
         },
 
         data () {
@@ -61,16 +64,16 @@
 
 <style lang="stylus">
     @import '~styles/config/variables.styl'
+    @import '~styles/third-party/scrollbar.css'
 
     .event-list
         bottom 0
-        height 40%
+        top 0
         position absolute
         left 0
         right 0
         overflow hidden
         padding 10px 5px 0 5px
-        border-top 1px solid #666
 
     .event
         font-size 12px
@@ -84,6 +87,9 @@
 
     .event:hover
         cursor w-resize
+
+    .player-list__container--hide .event
+        opacity 0
 
     .event--info
         background rgba(255,255,255,.6)
