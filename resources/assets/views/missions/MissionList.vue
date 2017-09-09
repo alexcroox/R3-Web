@@ -60,7 +60,7 @@
 
                         if (!item) return
 
-                        let itemData =  Object.assign({}, item)
+                        let itemData =  { ...item }
 
                         itemData.mission = (item.display_name != "")? item.display_name : item.name
                         itemData.length = item.length_human

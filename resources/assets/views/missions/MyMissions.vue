@@ -1,7 +1,6 @@
 <template>
-    <div>
-
-        <container v-if="!playerId" box="true" class="align__text--center margin__top--huge container--no-player-id">
+    <div class="margin__bottom--large">
+        <container v-if="!playerId || forceChange" box="true" class="align__text--center margin__top--huge container--no-player-id">
 
             <i class="fa fa-user-circle-o my-missions__icon" aria-hidden="true"></i>
 
@@ -39,6 +38,14 @@
                 :listTotal="listData.length"
                 @searched="updateSearchQuery($event)"
                 :placeholder="$t('search-missions')">
+
+                <router-link
+                    v-if="playerId && !noPlayerMissions"
+                    :to="{ name: 'stats.me' }"
+                    class="view-my-stats text-link">
+                    <i class="fa fa-area-chart" aria-hidden="true"></i>
+                    {{ $t('view-my-stats') }}
+                </router-link>
             </list-search>
 
             <table-list-missions
@@ -56,11 +63,14 @@
                 {{ $t('change-player-id') }}
             </button>
         </container>
-
     </div>
 </template>
 
 <script>
+    import axios from 'http'
+    import _each from 'lodash.foreach'
+    import { ucfirst } from 'filters'
+
     import ListSearch from 'components/ListSearch.vue'
     import Container from 'components/Container.vue'
     import TableListMissions from 'components/TableListMissions.vue'
@@ -68,9 +78,6 @@
     import FormButton from 'components/FormButton.vue'
 
     import playerIdGif from 'images/player-id.gif'
-
-    import _each from 'lodash.foreach'
-    import { ucfirst } from 'filters'
 
     export default {
         components: {
@@ -83,11 +90,11 @@
 
         data () {
             return {
-
                 searchQuery: '',
                 savingPlayerId: false,
+                forceChange: false,
                 saveButtonText: ucfirst(this.$t('save')),
-                newPlayerId: 0,
+                newPlayerId: this.$store.state.preference.playerId,
                 noPlayerMissions: false,
                 playerId: this.$store.state.preference.playerId,
                 listColumns: ['mission', 'terrain', 'length', 'players', 'played'],
@@ -105,8 +112,7 @@
             resetPlayerId () {
 
                 this.savingPlayerId = false
-                this.playerId = 0
-                this.$store.commit('setPreferencePlayerId', 0)
+                this.forceChange = true
                 this.saveButtonText = ucfirst(this.$t('save'))
             },
 
@@ -119,6 +125,7 @@
                 // Save player ID to localstorage
                 this.$store.commit('setPreferencePlayerId', this.newPlayerId)
                 this.playerId = this.newPlayerId
+                this.forceChange = false
 
                 this.$toastr.success('Your player ID has been saved')
             },
@@ -136,15 +143,18 @@
 
                     _each(this.$store.state.missions, (item) => {
 
-                        let itemData = item;
+                        if (!item) return
+
+                        let itemData = { ...item }
 
                         // We only want missions that this player was a part of
-                        if (this.playerId.indexOf(item.player_list) > -1) {
+                        if (item.player_list.indexOf(this.playerId) > -1) {
 
-                            itemData.mission = item.display_name
+                            itemData.mission = (item.display_name != "")? item.display_name : item.name
                             itemData.length = item.length_human
                             itemData.players = item.player_count
                             itemData.played = item.played_human
+                            itemData.terrain = item.terrain.toUpperCase()
 
                             missionData.push(itemData)
                         }
@@ -175,5 +185,8 @@
         margin-bottom 30px
 
         @media (max-width 600px)
-            display none
+            display none\
+
+    .view-my-stats
+        float right
 </style>

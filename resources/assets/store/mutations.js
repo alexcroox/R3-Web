@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 export const state = {
     settings: {},
     missions: [],
@@ -11,6 +13,7 @@ export const state = {
         summary: {},
         terrains: [],
         attendance: [],
+        me: {},
     }
 }
 
@@ -25,23 +28,27 @@ export const mutations = {
     },
 
     setStatsTerrains(state, terrains) {
-        state.stats.terrains = terrains
+        Vue.set(state.stats, 'terrains', terrains)
     },
 
     setStatsAttendance(state, attendance) {
-        state.stats.attendance = attendance
+        Vue.set(state.stats, 'attendance', attendance)
+    },
+
+    setStatsMe(state, stats) {
+        Vue.set(state.stats, 'me', stats)
     },
 
     setPreferenceLanguage(state, locale) {
         console.warn('Locale changing', locale)
-        state.preference.locale = locale
+        Vue.set(state.preference, 'locale', locale)
     },
 
     setPreferencePlayerId(state, playerId) {
-        state.preference.playerId = playerId
+        Vue.set(state.preference, 'playerId', playerId)
     },
 
     setPreferencePlaybackSpeed(state, speed) {
-        state.preference.playbackSpeed = speed
+        Vue.set(state.preference, 'playbackSpeed', speed)
     },
 }

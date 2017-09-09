@@ -16,6 +16,7 @@
             :placeholder="placeholder">
         </input-text>
 
+        <slot></slot>
     </div>
 </template>
 
@@ -39,6 +40,7 @@
     .list-search__title
         font-weight 500
         display inline-block
+        vertical-align middle
         margin-right 30px
 
         @media (max-width 480px)

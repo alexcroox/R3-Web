@@ -11,6 +11,8 @@
 
             {{ item.text }}
 
+            <i v-if="item.private" :class="['fa', 'tab__item__icon', 'tab__item__icon--private', faIcon('lock')]" aria-hidden="true"></i>
+
         </router-link>
     </div>
 </template>
@@ -65,4 +67,9 @@
 
     .tab__item__icon
         margin-right 5px
+
+    .tab__item__icon--private
+        opacity 0.5
+        margin-left 3px
+        vertical-align middle
 </style>

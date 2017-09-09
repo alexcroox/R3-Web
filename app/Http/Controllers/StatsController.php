@@ -114,4 +114,79 @@ class StatsController extends Controller
 
         return $stats;
     }
+
+    /**
+     * @SWG\Get(
+     *     tags={"Stats"},
+     *     path="/stats/player/{playerId}",
+     *     summary="Find player stats by by Id",
+     *     @SWG\Parameter(
+     *         description="Id of player to return",
+     *         in="path",
+     *         name="playerId",
+     *         required=true,
+     *         default=1,
+     *         type="integer",
+     *         format="int64"
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Stats for a single player"
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Playeer not found"
+     *     )
+     * )
+     */
+    public function fetchPlayer($playerId = 0)
+    {
+        $stats = [];
+
+        $stats['missionCount'] = Infantry::where('player_id', $playerId)->count();
+
+        $stats['kills'] = DB::table('events_downed')
+                                ->select(DB::raw('count(events_downed.mission) as total'))
+                                ->join('infantry', 'events_downed.entity_attacker', '=', 'infantry.entity_id')
+                                ->where('infantry.player_id', $playerId)
+                                ->where('events_downed.type', 'killed')
+                                ->orderBy('total', 'desc')
+                                ->first();
+
+        $stats['deaths'] = DB::table('events_downed')
+                                ->select(DB::raw('count(events_downed.mission) as total'))
+                                ->join('infantry', 'events_downed.entity_victim', '=', 'infantry.entity_id')
+                                ->where('infantry.player_id', $playerId)
+                                ->where('events_downed.type', 'killed')
+                                ->orderBy('total', 'desc')
+                                ->first();
+
+        $stats['fireTeams'] = Infantry::select('infantry.group', DB::raw('count(infantry.group) as total'))
+                                            ->where('player_id', $playerId)
+                                            ->groupBy('infantry.group')
+                                            ->orderBy('total', 'desc')
+                                            ->get();
+
+        $stats['classes'] = Infantry::select('class', DB::raw('count(class) as total, ANY_VALUE(icon) as icon'))
+                                            ->where('player_id', $playerId)
+                                            ->groupBy('class')
+                                            ->orderBy('total', 'desc')
+                                            ->get();
+
+        foreach($stats['classes'] as $class) {
+            $class->iconUrl = config('r3.iconDomain') . '/' . $class['icon'] . '-west-trim.png';
+        }
+
+        $stats['factionCount'] = Infantry::select('faction', DB::raw('count(faction) as total'))
+                                            ->where('player_id', $playerId)
+                                            ->groupBy('faction')
+                                            ->orderBy('total', 'desc')
+                                            ->get();
+
+        foreach($stats['factionCount'] as $faction) {
+            $faction->factionData = getFactionData($faction['faction']);
+        }
+
+        return $stats;
+    }
 }

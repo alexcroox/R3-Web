@@ -147,6 +147,7 @@
         left auto
         position relative
         display inline-block
+        vertical-align middle
         margin-right 10px
         font-size 16px
 

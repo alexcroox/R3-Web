@@ -4,8 +4,9 @@
 
         <tab :tabs="[
             { text: ucfirst($t('summary')), route: 'stats.summary', icon: 'tachometer', exact: true },
+            { text: ucfirst($t('my-stats')), route: 'stats.me', icon: 'address-card', exact: true },
             { text: ucfirst($t('terrains')), route: 'stats.terrains', icon: 'globe' },
-            { text: ucfirst($t('attendance')), route: 'stats.attendance', icon: 'user' },
+            { text: ucfirst($t('attendance')), route: 'stats.attendance', icon: 'user', private: true },
         ]"></tab>
 
         <router-view></router-view>

@@ -42,7 +42,7 @@ class MissionController extends Controller
                     )
                     ->leftJoin('infantry', 'infantry.mission', '=', 'missions.id')
                     ->where('missions.hidden', 0)
-                    ->where('infantry.player_id', '<>', '_SP_AI_')
+                    ->where('infantry.player_id', '<>', '')
                     ->groupBy('missions.id')
                     ->orderBy('created_at', 'desc')
                     ->get();

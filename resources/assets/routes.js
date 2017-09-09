@@ -37,6 +37,10 @@ let routes = [
             name: 'stats.summary',
             component: require('./views/stats/StatsSummary.vue')
         }, {
+            path: 'me',
+            name: 'stats.me',
+            component: require('./views/stats/StatsMe.vue')
+        }, {
             path: 'terrains',
             name: 'stats.terrains',
             component: require('./views/stats/StatsTerrains.vue')

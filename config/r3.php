@@ -14,5 +14,7 @@ return [
     'minimum_mission_length' => 5,
 
     // Minimum number of players before auto hidden
-    'minimum_players' => 3
+    'minimum_players' => 3,
+
+    'iconDomain' => 'https://r3icons.titanmods.xyz'
 ];
