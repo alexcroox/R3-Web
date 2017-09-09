@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
-import { state, mutations } from './mutations'
+import { state, mutations, getters } from './mutations'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state,
     mutations,
+    getters,
     plugins: [createPersistedState()]
 })

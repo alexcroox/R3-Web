@@ -1,36 +1,7 @@
 <template>
     <div class="margin__bottom--large">
-        <container v-if="!playerId || forceChange" box="true" class="align__text--center margin__top--huge container--no-player-id">
 
-            <i class="fa fa-user-circle-o my-missions__icon" aria-hidden="true"></i>
-
-            <!-- // TODO: locale -->
-            <h3 class="margin__bottom--medium" v-html="$t('enter-filter-missions',
-                {
-                    'url': playerIdGif,
-                    'class': 'text-link text-link--with-underline',
-                    'target': '_blank'
-                })">
-            </h3>
-
-            <p class="margin__bottom--large">
-                {{ $t('events-effect-you') }}
-            </p>
-
-            <input-text
-                v-model="newPlayerId"
-                @enter="savePlayerId"
-                :placeholder="$t('arma-player-id')"
-                short="true"
-                name="my-player-id"
-                class="margin__right--small">
-            </input-text>
-
-            <form-button @click="savePlayerId" :loading="savingPlayerId">{{ saveButtonText }}</form-button>
-
-        </container>
-
-        <container v-else>
+        <container v-if="playerId && !changePlayerId">
 
             <list-search
                 :title="ucfirst($t('missions'))"
@@ -54,19 +25,15 @@
                 :filter-key="searchQuery"
                 :noData="noPlayerMissions">
             </table-list-missions>
-
         </container>
 
-        <container v-if="playerId">
-            <button @click="resetPlayerId" class="text-link text-link--with-icon margin__top--large">
-                <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                {{ $t('change-player-id') }}
-            </button>
-        </container>
+        <player-id @changePlayerId="updateChangePlayerId"></player-id>
+
     </div>
 </template>
 
 <script>
+    import { mapGetters } from 'vuex'
     import axios from 'http'
     import _each from 'lodash.foreach'
     import { ucfirst } from 'filters'
@@ -74,74 +41,39 @@
     import ListSearch from 'components/ListSearch.vue'
     import Container from 'components/Container.vue'
     import TableListMissions from 'components/TableListMissions.vue'
-    import InputText from 'components/InputText.vue'
-    import FormButton from 'components/FormButton.vue'
-
-    import playerIdGif from 'images/player-id.gif'
+    import PlayerId from 'components/PlayerId.vue'
 
     export default {
         components: {
             Container,
             ListSearch,
             TableListMissions,
-            InputText,
-            FormButton
+            PlayerId,
         },
 
         data () {
             return {
                 searchQuery: '',
-                savingPlayerId: false,
-                forceChange: false,
-                saveButtonText: ucfirst(this.$t('save')),
-                newPlayerId: this.$store.state.preference.playerId,
+                changePlayerId: false,
                 noPlayerMissions: false,
-                playerId: this.$store.state.preference.playerId,
                 listColumns: ['mission', 'terrain', 'length', 'players', 'played'],
-                playerIdGif,
             }
         },
 
-        methods: {
-
-            updateSearchQuery (val) {
-
-                this.searchQuery = val
-            },
-
-            resetPlayerId () {
-
-                this.savingPlayerId = false
-                this.forceChange = true
-                this.saveButtonText = ucfirst(this.$t('save'))
-            },
-
-            savePlayerId () {
-
-                this.savingPlayerId = true
-                this.saveButtonText = ucfirst(this.$t('saving'))
-                console.log('Saving player id', this.newPlayerId)
-
-                // Save player ID to localstorage
-                this.$store.commit('setPreferencePlayerId', this.newPlayerId)
-                this.playerId = this.newPlayerId
-                this.forceChange = false
-
-                this.$toastr.success('Your player ID has been saved')
-            },
-
-            ucfirst,
-        },
-
         computed: {
+
+            ...mapGetters([
+                'playerId',
+                'missions'
+            ]),
 
             listData () {
 
                 let missionData = []
 
-                if(this.$store.state.missions) {
+                if(this.missions) {
 
-                    _each(this.$store.state.missions, (item) => {
+                    _each(this.missions, (item) => {
 
                         if (!item) return
 
@@ -171,22 +103,24 @@
                 return missionData
             },
         },
+
+        methods: {
+
+            updateSearchQuery (val) {
+
+                this.searchQuery = val
+            },
+
+            updateChangePlayerId (change) {
+                this.changePlayerId = change
+            },
+
+            ucfirst,
+        },
     }
 </script>
 
 <style scoped lang="stylus">
-    .container--no-player-id
-        @media (max-width 600px)
-            text-align left !important
-
-    .my-missions__icon
-        font-size  70px
-        color  #6ab73b
-        margin-bottom 30px
-
-        @media (max-width 600px)
-            display none\
-
     .view-my-stats
         float right
 </style>

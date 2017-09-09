@@ -145,6 +145,14 @@ class StatsController extends Controller
 
         $stats['missionCount'] = Infantry::where('player_id', $playerId)->count();
 
+        if($stats['missionCount'] == 0)
+            return response()->json(['error' => 'Player Not Found'], 404);
+
+        $stats['bio'] = Infantry::select('name')
+                                    ->where('player_id', $playerId)
+                                    ->orderBy('mission', 'desc')
+                                    ->first();
+
         $stats['kills'] = DB::table('events_downed')
                                 ->select(DB::raw('count(events_downed.mission) as total'))
                                 ->join('infantry', 'events_downed.entity_attacker', '=', 'infantry.entity_id')

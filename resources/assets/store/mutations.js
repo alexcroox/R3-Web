@@ -45,10 +45,19 @@ export const mutations = {
     },
 
     setPreferencePlayerId(state, playerId) {
+        console.log('Setting playerId', playerId)
         Vue.set(state.preference, 'playerId', playerId)
     },
 
     setPreferencePlaybackSpeed(state, speed) {
         Vue.set(state.preference, 'playbackSpeed', speed)
     },
+}
+
+export const getters = {
+
+  playerId (state) { return state.preference.playerId },
+  missions (state) { return state.missions },
+  statsMe (state) { return state.stats.me },
+
 }

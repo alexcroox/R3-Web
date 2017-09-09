@@ -29,6 +29,7 @@
 
     .container--box
         background #FFF
+        border 1px solid #F4F4F4
         padding 50px $sidePadding
         margin-left $sidePadding
         margin-right $sidePadding
