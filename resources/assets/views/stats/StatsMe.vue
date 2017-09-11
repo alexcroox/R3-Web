@@ -8,6 +8,8 @@
 
             <h3>Total deaths: {{ stats.deaths.total }}</h3>
 
+            <h3>Longest kill: {{ stats.kills.longest.distance }}m</h3>
+
             <div>
                 <h3>Most played factions</h3>
                 <ul>

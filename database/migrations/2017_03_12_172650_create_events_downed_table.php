@@ -20,6 +20,7 @@ class CreateEventsDownedTable extends Migration
             $table->string('type', 30);
             $table->smallInteger('entity_attacker');
             $table->smallInteger('entity_victim');
+            $table->tinyInteger('same_faction')->default(0);
             $table->smallInteger('distance');
             $table->string('weapon', 40);
 

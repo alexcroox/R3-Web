@@ -55,7 +55,7 @@ class MissionController extends Controller
             $mission->player_list = explode(",", $mission->raw_player_list);
             $mission->length_in_minutes = round($mission->last_mission_time / 60);
 
-            $mission->in_progress_block = ($mission->minutes_since_last_event < (int) Setting::get('minutesMissionEndBlock', 2)) ? true : false;
+            $mission->in_progress_block = ($mission->minutes_since_last_event < (float) Setting::get('minutesMissionEndBlock', 2)) ? true : false;
 
             // Generate and save a slug if required
             $mission->slug = $this->generateSlug($mission);
@@ -119,10 +119,10 @@ class MissionController extends Controller
 
     private function setHumanTimes($mission)
     {
-        $lastEventTime = Carbon::parse($mission->last_event_time);
+        $lastEventTime = Carbon::parse($mission->last_event_time, 'UTC');
         $lastEventTime->setTimezone(config('app.timezone'));
 
-        $missionStart = Carbon::parse($mission->created_at);
+        $missionStart = Carbon::parse($mission->created_at, 'UTC');
         $missionStart->setTimezone(config('app.timezone'));
 
         $mission->minutes_since_last_event = $lastEventTime->diffInMinutes($this->currentTime);
@@ -188,7 +188,7 @@ class MissionController extends Controller
         Carbon::setLocale(config('app.locale'));
         $currentTime = Carbon::now(config('app.timezone'));
 
-        $lastEventTime = Carbon::parse($getLastMissionEvent->last_event_time);
+        $lastEventTime = Carbon::parse($getLastMissionEvent->last_event_time, 'UTC');
         $lastEventTime->setTimezone(config('app.timezone'));
 
         $minutesSinceLastEvent = $lastEventTime->diffInMinutes($currentTime);

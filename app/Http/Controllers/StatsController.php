@@ -169,6 +169,14 @@ class StatsController extends Controller
                                 ->orderBy('total', 'desc')
                                 ->first();
 
+        $stats['kills']->longest = DB::table('events_downed')
+                                ->select('distance')
+                                ->join('infantry', 'events_downed.entity_attacker', '=', 'infantry.entity_id')
+                                ->where('infantry.player_id', $playerId)
+                                ->where('events_downed.type', 'killed')
+                                ->orderBy('distance', 'desc')
+                                ->first();
+
         $stats['fireTeams'] = Infantry::select('infantry.group', DB::raw('count(infantry.group) as total'))
                                             ->where('player_id', $playerId)
                                             ->groupBy('infantry.group')
