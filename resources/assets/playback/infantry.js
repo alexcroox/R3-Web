@@ -101,8 +101,10 @@ class Infantry {
                 if (
                     posData.key_frame == '1' &&
                     (Time.currentMissionTime - this.timeLastSeenKeyFrame > 9)
-                )
+                ) {
+                    this.timeLastSeenKeyFrame = Time.currentMissionTime
                     this.clearMarkers()
+                }
 
                 this.updateEntityPosition(posData)
             })
@@ -203,7 +205,7 @@ class Infantry {
 
         let marker = L.marker([0,0], { icon })
 
-        let label = (this.isPlayer(entity)) ? entity.name : false
+        let label = (this.isPlayer(entity)) ? entity.name : entity.entity_id
 
         if (label)
             marker.bindTooltip(`<span class="map__label__text">${label}</span>`, {

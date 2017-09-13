@@ -5,7 +5,7 @@ import _each from 'lodash.foreach'
 const calculateVehicleLabel = function (driver, crew, cargo) {
 
     let label = ' '
-    let driverLabel = ''
+    let driverLabel = driver.entity_id
     let crewLabel = ''
     let cargoLabel = ''
 

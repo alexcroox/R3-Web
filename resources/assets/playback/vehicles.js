@@ -102,8 +102,10 @@ class Vehicles {
                 if (
                     posData.key_frame == '1' &&
                     (Time.currentMissionTime - this.timeLastSeenKeyFrame > 9)
-                )
+                ) {
+                    this.timeLastSeenKeyFrame = Time.currentMissionTime
                     this.clearMarkers()
+                }
 
                 this.updateEntityPosition(posData)
             })
