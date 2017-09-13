@@ -18,6 +18,7 @@ class Infantry {
         this.entities = {}
         this.positions = {}
         this.layer
+        this.timeLastSeenKeyFrame = 10
     }
 
     loadEntities (missionId) {
@@ -81,23 +82,6 @@ class Infantry {
         })
     }
 
-    // Lets look over what we have on the map and decide
-    // if we need to remove anything
-    reviewExistingMarkers () {
-
-        _each(this.entities, entity => {
-
-            // Auto cleanup dead vehicles
-            // TODO make this optional
-            if (
-                entity.hasOwnProperty('dead') &&
-                entity.dead &&
-                Time.currentMissionTime - entity.missionTimeLastUpdated > (Time.speed * 5)
-            )
-                this.removeEntity(entity)
-        })
-    }
-
     removeEntity (entity) {
 
         console.warn('Vehicles: removing old layer', entity.icon)
@@ -110,6 +94,15 @@ class Infantry {
         if (this.positions.hasOwnProperty(missionTime)) {
 
             _each(this.positions[missionTime], posData => {
+
+                // If this is the first key frame we've seen since the last batch
+                // lets clear all current markers and prepare for the up to date ones
+                // that are about to be added
+                if (
+                    posData.key_frame == '1' &&
+                    (Time.currentMissionTime - this.timeLastSeenKeyFrame > 9)
+                )
+                    this.clearMarkers()
 
                 this.updateEntityPosition(posData)
             })

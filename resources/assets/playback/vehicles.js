@@ -21,6 +21,7 @@ class Vehicles {
         this.positions = {}
         this.playersInVehicles = {}
         this.icons = {}
+        this.timeLastSeenKeyFrame = 10
         this.layer
     }
 
@@ -83,35 +84,6 @@ class Vehicles {
         })
     }
 
-    // Lets look over what we have on the map and decide
-    // if we need to remove anything
-    reviewExistingMarkers () {
-
-        _each(this.entities, entity => {
-
-            // If it's not on the map currently, ignore
-            if (!this.layer.hasLayer(entity.layer))
-                return
-
-            // // Parachutes don't die currently so we need to remove
-            // // them after a period of no movement
-            // if (
-            //     entity.icon == 'iconParachute' &&
-            //     (Time.currentMissionTime - entity.missionTimeLastUpdated > (Time.speed * 5))
-            // )
-            //     this.removeEntity(entity)
-
-            // // Auto cleanup dead vehicles
-            // // TODO make this optional
-            // if (
-            //     entity.hasOwnProperty('dead') &&
-            //     entity.dead &&
-            //     Time.currentMissionTime - entity.missionTimeLastUpdated > (Time.speed * 5)
-            // )
-            //     this.removeEntity(entity)
-        })
-    }
-
     removeEntity (entity) {
 
         console.warn('Vehicles: removing old layer', entity.icon)
@@ -124,6 +96,14 @@ class Vehicles {
         if (this.positions.hasOwnProperty(missionTime)) {
 
             _each(this.positions[missionTime], posData => {
+                // If this is the first key frame we've seen since the last batch
+                // lets clear all current markers and prepare for the up to date ones
+                // that are about to be added
+                if (
+                    posData.key_frame == '1' &&
+                    (Time.currentMissionTime - this.timeLastSeenKeyFrame > 9)
+                )
+                    this.clearMarkers()
 
                 this.updateEntityPosition(posData)
             })
