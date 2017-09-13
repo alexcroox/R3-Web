@@ -31,7 +31,7 @@
         font 11px/22px "Helvetica Neue", Arial, Helvetica, sans-serif
         font-weight bold
         margin-top 4px
-        padding 0 0 0 20px
+        padding 0 0 0 25px
         border none
         background none
         position absolute
@@ -66,8 +66,24 @@
     .map__label__infantry
     .map__label__vehicle
         font-size 11px
-        letter-spacing 0.03em
+        letter-spacing 0.04em
         margin 0 0 0 -12px
+
+    .map__label__vehicle--driver
+        padding 0 6px
+        display block
+
+    .map__label__vehicle__crew
+    .map__label__vehicle__cargo
+        line-height 14px
+        display block
+        color #666
+
+    .map__label__vehicle__crew__unit
+    .map__label__vehicle__cargo__unit
+        display block
+        padding 0 6px
+        line-height 14px
 
     .map__label__text
         display block
@@ -82,13 +98,13 @@
     .projectile__grenade
         transition all 0.7s
 
-    .projectile__missile
+    .projectile__launch-pulse
         visibility hidden
-        animation missileLaunch 1s
+        animation launchPulse 1s
         animation-timing-function ease-in-out
         transform-origin 50% 50%
 
-    @keyframes missileLaunch
+    @keyframes launchPulse
         0%
             visibility visible
             transform scale(0)
@@ -96,4 +112,31 @@
             transform scale(20)
         100%
             transform scale(0)
+
+    .projectile__grenade
+        visibility hidden
+        animation grenadeExplode 1s
+        animation-timing-function ease-in-out
+        transform-origin 50% 50%
+
+    @keyframes grenadeExplode
+        0%
+            visibility visible
+            transform scale(0)
+        50%
+            transform scale(5)
+        100%
+            transform scale(0)
+
+    .projectile__smoke
+        animation smoke 5s
+        animation-timing-function ease-in-out
+
+    @keyframes smoke
+        0%
+            opacity 0
+        50%
+            opacity 1
+        100%
+            opacity 0
 </style>

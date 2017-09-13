@@ -334,7 +334,10 @@
 
                 setTimeout(() => {
                     bus.$emit('notification', {
-                        message: `${this.missionName} - ${this.terrainConfig.name} - ${this.missionPlayed}`,
+                        message: `
+                            ${this.missionName.toUpperCase()} -
+                            ${this.terrainConfig.name.toUpperCase()} -
+                            ${this.missionPlayed}`,
                         type: 'info'
                     })
                 }, 1000)

@@ -1,6 +1,7 @@
 import axios from 'http'
 import _groupBy from 'lodash.groupby'
 import _each from 'lodash.foreach'
+import _defaults from 'lodash.defaults'
 import L from 'leaflet'
 import moment from 'moment'
 
@@ -68,6 +69,34 @@ class PlaybackEvents {
 
                     case "awake":
 
+                        Infantry.awake(event.entity_victim)
+
+                        break
+
+                    case "missile":
+                    case "rocket":
+
+                        this.selfPropelledLaunch(event)
+
+                        break
+
+                    case "grenade":
+                    case "smoke":
+
+                        this.projectileLaunch(event)
+
+                        break
+
+                    case "connect":
+                    case "disconnect":
+
+                        bus.$emit('notification', {
+                            message: `<span class="uppercase">${event.player_name}</span> ${event.type}ed`,
+                            type: 'info',
+                            position: false,
+                            entityId: false
+                        })
+
                         break
                 }
             })
@@ -115,10 +144,17 @@ class PlaybackEvents {
 
             trackAnchorLine()
 
-            victim.dead = true
+            if (event.type == "unconscious")
+                victim.unconscious = true
+            else if (event.type == "killed")
+                victim.dead = true
+
             victim.layer.setOpacity(0.4)
 
             // If an AI was killed by a player or vice versa show notification
+            if (!victim.isPlayer && !attacker.isPlayer)
+                return
+
             let type = (victim.isPlayer)? 'kill-player' : 'kill-ai'
 
             // Position is used to focus on the victim if the event is clicked and
@@ -140,6 +176,142 @@ class PlaybackEvents {
                 type,
                 position,
                 entityId
+            })
+        }
+    }
+
+    // Missile or rocket launch
+    selfPropelledLaunch (event) {
+
+        let attacker = Playback.findEntity(event.entity_attacker, true)
+        let victim = Playback.findEntity(event.entity_victim, true)
+
+        if (attacker) {
+
+            let launchPosition = attacker.layer.getLatLng()
+
+            this.pulseCircle(launchPosition)
+
+            // Animate a M m m towards victim
+            if (victim) {
+
+                let victimPosition = victim.layer.getLatLng()
+
+                console.log(event.type)
+
+                let icon = L.icon(_defaults({
+                    iconUrl: `${Map.iconMarkerDefaults.iconUrl}/${event.type}.png`,
+                    className: `projectile__${event.type}`
+                }, Map.iconMarkerDefaults))
+
+                let projectileIcon = L.marker(launchPosition, {
+                    icon,
+                    interactive: false
+                }).addTo(Map.handler)
+
+                setTimeout(() => projectileIcon.setLatLng(victimPosition), 50)
+                setTimeout(() => Map.handler.removeLayer(projectileIcon), 1000)
+
+                // Position is used to focus on the victim if the event is clicked and
+                // we time travel to focus on the event
+                if (!victim.isPlayer)
+                    return
+
+                bus.$emit('notification', {
+                    message: `${event.type} launch at <span class="uppercase">${victim.name}</span>`,
+                    type: 'self-propelled-launch',
+                    position: victimPosition,
+                    entityId: victim.entity_id
+                })
+            }
+        }
+    }
+
+    // Pulse a large circle around the attacker
+    pulseCircle (launchPosition, color = 'red', className = 'projectile__launch-pulse') {
+
+        let launchPulse = L.circle(launchPosition, 50, {
+            weight: 1,
+            color,
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            className,
+            interactive: false
+        }).addTo(Map.handler)
+
+        setTimeout(() => Map.handler.removeLayer(launchPulse), 1000)
+    }
+
+    // Throwing or firing HE or Smoke
+    // Pulse a large circle around the attacker and animate a smoke or explosion
+    // where the projectile lands
+    projectileLaunch (event) {
+
+        let attacker = Playback.findEntity(event.entity_attacker, true)
+
+        if (attacker) {
+
+            let launchPosition = attacker.layer.getLatLng()
+
+            this.pulseCircle(launchPosition, 'black')
+
+            let projectileExplodePosition = Map.rc.unproject([event.x, event.y])
+
+            if (event.type == 'grenade') {
+
+                console.warn('nade', projectileExplodePosition);
+
+                let explodePulse = L.circle(projectileExplodePosition, 15, {
+                    weight: 1,
+                    color: 'black',
+                    opacity: 0.6,
+                    fill: true,
+                    className: 'projectile__grenade',
+                    clickable: false
+                }).addTo(Map.handler)
+
+                setTimeout(() => Map.handler.removeLayer(explodePulse), 1000)
+
+            } else {
+
+                let color = '#CCC';
+                let projectileName = event.projectile_name.toLowerCase()
+
+                if(projectileName.indexOf('purple') > -1)
+                    color = 'purple';
+
+                if(projectileName.indexOf('green') > -1)
+                    color = 'green';
+
+                if(projectileName.indexOf('red') > -1)
+                    color = 'red';
+
+                if(projectileName.indexOf('blue') > -1)
+                    color = 'blue';
+
+                console.warn(projectileName, color);
+
+                let smokeCircle = L.circle(projectileExplodePosition, 50, {
+                    weight: 40,
+                    color: color,
+                    opacity: 0.5,
+                    className: 'projectile__smoke',
+                    clickable: false
+                }).addTo(Map.handler);
+
+                setTimeout(() => Map.handler.removeLayer(smokeCircle), 5000)
+            }
+
+            // Position is used to focus on the victim if the event is clicked and
+            // we time travel to focus on the event
+            if (!attacker.isPlayer)
+                return
+
+            bus.$emit('notification', {
+                message: `<span class="uppercase">${attacker.name}</span> fired ${event.projectile_name}`,
+                type: 'projectile-launch',
+                position: launchPosition,
+                entityId: attacker.entity_id
             })
         }
     }

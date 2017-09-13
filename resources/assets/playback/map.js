@@ -109,9 +109,10 @@ class Map {
     }
 
     // Our unit marker image
-    prepareIcon (entityIcon, factionData) {
+    prepareIcon (entityIcon, factionData, className = '') {
         return L.icon(_defaults({
-            iconUrl: `${this.iconMarkerDefaults.iconUrl}/${entityIcon}-${factionData.name}.png`
+            iconUrl: `${this.iconMarkerDefaults.iconUrl}/${entityIcon}-${factionData.name}.png`,
+            className
         }, this.iconMarkerDefaults))
     }
 }

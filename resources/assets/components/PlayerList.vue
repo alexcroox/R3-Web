@@ -16,7 +16,7 @@
                 <i class="fa fa-thumb-tack"></i>
         </button>
 
-        <vue-scrollbar class="player-list" :style="{ bottom: splitY + '%' }">
+        <vue-scrollbar ref="player-list" class="player-list" :style="{ bottom: splitY + '%' }">
             <div
                 v-on:mouseleave="mouseLeave"
                 v-on:mouseenter="mouseEnter">
@@ -438,16 +438,6 @@
         margin-right 5px
         width 12px
         vertical-align sub
-
-    .event-list
-        bottom 0
-        height $eventListHeight
-        position absolute
-        left 0
-        right 0
-        overflow hidden
-        padding 10px
-        border-top 1px solid #666
 
 
 </style>

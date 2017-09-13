@@ -26,7 +26,7 @@ const calculateVehicleLabel = function (driver, crew, cargo) {
         if (crewEntityId != driver.entity_id) {
             let crewEntity = Infantry.getEntityById(crewEntityId)
             crewLabel += `
-                <span class="map__label map__label__vehicle map__label__vehicle--crew">
+                <span class="map__label map__label__vehicle__crew__unit">
                     ${crewEntity.name}
                 </span>`
         }
@@ -36,14 +36,14 @@ const calculateVehicleLabel = function (driver, crew, cargo) {
     _each(cargo, cargoEntityId => {
         let cargoEntity = Infantry.getEntityById(cargoEntityId)
         cargoLabel += `
-            <span class="map__label map__label__vehicle map__label__vehicle--cargo">
+            <span class="map__label map__label__vehicle__cargo__unit">
                 ${cargoEntity.name}
             </span>`
     })
 
     if (driverLabel != '')
         label += `
-            <span class="map__label map__label__vehicle map__label__vehicle--driver">
+            <span class="map__label map__label__vehicle--driver">
                 ${driverLabel}
             </span>`
 

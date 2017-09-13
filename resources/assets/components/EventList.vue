@@ -1,12 +1,14 @@
 <template>
-    <vue-scrollbar class="event-list">
-        <button
-            title="Jump back in time"
-            v-for="m in messages"
-            v-html="m.message"
-            class="event"
-            @click="jumpToEvent(m)"
-            :class="[`event--${m.type}`]"></button>
+    <vue-scrollbar ref="event-list" class="event-list">
+        <div>
+            <button
+                title="Jump back in time"
+                v-for="m in messages"
+                v-html="m.message"
+                class="event"
+                @click="jumpToEvent(m)"
+                :class="[`event--${m.type}`]"></button>
+        </div>
     </vue-scrollbar>
 </template>
 
@@ -74,6 +76,8 @@
         right 0
         overflow hidden
         padding 10px 5px 0 5px
+        border-top 1px solid #666
+        min-height 100px
 
     .event
         font-size 12px
@@ -84,9 +88,10 @@
         margin-bottom 4px
         text-align left
         width 100%
+        border-radius 4px
 
     .event:hover
-        cursor w-resize
+        cursor pointer
 
     .player-list__container--hide .event
         opacity 0
@@ -101,4 +106,8 @@
     .event--kill-ai
         background rgba(255,0,0,.6)
         opacity 0.6
+
+    .event--self-propelled-launch
+    .projectile-propelled-launch
+        background rgba(255,255,255,.6)
 </style>

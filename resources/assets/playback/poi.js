@@ -22,7 +22,7 @@ class Poi {
                     this.addToMap(data)
             })
             .catch(error => {
-                console.warn(`POI: ${Map.terrainConfig.name} has no town labels, would you like to <a href="">add some?</a>`, error)
+                console.warn(`POI: ${Map.terrainConfig.name} has no town labels, would you like to add some? https://github.com/alexcroox/R3-Web/wiki/How-to-add-terrain-label-data`)
             })
     }
 

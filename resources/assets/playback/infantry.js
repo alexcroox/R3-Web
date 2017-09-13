@@ -208,7 +208,7 @@ class Infantry {
         let label = (this.isPlayer(entity)) ? entity.name : entity.entity_id
 
         if (label)
-            marker.bindTooltip(`<span class="map__label__text">${label}</span>`, {
+            marker.bindTooltip(`${label}`, {
                 className: `map__label map__label__infantry`
             })
 
@@ -246,6 +246,19 @@ class Infantry {
             this.layer.hasLayer(this.entities[entityId].layer)
         )
             this.layer.removeLayer(this.entities[entityId].layer)
+    }
+
+    // Unit has woken up, let's remove their opacity
+    // TODO: What if this event is skipped? We need to look at if a unit has moved
+    // since being marked as dead and remove opacity too
+    awake (entityId) {
+
+        if (
+            this.entities.hasOwnProperty(entityId) &&
+            this.entities[entityId].hasOwnProperty('layer') &&
+            this.layer.hasLayer(this.entities[entityId].layer)
+        )
+            this.entities[entityId].layer.setOpacity(1)
     }
 
     getPlayers () {
