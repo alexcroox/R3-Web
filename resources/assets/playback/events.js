@@ -53,6 +53,12 @@ class PlaybackEvents {
 
                         break
 
+                    case "get_out":
+
+                        Vehicles.getOut(event.entity_unit)
+
+                        break
+
                     case "killed":
                     case "unconscious":
 

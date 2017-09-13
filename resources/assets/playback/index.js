@@ -94,6 +94,14 @@ class Playback {
 
         this.trackingHighlightedUnit = false
     }
+
+    addFactionToIconUrl (url, factionId) {
+
+        let factionData = getFactionData(factionId)
+
+        // Add our faction to the icon name so we get a colour specific version
+        return url.replace(".png", `-${factionData.name}.png`)
+    }
 }
 
 export default new Playback

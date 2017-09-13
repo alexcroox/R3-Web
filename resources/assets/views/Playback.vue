@@ -106,6 +106,10 @@
                         complete: false,
                         text: 'Loading terrain'
                     },
+                    vehicleIcons: {
+                        complete: false,
+                        text: 'Loading vehicle icons'
+                    },
                     missionInfo: {
                         complete: false,
                         text: 'Loading mission'
@@ -157,6 +161,7 @@
             });
 
             this.getTerrainInfo()
+            this.getVehicleIcons()
             this.fetchMissionInfo()
         },
 
@@ -219,6 +224,24 @@
                                 class="text-link text-link--with-underline">
                                 why don't you add it?
                             </a>`)
+                    })
+            },
+
+            getVehicleIcons () {
+
+                axios.get(`${this.iconDomain}/config.json`)
+                    .then(response => {
+
+                        console.log('Playback: Got vehicle icons', response.data);
+
+                        Vehicles.icons = response.data
+
+                        this.completeLoadingStage('vehicleIcons')
+                    })
+                    .catch(error => {
+                        console.error('Error fetching vehicle icon config', error)
+
+                        this.errorReturnToMissionList('Cannot download vehicle icons, please try again')
                     })
             },
 

@@ -11,12 +11,16 @@ import Time from './time'
 import { gameToMapPosX, gameToMapPosY } from './helpers/gameToMapPos'
 import getFactionData from './helpers/getFactionData'
 import shortestRotation from './helpers/shortestRotation'
+import emptyEntity from './helpers/emptyEntity'
+import calculateVehicleLabel from './helpers/calculateVehicleLabel'
 
 class Vehicles {
 
     constructor () {
         this.entities = {}
         this.positions = {}
+        this.playersInVehicles = {}
+        this.icons = {}
         this.layer
     }
 
@@ -89,22 +93,22 @@ class Vehicles {
             if (!this.layer.hasLayer(entity.layer))
                 return
 
-            // Parachutes don't die currently so we need to remove
-            // them after a period of no movement
-            if (
-                entity.icon == 'iconParachute' &&
-                (Time.currentMissionTime - entity.missionTimeLastUpdated > (Time.speed * 5))
-            )
-                this.removeEntity(entity)
+            // // Parachutes don't die currently so we need to remove
+            // // them after a period of no movement
+            // if (
+            //     entity.icon == 'iconParachute' &&
+            //     (Time.currentMissionTime - entity.missionTimeLastUpdated > (Time.speed * 5))
+            // )
+            //     this.removeEntity(entity)
 
-            // Auto cleanup dead vehicles
-            // TODO make this optional
-            if (
-                entity.hasOwnProperty('dead') &&
-                entity.dead &&
-                Time.currentMissionTime - entity.missionTimeLastUpdated > (Time.speed * 5)
-            )
-                this.removeEntity(entity)
+            // // Auto cleanup dead vehicles
+            // // TODO make this optional
+            // if (
+            //     entity.hasOwnProperty('dead') &&
+            //     entity.dead &&
+            //     Time.currentMissionTime - entity.missionTimeLastUpdated > (Time.speed * 5)
+            // )
+            //     this.removeEntity(entity)
         })
     }
 
@@ -134,31 +138,63 @@ class Vehicles {
             return
         }
 
-        // Do we know of the driver?
-        if (!Infantry.entities.hasOwnProperty(posData.driver)) {
-            console.warn('Vehicles: unknown driver', posData.driver)
-            return
+        let vehicleEntity = this.entities[posData.entity_id]
+        let driver = Infantry.entities[posData.driver]
+        let crew = (posData.crew == '')? [] : posData.crew.split(',')
+        let cargo = (posData.cargo == '')? [] : posData.cargo.split(',')
+
+        if (driver == null)
+            driver = {...emptyEntity}
+
+        if (vehicleEntity.customIcon == null)
+            vehicleEntity.customIcon = this.getVehicleIcon(vehicleEntity.icon_path, vehicleEntity.icon)
+
+        let factionData = getFactionData(driver.faction)
+
+        // We need to change a player's icon to the vehicle they are in, lets work
+        // out who is in this vehicle and assign this vehicle class to their entity_id
+        if (Infantry.isPlayer(driver)) {
+            this.playersInVehicles[driver.entity_id] = vehicleEntity.customIcon
         }
 
-        let entity = this.entities[posData.entity_id]
-        let driver = Infantry.entities[posData.driver]
+        // Set the vehicle icon for all crew members, but skip the driver if duplicated in crew list
+        _each(crew, crewEntityId => {
+            if (crewEntityId != driver.entity_id) {
+                let crewEntity = Infantry.getEntityById(crewEntityId)
+                factionData = getFactionData(crewEntity.faction)
+                this.playersInVehicles[crewEntityId] = vehicleEntity.customIcon
+            }
+        })
 
-        // Has this entity ever been on the map?
-        if (!entity.hasOwnProperty('layer'))
-            this.addEntityToMap(entity, driver)
+        _each(cargo, cargoEntityId => {
+            let cargoEntity = Infantry.getEntityById(cargoEntityId)
+            factionData = getFactionData(cargoEntity.faction)
+            this.playersInVehicles[cargoEntityId] = vehicleEntity.customIcon
+        })
 
-        // Has this entity been on the map, but isn't right now?
-        if (!this.layer.hasLayer(entity.layer))
-            this.layer.addLayer(entity.layer)
+        // Has this vehicleEntity ever been on the map?
+        if (!vehicleEntity.hasOwnProperty('layer'))
+            this.addEntityToMap(vehicleEntity, factionData)
+
+        // Has this vehicleEntity been on the map, but isn't right now?
+        if (!this.layer.hasLayer(vehicleEntity.layer))
+            this.layer.addLayer(vehicleEntity.layer)
 
         // Store when we last moved this unit so we can decide to clean up later
-        entity.missionTimeLastUpdated = posData.mission_time
+        vehicleEntity.missionTimeLastUpdated = posData.mission_time
 
-        // Update entity position
-        entity.layer.setLatLng(Map.rc.unproject([posData.x, posData.y]))
+        // Update vehicleEntity position
+        vehicleEntity.layer.setLatLng(Map.rc.unproject([posData.x, posData.y]))
 
         // Update rotation
-        this.setEntityRotation(entity, posData.direction)
+        this.setEntityRotation(vehicleEntity, posData.direction)
+
+        // Update label
+        vehicleEntity.layer.setTooltipContent(calculateVehicleLabel(driver, crew, cargo))
+
+        // Update icon
+        let markerIcon = Map.prepareIcon(vehicleEntity.customIcon, factionData)
+        vehicleEntity.layer.setIcon(markerIcon)
     }
 
     setEntityRotation (entity, newAngle) {
@@ -175,33 +211,40 @@ class Vehicles {
         entity.layer.setRotationAngle(newAngle)
     }
 
-    addEntityToMap (entity, driver) {
-
-        let entityIcon = entity.icon
-        let factionData = getFactionData(driver.faction)
+    addEntityToMap (entity, factionData) {
 
         // We need to store it's current faction to work out
         // if we need to change it's colour on the next position update
         // I.e if an enemy unit jumps in after
-        entity.faction = driver.faction
+        entity.faction = factionData.id
 
         // Our unit marker image
-        let icon = L.icon(_defaults({
-            iconUrl: `${Map.iconMarkerDefaults.iconUrl}/${entityIcon}-${factionData.name}.png`
-        }, Map.iconMarkerDefaults))
+        let icon = Map.prepareIcon(entity.customIcon, factionData)
 
         let marker = L.marker([0,0], { icon })
 
-        let label = (driver.player_id != "" && driver.player_id != "_SP_AI_") ? driver.name : false
-
-        if (label)
-            marker.bindTooltip(label, {
-                className: `map__label map__label__vehicle`
-            })
+        marker.bindTooltip('', {
+            className: `map__label map__label__vehicle`
+        })
 
         // Create the marker, we aren't going to add it to the map
         // just yet so the position isn't important
         entity.layer = marker
+    }
+
+    // Infantry has gotten out of vehicle, let's remove them as being in a vehicle
+    getOut (entityId) {
+        delete this.playersInVehicles[entityId]
+    }
+
+    getVehicleIcon (iconPath, defaultIcon) {
+
+        let icon = `${defaultIcon}`
+
+        if (iconPath && this.icons.hasOwnProperty(iconPath.toLowerCase()))
+            icon = `${this.icons[iconPath.toLowerCase()]}`
+
+        return icon
     }
 
     initMapLayer () {
@@ -211,7 +254,9 @@ class Vehicles {
     }
 
     clearMarkers () {
-
+        console.log('Clearing vehicle markers')
+        this.layer.clearLayers()
+        this.playersInVehicles = {}
     }
 }
 

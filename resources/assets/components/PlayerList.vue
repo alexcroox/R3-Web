@@ -86,6 +86,7 @@
     import Playback from 'playback/index'
     import Infantry from 'playback/infantry'
     import Vehicles from 'playback/vehicles'
+    import Map from 'playback/map'
 
     export default {
 
@@ -164,7 +165,10 @@
 
                             let groupMembers = this.factions[player.faction].groups[player.group].members
 
-                            player.iconUrl = `${this.$store.state.settings.iconBaseUrl}/${player.icon}-${factionData.name}-trim.png`
+                            if (Vehicles.playersInVehicles.hasOwnProperty(player.entity_id))
+                                player.iconUrl = `${Map.iconDomain}/${Vehicles.playersInVehicles[player.entity_id]}-${factionData.name}-trim.png`
+                            else
+                                player.iconUrl = `${Map.iconDomain}/${player.icon}-${factionData.name}-trim.png`
 
                             // Add them to the group, if they aren't already there...
                             if (_find(groupMembers, ['entity_id', player.entity_id]) === undefined)
@@ -433,7 +437,7 @@
         display inline-block
         margin-right 5px
         width 12px
-        vertical-align middle
+        vertical-align sub
 
     .event-list
         bottom 0

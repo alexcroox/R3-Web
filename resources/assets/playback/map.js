@@ -1,5 +1,6 @@
 import L from 'leaflet'
 import RasterCoords from 'leaflet-rastercoords'
+import _defaults from 'lodash.defaults'
 import errorTile from 'images/map/error-tile.png'
 
 import Poi from './poi'
@@ -105,6 +106,13 @@ class Map {
         this.handler.setView(position, zoom)
 
         this.currentZoom = zoom
+    }
+
+    // Our unit marker image
+    prepareIcon (entityIcon, factionData) {
+        return L.icon(_defaults({
+            iconUrl: `${this.iconMarkerDefaults.iconUrl}/${entityIcon}-${factionData.name}.png`
+        }, this.iconMarkerDefaults))
     }
 }
 

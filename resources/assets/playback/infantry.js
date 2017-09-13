@@ -206,9 +206,7 @@ class Infantry {
         let factionData = getFactionData(entity.faction)
 
         // Our unit marker image
-        let icon = L.icon(_defaults({
-            iconUrl: `${Map.iconMarkerDefaults.iconUrl}/${entityIcon}-${factionData.name}.png`
-        }, Map.iconMarkerDefaults))
+        let icon = Map.prepareIcon(entityIcon, factionData)
 
         let marker = L.marker([0,0], { icon })
 
@@ -224,9 +222,23 @@ class Infantry {
         entity.layer = marker
     }
 
+    getEntityById (entityId) {
+        if (this.entities.hasOwnProperty(entityId))
+            return this.entities[entityId]
+        else
+            return false
+    }
+
     isPlayer (entity) {
 
         return (entity.player_id != "" && entity.player_id != "_SP_AI_") ? true : false
+    }
+
+    isPlayerByEntityId (entityId) {
+        if (!this.entities.hasOwnProperty(entityId))
+            return false
+        else
+            return this.isPlayer(this.entities[entityId])
     }
 
     // If the unit is on the map lets remove it as
@@ -265,7 +277,8 @@ class Infantry {
     }
 
     clearMarkers () {
-
+        console.log('Clearing infantry markers')
+        this.layer.clearLayers()
     }
 }
 

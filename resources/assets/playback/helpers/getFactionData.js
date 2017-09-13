@@ -34,6 +34,8 @@ const getFactionData = function (factionId) {
             break;
     }
 
+    factionData.id = factionId
+
     return factionData
 
 }
