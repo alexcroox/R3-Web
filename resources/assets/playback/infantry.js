@@ -116,7 +116,7 @@ class Infantry {
     // that positional data first, then quickly skip ahead to the time we want
     processLastKeyFrame (missionTime) {
 
-        if (missionTime == 0)
+        if (missionTime < 1)
             return
 
         if (this.positions.hasOwnProperty(missionTime) && this.positions[missionTime][0].key_frame == '1') {

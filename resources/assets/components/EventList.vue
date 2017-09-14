@@ -16,6 +16,7 @@
     import VueScrollbar from 'vue2-scrollbar'
     import bus from 'eventBus'
     import { mapGetters } from 'vuex'
+    import _each from 'lodash.foreach'
 
     import Playback from 'playback/index'
     import Infantry from 'playback/infantry'
@@ -37,7 +38,7 @@
         },
 
         created () {
-            bus.$on('notification', (message) => {
+            bus.$on('notification', message => {
 
                 if (!message.position) message.position = false
                 if (!message.entityId) message.entityId = false
@@ -53,7 +54,23 @@
 
                 this.messages.unshift({
                     ...message,
-                    missionTime: PlaybackTime.currentMissionTime - 10
+                    jumpMissionTime: PlaybackTime.currentMissionTime - 10,
+                    missionTime: PlaybackTime.currentMissionTime
+                })
+            })
+
+            // Delete any events that occur after the new mission time
+            bus.$on('skipTime', missionTime => {
+
+                console.log('Deleting messages after', missionTime)
+
+                _each(this.messages, (message, index) => {
+
+                    if (!message)
+                        return
+
+                    if (message.missionTime > missionTime)
+                        this.messages.splice(index, 1)
                 })
             })
         },
@@ -76,7 +93,7 @@
                 if (message.entityId)
                     bus.$emit('followUnit', message.entityId)
 
-                PlaybackTime.skipTime(message.missionTime)
+                PlaybackTime.skipTime(message.jumpMissionTime)
                 PlaybackTime.changeSpeed(5)
             }
         }

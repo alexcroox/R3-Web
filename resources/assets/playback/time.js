@@ -66,7 +66,8 @@ class PlaybackTime {
 
     skipTime (value) {
 
-        this.currentMissionTime = Math.round(value)
+        let newMissionTime = Math.round(value)
+        this.currentMissionTime = newMissionTime
 
         if (this.currentMissionTime < 0)
             this.currentMissionTime = 0
@@ -80,11 +81,12 @@ class PlaybackTime {
         // To avoid having to wait for up to 20 seconds for all static units to re-appear
         // we must look back in time to find our last key frame and populate the map with
         // that positional data first, then quickly skip ahead to the time we want
-        Infantry.processLastKeyFrame(Math.round(value))
-        Vehicles.processLastKeyFrame(Math.round(value))
+        Infantry.processLastKeyFrame(newMissionTime)
+        Vehicles.processLastKeyFrame(newMissionTime)
 
         this.ended = false
         bus.$emit('ended', this.ended)
+        bus.$emit('skipTime', newMissionTime)
 
         if (this.paused)
             this.play()
