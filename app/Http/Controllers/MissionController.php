@@ -19,6 +19,8 @@ class MissionController extends Controller
     {
         Carbon::setLocale(config('app.locale'));
         $this->currentTime = Carbon::now(config('app.timezone'));
+
+        $this->secondsMissionEndBlock = 20;
     }
     /**
      * @SWG\Get(
@@ -55,7 +57,7 @@ class MissionController extends Controller
             $mission->player_list = explode(",", $mission->raw_player_list);
             $mission->length_in_minutes = round($mission->last_mission_time / 60);
 
-            $mission->in_progress_block = ($mission->minutes_since_last_event < (float) Setting::get('minutesMissionEndBlock', 2)) ? true : false;
+            $mission->in_progress_block = ($mission->seconds_since_last_event < $this->secondsMissionEndBlock) ? true : false;
 
             // Generate and save a slug if required
             $mission->slug = $this->generateSlug($mission);
@@ -126,6 +128,7 @@ class MissionController extends Controller
         $missionStart->setTimezone(config('app.timezone'));
 
         $mission->minutes_since_last_event = $lastEventTime->diffInMinutes($this->currentTime);
+        $mission->seconds_since_last_event = $lastEventTime->diffInSeconds($this->currentTime);
         $mission->length_human = humanTimeDifference($lastEventTime, $missionStart);
         $mission->played_human = humanEventOccuredFromNow($missionStart);
 
@@ -191,8 +194,8 @@ class MissionController extends Controller
         $lastEventTime = Carbon::parse($getLastMissionEvent->last_event_time, 'UTC');
         $lastEventTime->setTimezone(config('app.timezone'));
 
-        $minutesSinceLastEvent = $lastEventTime->diffInMinutes($currentTime);
+        $secondsSinceLastEvent = $lastEventTime->diffInSeconds($currentTime);
 
-        return ($minutesSinceLastEvent < (int) Setting::get('minutesMissionEndBlock', 2)) ? false : true;
+        return ($secondsSinceLastEvent < 20) ? false : true;
     }
 }

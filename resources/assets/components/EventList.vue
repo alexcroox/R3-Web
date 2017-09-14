@@ -108,6 +108,6 @@
         opacity 0.6
 
     .event--self-propelled-launch
-    .projectile-propelled-launch
+    .event--projectile-launch
         background rgba(255,255,255,.6)
 </style>

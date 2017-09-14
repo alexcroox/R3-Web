@@ -39,11 +39,11 @@ class PositionController extends Controller
             switch($type) {
 
                 case "infantry":
-                    $keys = array('entity_id', 'x', 'y', 'direction', 'key_frame', 'mission_time');
+                    $keys = array('entity_id', 'x', 'y', 'direction', 'key_frame', 'is_dead', 'mission_time');
                     break;
 
                 case "vehicle":
-                    $keys = array('entity_id', 'x', 'y', 'z', 'direction', 'key_frame', 'driver', 'crew', 'cargo', 'mission_time');
+                    $keys = array('entity_id', 'x', 'y', 'z', 'direction', 'key_frame', 'driver', 'crew', 'cargo', 'is_dead', 'mission_time');
                     break;
             }
 

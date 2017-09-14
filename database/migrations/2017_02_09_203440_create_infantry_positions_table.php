@@ -20,7 +20,8 @@ class CreateInfantryPositionsTable extends Migration
             $table->float('x', 6, 1);
             $table->float('y', 6, 1);
             $table->tinyInteger('direction');
-            $table->tinyInteger('key_frame');
+            $table->tinyInteger('key_frame')->default(0);
+            $table->tinyInteger('is_dead')->default(0);
             $table->smallInteger('mission_time');
 
             $table->index('mission');

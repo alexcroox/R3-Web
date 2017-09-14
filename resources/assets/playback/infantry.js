@@ -111,6 +111,22 @@ class Infantry {
         }
     }
 
+    // To avoid having to wait for up to 20 seconds for all static units to re-appear
+    // we must look back in time to find our last key frame and populate the map with
+    // that positional data first, then quickly skip ahead to the time we want
+    processLastKeyFrame (missionTime) {
+
+        if (missionTime == 0)
+            return
+
+        if (this.positions.hasOwnProperty(missionTime) && this.positions[missionTime][0].key_frame == '1') {
+            this.processTime(missionTime)
+        } else {
+            missionTime--
+            this.processLastKeyFrame(missionTime)
+        }
+    }
+
     updateEntityPosition (posData) {
 
         // Do we know of this entity? If not ignore
@@ -139,6 +155,12 @@ class Infantry {
 
         // Update rotation
         this.setEntityRotation(entity, posData.direction)
+
+        // Is this unit dead?
+        if (entity.dead == null && posData.is_dead == '1') {
+            entity.dead = true
+            entity.layer.setOpacity(0.4)
+        }
 
         // Highlight unit?
         if (Playback.highlightUnit && Playback.highlightUnit == entity.entity_id) {

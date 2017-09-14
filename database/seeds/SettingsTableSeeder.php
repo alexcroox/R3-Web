@@ -18,11 +18,6 @@ class SettingsTableSeeder extends Seeder
         ]);
 
         DB::table('settings')->insert([
-            'key' => 'minutesMissionEndBlock',
-            'value' => 2
-        ]);
-
-        DB::table('settings')->insert([
             'key' => 'minutesMinimumMission',
             'value' => 5
         ]);

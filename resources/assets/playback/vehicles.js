@@ -112,6 +112,22 @@ class Vehicles {
         }
     }
 
+    // To avoid having to wait for up to 20 seconds for all static units to re-appear
+    // we must look back in time to find our last key frame and populate the map with
+    // that positional data first, then quickly skip ahead to the time we want
+    processLastKeyFrame (missionTime) {
+
+        if (missionTime == 0)
+            return
+
+        if (this.positions.hasOwnProperty(missionTime) && this.positions[missionTime][0].key_frame == '1') {
+            this.processTime(missionTime)
+        } else {
+            missionTime--
+            this.processLastKeyFrame(missionTime)
+        }
+    }
+
     updateEntityPosition (posData) {
 
         // Do we know of this entity? If not ignore
@@ -170,6 +186,15 @@ class Vehicles {
 
         // Update rotation
         this.setEntityRotation(vehicleEntity, posData.direction)
+
+        // Is this unit dead? This helps when skipping back and forth through time
+        if (vehicleEntity.dead == null && posData.is_dead == '1') {
+            vehicleEntity.dead = true
+            vehicleEntity.layer.setOpacity(0.4)
+        } else if (vehicleEntity.dead != null && posData.is_dead == '0') {
+            vehicleEntity.dead = null
+            vehicleEntity.layer.setOpacity(1)
+        }
 
         // Update label
         vehicleEntity.layer.setTooltipContent(calculateVehicleLabel(driver, crew, cargo))
