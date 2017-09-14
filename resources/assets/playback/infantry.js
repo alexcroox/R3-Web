@@ -240,6 +240,7 @@ class Infantry {
     }
 
     getEntityById (entityId) {
+
         if (this.entities.hasOwnProperty(entityId))
             return this.entities[entityId]
         else
@@ -252,10 +253,13 @@ class Infantry {
     }
 
     isPlayerByEntityId (entityId) {
-        if (!this.entities.hasOwnProperty(entityId))
+
+        let entity = this.getEntityById(entityId)
+
+        if (!entity)
             return false
         else
-            return this.isPlayer(this.entities[entityId])
+            return this.isPlayer(entity)
     }
 
     // If the unit is on the map lets remove it as

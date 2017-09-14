@@ -5,7 +5,7 @@
             <h1 class="fullscreen-loader__title">{{ title }}</h1>
             <p v-if="title != ''" class="fullscreen-loader__sub-title">{{ subTitle }}</p>
 
-            <span class="fullscreen-loader__icon"></span>
+            <loader></loader>
 
             <p class="fullscreen-loader__text">{{ text }}</p>
         </div>
@@ -14,16 +14,15 @@
 </template>
 
 <script>
+    import Loader from 'components/Loader.vue'
+
     export default {
 
         props: ['text', 'title', 'subTitle'],
 
-        watch: {
-
-            text () {
-
-            }
-        }
+        components: {
+            Loader,
+        },
     }
 </script>
 
@@ -55,13 +54,6 @@
         font-weight 500
         color #AAA
 
-    .fullscreen-loader__icon
-        width 17px
-        height 26px
-        background url('~images/map/loading-icon.png') no-repeat center center
-        display inline-block
-        animation fullscreenLoaderIconMotion 5s cubic-bezier(0.770,  0.000, 0.175, 1.000) infinite
-
     .fullscreen-loader__text
         color #fff
         margin-top 5px
@@ -69,35 +61,4 @@
         font-size 12px
         font-weight 500
         text-transform uppercase
-
-    @keyframes fullscreenLoaderIconMotion
-        0%
-            transform translateX(0) scale(1) rotate(85deg)
-        8%
-            transform translateX(0) scale(1) rotate(0deg)
-        16%
-            transform translateX(0) scale(1) rotate(85deg)
-
-        24%
-            transform translateX(50px) scale(0.3) rotate(85deg)
-        32%
-            transform translateX(50px) scale(0.3) rotate(0deg)
-        40%
-            transform translateX(50px) scale(0.3) rotate(-85deg)
-
-        48%
-            transform translateX(0) scale(1) rotate(-85deg)
-        56%
-            transform translateX(0) scale(1) rotate(85deg)
-        64%
-            transform translateX(0) scale(1) rotate(-85deg)
-
-        72%
-            transform translateX(-50px) scale(0.3) rotate(-85deg)
-        80%
-            transform translateX(-50px) scale(0.3) rotate(0deg)
-        88%
-            transform translateX(-50px) scale(0.3) rotate(85deg)
-        100%
-            transform translateX(0) scale(1) rotate(85deg)
 </style>

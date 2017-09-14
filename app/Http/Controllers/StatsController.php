@@ -177,6 +177,20 @@ class StatsController extends Controller
                                 ->orderBy('distance', 'desc')
                                 ->first();
 
+        $stats['favouriteWeapon'] = Infantry::select('infantry.weapon', DB::raw('count(infantry.weapon) as total'))
+                                            ->where('player_id', $playerId)
+                                            ->where('weapon', '<>', '')
+                                            ->groupBy('infantry.weapon')
+                                            ->orderBy('total', 'desc')
+                                            ->get();
+
+        $stats['favouriteLauncher'] = Infantry::select('infantry.launcher', DB::raw('count(infantry.launcher) as total'))
+                                            ->where('player_id', $playerId)
+                                            ->where('launcher', '<>', '')
+                                            ->groupBy('infantry.launcher')
+                                            ->orderBy('total', 'desc')
+                                            ->get();
+
         $stats['fireTeams'] = Infantry::select('infantry.group', DB::raw('count(infantry.group) as total'))
                                             ->where('player_id', $playerId)
                                             ->groupBy('infantry.group')

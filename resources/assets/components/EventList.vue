@@ -7,7 +7,7 @@
                 v-html="m.message"
                 class="event"
                 @click="jumpToEvent(m)"
-                :class="[`event--${m.type}`]"></button>
+                :class="[`event--${m.type}`, {'event--is-user': m.isUser}]"></button>
         </div>
     </vue-scrollbar>
 </template>
@@ -15,8 +15,10 @@
 <script>
     import VueScrollbar from 'vue2-scrollbar'
     import bus from 'eventBus'
+    import { mapGetters } from 'vuex'
 
     import Playback from 'playback/index'
+    import Infantry from 'playback/infantry'
     import PlaybackTime from 'playback/time'
     import InputText from 'components/InputText.vue'
     import Map from 'playback/map'
@@ -40,11 +42,28 @@
                 if (!message.position) message.position = false
                 if (!message.entityId) message.entityId = false
 
+                // Check if this message involves our user
+                if (message.entityId) {
+
+                    let entity = Infantry.getEntityById(message.entityId)
+
+                    if (entity.player_id == this.playerId)
+                        message.isUser = true
+                }
+
                 this.messages.unshift({
                     ...message,
                     missionTime: PlaybackTime.currentMissionTime - 10
                 })
             })
+        },
+
+        computed: {
+
+            ...mapGetters([
+                'playerId'
+            ]),
+
         },
 
         methods: {
@@ -97,6 +116,8 @@
         opacity 0
 
     .event--info
+    .event--self-propelled-launch
+    .event--projectile-launch
         background rgba(255,255,255,.6)
         color #333
 
@@ -107,7 +128,6 @@
         background rgba(255,0,0,.6)
         opacity 0.6
 
-    .event--self-propelled-launch
-    .event--projectile-launch
-        background rgba(255,255,255,.6)
+    .event--is-user
+        background #6D62AE
 </style>
