@@ -1,4 +1,5 @@
 import Infantry from '../infantry'
+import Playback from '../index'
 import _each from 'lodash.foreach'
 
 // Return a string containing driver, crew and vehicle text where applicable
@@ -8,6 +9,8 @@ const calculateVehicleLabel = function (driver, crew, cargo) {
     let driverLabel = ''
     let crewLabel = ''
     let cargoLabel = ''
+
+    let highlightUnitClass = 'map__label__vehicle--highlight-unit'
 
     // AI driver, players as passengers
     if (
@@ -25,8 +28,9 @@ const calculateVehicleLabel = function (driver, crew, cargo) {
     _each(crew, crewEntityId => {
         if (crewEntityId != driver.entity_id) {
             let crewEntity = Infantry.getEntityById(crewEntityId)
+            let highlightClass = (crewEntityId == Playback.highlightUnit)? highlightUnitClass : ''
             crewLabel += `
-                <span class="map__label map__label__vehicle__crew__unit">
+                <span class="map__label map__label__vehicle__crew__unit ${highlightClass}">
                     ${crewEntity.name}
                 </span>`
         }
@@ -35,17 +39,20 @@ const calculateVehicleLabel = function (driver, crew, cargo) {
     // Add cargo to the label
     _each(cargo, cargoEntityId => {
         let cargoEntity = Infantry.getEntityById(cargoEntityId)
+        let highlightClass = (cargoEntity == Playback.highlightUnit)? highlightUnitClass : ''
         cargoLabel += `
-            <span class="map__label map__label__vehicle__cargo__unit">
+            <span class="map__label map__label__vehicle__cargo__unit ${highlightClass}">
                 ${cargoEntity.name}
             </span>`
     })
 
-    if (driverLabel != '')
+    if (driverLabel != '') {
+        let highlightClass = (driver.entity_id == Playback.highlightUnit)? highlightUnitClass : ''
         label += `
-            <span class="map__label map__label__vehicle--driver">
+            <span class="map__label map__label__vehicle--driver ${highlightClass}">
                 ${driverLabel}
             </span>`
+    }
 
     if (crewLabel != '')
         label += `

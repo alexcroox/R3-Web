@@ -157,16 +157,19 @@ class Infantry {
         this.setEntityRotation(entity, posData.direction)
 
         // Is this unit dead?
+        // Is this unit dead? This helps when skipping back and forth through time
         if (entity.dead == null && posData.is_dead == '1') {
             entity.dead = true
             entity.layer.setOpacity(0.4)
+        } else if (entity.dead != null && posData.is_dead == '0') {
+            entity.dead = null
+            entity.layer.setOpacity(1)
         }
 
         // Highlight unit?
         if (Playback.highlightUnit && Playback.highlightUnit == entity.entity_id) {
 
-            let tooltip = entity.layer.getTooltip().getElement()
-            tooltip.classList.add('map__label--highlighted')
+            this.highlightUnit(entity.entity_id)
 
             // Lets not continue panning to the unit if the user wants to look around the map
             if (Playback.trackingHighlightedUnit) {
@@ -186,6 +189,17 @@ class Infantry {
             Map.setView(mapPosition, 4)
             Playback.centeredOnFirstPlayer = true
         }
+    }
+
+    highlightUnit (entityId) {
+
+        let entity = this.getEntityById(entityId)
+
+        if (!entity)
+            return
+
+        let tooltip = entity.layer.getTooltip().getElement()
+        tooltip.classList.add('map__label--highlighted')
     }
 
     stopHighlightingUnit (entityId) {
@@ -227,10 +241,10 @@ class Infantry {
 
         let marker = L.marker([0,0], { icon })
 
-        let label = (this.isPlayer(entity)) ? entity.name : entity.entity_id
+        let label = (this.isPlayer(entity)) ? entity.name : ''
 
         if (label)
-            marker.bindTooltip(`${label}`, {
+            marker.bindTooltip(`<span class="map__label__text">${label}</span>`, {
                 className: `map__label map__label__infantry`
             })
 

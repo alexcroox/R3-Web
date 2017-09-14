@@ -76,6 +76,7 @@ class Playback {
 
         this.highlightUnit = entityId
         this.trackingHighlightedUnit = true
+        Infantry.highlightUnit(entityId)
     }
 
     stopHighlightingUnit (entityId) {

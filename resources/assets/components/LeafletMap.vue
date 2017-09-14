@@ -89,6 +89,7 @@
         display block
 
     .map__label--highlighted .map__label__text
+    .map__label__vehicle--highlight-unit
         color #FFF
         background rgba(0,0,0,.5)
         padding 0 6px
