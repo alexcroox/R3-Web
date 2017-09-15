@@ -13,7 +13,9 @@ use Setting;
 
 class MissionController extends Controller
 {
-    private $selectPlayerCount = "COUNT(distinct infantry.player_id) as player_count, GROUP_CONCAT(infantry.player_id SEPARATOR ',') as raw_player_list";
+    private $selectPlayerCount = "
+        COUNT(distinct infantry.player_id) as player_count,
+        GROUP_CONCAT(IF(infantry.player_id='', NULL, infantry.player_id) SEPARATOR ',') as raw_player_list";
 
     public function __construct()
     {
@@ -54,7 +56,6 @@ class MissionController extends Controller
             // Generate extra data for consumption
             $mission = $this->setHumanTimes($mission);
 
-            $mission->player_list = explode(",", $mission->raw_player_list);
             $mission->length_in_minutes = round($mission->last_mission_time / 60);
 
             $mission->in_progress_block = ($mission->seconds_since_last_event < $this->secondsMissionEndBlock) ? true : false;
@@ -115,7 +116,6 @@ class MissionController extends Controller
      */
     public function fetchAll()
     {
-
         return Mission::orderBy('id', 'desc')->get();
     }
 

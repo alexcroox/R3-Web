@@ -3,11 +3,6 @@
         class="player-list__container"
         :class="{ 'player-list__container--hide': hidden }">
 
-        <router-link to="/" class="player-list__back">
-            <i class="fa fa-arrow-left player-list__back__icon"></i>
-            Mission list
-        </router-link>
-
         <button
             @click="toggleHide"
             class="player-list__toggle-sticky"
@@ -274,7 +269,7 @@
 
     .player-list__container
         left 0
-        top 0
+        top $headerHeight
         bottom 0
         width 186px
         color #FFF
@@ -333,7 +328,7 @@
         padding 10px 10px 10px 10px
         overflow hidden
         position absolute
-        top 36px
+        top 0
         bottom 40%
         right 0
         left 0

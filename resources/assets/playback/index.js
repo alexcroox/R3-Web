@@ -3,6 +3,7 @@ import bus from 'eventBus'
 
 import Infantry from './infantry'
 import Vehicles from './vehicles'
+import Time from './time'
 
 class Playback {
 
@@ -26,6 +27,7 @@ class Playback {
                     console.log('Playback: Got mission info', response.data)
 
                     this.missionInfo = response.data
+                    Time.currentMissionTime = 0
 
                     resolve(response.data)
                 })

@@ -1,6 +1,8 @@
 <template>
     <div class="playback__container">
 
+        <main-header v-if="!loading" :title="missionName" fixed="true"></main-header>
+
         <transition name="fade">
             <full-screen-loader
                 v-if="loading"
@@ -62,6 +64,7 @@
     import MapBox from 'components/MapBox.vue'
     import ShareModal from 'views/modals/ShareModal.vue'
     import PlayerList from 'components/PlayerList.vue'
+    import MainHeader from 'components/MainHeader.vue'
 
     import Playback from 'playback/index'
     import PlaybackTime from 'playback/time'
@@ -80,6 +83,7 @@
             MapBox,
             ShareModal,
             PlayerList,
+            MainHeader,
         },
 
         props: ['urlData'],
@@ -450,6 +454,7 @@
         display flex
         align-items center
         padding 0 10px
+        z-index 2
 
         @media (max-width 900px)
             left 10px
