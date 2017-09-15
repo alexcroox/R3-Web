@@ -1,5 +1,5 @@
 <template>
-    <container>
+    <container class="margin__bottom--large">
         <list-search
             :title="ucfirst($t('players'))"
             :listTotal="listData.length"

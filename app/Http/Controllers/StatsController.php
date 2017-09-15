@@ -106,7 +106,7 @@ class StatsController extends Controller
         foreach($stats as $stat) {
 
             // Generate extra data for consumption
-            $lastSeen = Carbon::parse($stat->last_seen);
+            $lastSeen = Carbon::parse($stat->last_seen, 'UTC');
             $lastSeen->setTimezone(config('app.timezone'));
 
             $stat->last_seen_human = $lastSeen->diffForHumans();
@@ -148,70 +148,118 @@ class StatsController extends Controller
         if($stats['missionCount'] == 0)
             return response()->json(['error' => 'Player Not Found'], 404);
 
-        $stats['bio'] = Infantry::select('name')
-                                    ->where('player_id', $playerId)
-                                    ->orderBy('mission', 'desc')
-                                    ->first();
+        $stats['bio'] = DB::table('infantry')
+            ->select('infantry.name', 'missions.last_event_time')
+            ->where('player_id', $playerId)
+            ->leftJoin('missions', 'missions.id', '=', 'infantry.mission')
+            ->orderBy('mission', 'desc')
+            ->first();
+
+        $lastPlayed = Carbon::parse($stats['bio']->last_event_time, 'UTC');
+        $lastPlayed->setTimezone(config('app.timezone'));
+        $stats['bio']->last_played_human = humanEventOccuredFromNow($lastPlayed);
 
         $stats['kills'] = DB::table('events_downed')
-                                ->select(DB::raw('count(events_downed.mission) as total'))
-                                ->join('infantry', 'events_downed.entity_attacker', '=', 'infantry.entity_id')
-                                ->where('infantry.player_id', $playerId)
-                                ->where('events_downed.type', 'killed')
-                                ->orderBy('total', 'desc')
-                                ->first();
+            ->select(DB::raw('count(events_downed.mission) as total'))
+            ->leftJoin('infantry', function($join)
+            {
+                $join->on('events_downed.entity_attacker', '=', 'infantry.entity_id');
+                $join->on('events_downed.mission', '=', 'infantry.mission');
+            })
+            ->where('infantry.player_id', $playerId)
+            ->where('events_downed.type', 'killed')
+            ->orderBy('total', 'desc')
+            ->first();
 
         $stats['deaths'] = DB::table('events_downed')
-                                ->select(DB::raw('count(events_downed.mission) as total'))
-                                ->join('infantry', 'events_downed.entity_victim', '=', 'infantry.entity_id')
-                                ->where('infantry.player_id', $playerId)
-                                ->where('events_downed.type', 'killed')
-                                ->orderBy('total', 'desc')
-                                ->first();
+            ->select(DB::raw('count(events_downed.mission) as total'))
+            ->leftJoin('infantry', function($join)
+            {
+                $join->on('events_downed.entity_victim', '=', 'infantry.entity_id');
+                $join->on('events_downed.mission', '=', 'infantry.mission');
+            })
+            ->where('infantry.player_id', $playerId)
+            ->where('events_downed.type', 'killed')
+            ->orderBy('total', 'desc')
+            ->first();
 
         $stats['kills']->longest = DB::table('events_downed')
-                                ->select('distance')
-                                ->join('infantry', 'events_downed.entity_attacker', '=', 'infantry.entity_id')
-                                ->where('infantry.player_id', $playerId)
-                                ->where('events_downed.type', 'killed')
-                                ->orderBy('distance', 'desc')
-                                ->first();
+            ->select('distance')
+            ->leftJoin('infantry', function($join)
+            {
+                $join->on('events_downed.entity_attacker', '=', 'infantry.entity_id');
+                $join->on('events_downed.mission', '=', 'infantry.mission');
+            })
+            ->where('infantry.player_id', $playerId)
+            ->where('events_downed.type', 'killed')
+            ->orderBy('distance', 'desc')
+            ->first();
 
-        $stats['favouriteWeapon'] = Infantry::select('infantry.weapon', DB::raw('count(infantry.weapon) as total'))
-                                            ->where('player_id', $playerId)
-                                            ->where('weapon', '<>', '')
-                                            ->groupBy('infantry.weapon')
-                                            ->orderBy('total', 'desc')
-                                            ->get();
+        $stats['kills']->friendlyFire = DB::table('events_downed')
+            ->select(DB::raw('count(events_downed.mission) as total'))
+            ->leftJoin('infantry', function($join)
+            {
+                $join->on('events_downed.entity_attacker', '=', 'infantry.entity_id');
+                $join->on('events_downed.mission', '=', 'infantry.mission');
+            })
+            ->where('infantry.player_id', $playerId)
+            ->where('events_downed.type', 'killed')
+            ->where('events_downed.same_faction', 1)
+            ->orderBy('total', 'desc')
+            ->first();
 
-        $stats['favouriteLauncher'] = Infantry::select('infantry.launcher', DB::raw('count(infantry.launcher) as total'))
-                                            ->where('player_id', $playerId)
-                                            ->where('launcher', '<>', '')
-                                            ->groupBy('infantry.launcher')
-                                            ->orderBy('total', 'desc')
-                                            ->get();
+        $stats['kills']->civilianCasualties = DB::table('events_downed')
+            ->select(DB::raw('count(events_downed.mission) as total'))
+            ->leftJoin('infantry as i1', function($join)
+            {
+                $join->on('events_downed.entity_attacker', '=', 'i1.entity_id');
+                $join->on('events_downed.mission', '=', 'i1.mission');
+            })
+            ->leftJoin('infantry as i2', function($join)
+            {
+                $join->on('events_downed.entity_victim', '=', 'i2.entity_id');
+                $join->on('events_downed.mission', '=', 'i2.mission');
+            })
+            ->where('i1.player_id', $playerId)
+            ->where('events_downed.type', 'killed')
+            ->whereRaw('i1.faction <> i2.faction')
+            ->where('i2.faction', 3)
+            ->first();
+
+        $stats['favouriteWeapons'] = DB::table('events_downed')
+            ->select('events_downed.weapon', DB::raw('count(events_downed.weapon) as total'))
+            ->leftJoin('infantry', function($join)
+            {
+                $join->on('events_downed.entity_attacker', '=', 'infantry.entity_id');
+                $join->on('events_downed.mission', '=', 'infantry.mission');
+            })
+            ->where('infantry.player_id', $playerId)
+            ->where('events_downed.type', 'killed')
+            ->groupBy('events_downed.weapon')
+            ->orderBy('total', 'desc')
+            ->get(10);
 
         $stats['fireTeams'] = Infantry::select('infantry.group', DB::raw('count(infantry.group) as total'))
-                                            ->where('player_id', $playerId)
-                                            ->groupBy('infantry.group')
-                                            ->orderBy('total', 'desc')
-                                            ->get();
+            ->where('player_id', $playerId)
+            ->groupBy('infantry.group')
+            ->orderBy('total', 'desc')
+            ->get();
 
         $stats['classes'] = Infantry::select('class', DB::raw('count(class) as total, ANY_VALUE(icon) as icon'))
-                                            ->where('player_id', $playerId)
-                                            ->groupBy('class')
-                                            ->orderBy('total', 'desc')
-                                            ->get();
+            ->where('player_id', $playerId)
+            ->groupBy('class')
+            ->orderBy('total', 'desc')
+            ->get();
 
         foreach($stats['classes'] as $class) {
             $class->iconUrl = config('r3.iconDomain') . '/' . $class['icon'] . '-west-trim.png';
         }
 
         $stats['factionCount'] = Infantry::select('faction', DB::raw('count(faction) as total'))
-                                            ->where('player_id', $playerId)
-                                            ->groupBy('faction')
-                                            ->orderBy('total', 'desc')
-                                            ->get();
+            ->where('player_id', $playerId)
+            ->groupBy('faction')
+            ->orderBy('total', 'desc')
+            ->get();
 
         foreach($stats['factionCount'] as $faction) {
             $faction->factionData = getFactionData($faction['faction']);

@@ -2,6 +2,9 @@
     <div class="margin__bottom--large">
         <container v-if="validPlayer && playerId && !changePlayerId && stats.bio">
             <h1>{{ stats.bio.name }}</h1>
+
+            <h3>Last seen: {{ stats.bio.last_played_human }}</h3>
+
             <h3>Total missions: {{ stats.missionCount }}</h3>
 
             <h3>Total kills: {{ stats.kills.total }}</h3>
@@ -9,6 +12,10 @@
             <h3>Total deaths: {{ stats.deaths.total }}</h3>
 
             <h3>Longest kill: {{ stats.kills.longest.distance }}m</h3>
+
+            <h3>Friendly Fire incidents: {{ stats.kills.friendlyFire.total }}</h3>
+
+            <h3>Civilian casualties: {{ stats.kills.civilianCasualties.total }}</h3>
 
             <div>
                 <h3>Most played factions</h3>
@@ -45,24 +52,12 @@
             </div>
 
              <div>
-                <h3>Most used primary weapons</h3>
-                <span v-if="!stats.favouriteWeapon.length">No weapons held yet</span>
+                <h3>Favourite weapons</h3>
+                <span v-if="!stats.favouriteWeapons.length">No kills yet!</span>
                 <ul v-else>
-                    <li v-for="weapon in stats.favouriteWeapon">
+                    <li v-for="weapon in stats.favouriteWeapons">
                         <span>
                             {{ weapon.weapon }} -  {{ weapon.total }}
-                        </span>
-                    </li>
-                </ul>
-            </div>
-
-            <div>
-                <h3>Most used launchers</h3>
-                <span v-if="!stats.favouriteLauncher.length">No launchers used yet</span>
-                <ul v-else>
-                    <li v-for="launcher in stats.favouriteLauncher">
-                        <span>
-                            {{ launcher.launcher }} -  {{ launcher.total }}
                         </span>
                     </li>
                 </ul>
