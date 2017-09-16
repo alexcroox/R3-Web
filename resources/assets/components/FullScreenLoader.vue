@@ -49,7 +49,7 @@
 
     .fullscreen-loader__sub-title
         text-transform uppercase
-        margin-bottom 70px
+        margin-bottom 25px
         margin-top 10px
         font-weight 500
         color #AAA

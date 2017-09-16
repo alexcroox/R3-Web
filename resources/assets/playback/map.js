@@ -36,6 +36,7 @@ class Map {
             iconAnchor: [15, 15],
             iconUrl: ''
         }
+        this.icons = {}
     }
 
     render (terrainConfig, tileDomain, iconDomain) {
@@ -114,6 +115,16 @@ class Map {
             iconUrl: `${this.iconMarkerDefaults.iconUrl}/${entityIcon}-${factionData.name}.png`,
             className
         }, this.iconMarkerDefaults))
+    }
+
+    getUnitIcon (iconPath, defaultIcon) {
+
+        let icon = `${defaultIcon}`
+
+        if (iconPath && this.icons.hasOwnProperty(iconPath.toLowerCase()))
+            icon = `${this.icons[iconPath.toLowerCase()]}`
+
+        return icon
     }
 }
 

@@ -1,8 +1,6 @@
 <template>
     <div class="playback__container">
 
-        <main-header v-if="!loading" :title="missionName" fixed="true"></main-header>
-
         <transition name="fade">
             <full-screen-loader
                 v-if="loading"
@@ -15,6 +13,8 @@
         <leaflet-map
             :terrainConfig="terrainConfig">
         </leaflet-map>
+
+        <main-header v-if="!loading" :title="missionName" fixed="true"></main-header>
 
         <player-list v-if="!loading"></player-list>
 
@@ -110,9 +110,9 @@
                         complete: false,
                         text: 'Loading terrain'
                     },
-                    vehicleIcons: {
+                    unitIcons: {
                         complete: false,
-                        text: 'Loading vehicle icons'
+                        text: 'Loading unit icons'
                     },
                     missionInfo: {
                         complete: false,
@@ -165,7 +165,7 @@
             });
 
             this.getTerrainInfo()
-            this.getVehicleIcons()
+            this.getUnitIcons()
             this.fetchMissionInfo()
         },
 
@@ -231,21 +231,21 @@
                     })
             },
 
-            getVehicleIcons () {
+            getUnitIcons () {
 
                 axios.get(`${this.iconDomain}/config.json`)
                     .then(response => {
 
-                        console.log('Playback: Got vehicle icons', response.data);
+                        console.log('Playback: Got unit icons', response.data);
 
-                        Vehicles.icons = response.data
+                        Map.icons = response.data
 
-                        this.completeLoadingStage('vehicleIcons')
+                        this.completeLoadingStage('unitIcons')
                     })
                     .catch(error => {
-                        console.error('Error fetching vehicle icon config', error)
+                        console.error('Error fetching unit icon config', error)
 
-                        this.errorReturnToMissionList('Cannot download vehicle icons, please try again')
+                        this.errorReturnToMissionList('Cannot download unit icons, please try again')
                     })
             },
 

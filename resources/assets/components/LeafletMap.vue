@@ -88,11 +88,15 @@
     .map__label__text
         display block
 
+    .map__label--highlighted
+        z-index 7
+
     .map__label--highlighted .map__label__text
     .map__label__vehicle--highlight-unit
         color #FFF
         background rgba(0,0,0,.5)
         padding 0 6px
+        z-index 7
 
     .projectile__missile
     .projectile__rocket

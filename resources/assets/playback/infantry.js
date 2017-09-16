@@ -233,7 +233,7 @@ class Infantry {
 
     addEntityToMap (entity) {
 
-        let entityIcon = entity.icon
+        let entityIcon = Map.getUnitIcon(entity.icon, entity.icon)
         let factionData = getFactionData(entity.faction)
 
         // Our unit marker image

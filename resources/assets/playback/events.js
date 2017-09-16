@@ -26,9 +26,9 @@ class PlaybackEvents {
             axios.get(`/events/${missionId}`)
                 .then(response => {
 
-                    console.log('Events: Got mission events', response.data.length)
-
                     this.list = _groupBy(response.data, (event) => { return event.mission_time })
+
+                    console.log('Events: Got mission events', this.list)
 
                     resolve()
                 })
@@ -45,6 +45,8 @@ class PlaybackEvents {
         if (this.list.hasOwnProperty(missionTime)) {
 
             _each(this.list[missionTime], event => {
+
+                console.log(event.type, event)
 
                 switch (event.type) {
 
@@ -106,20 +108,22 @@ class PlaybackEvents {
 
     killed (event) {
 
-        let attacker = Playback.findEntity(event.entity_attacker, true)
-        let victim = Playback.findEntity(event.entity_victim, true)
+        let attacker = Playback.findEntity(event.entity_attacker, false)
+        let attackerOnMap = Playback.findEntity(event.entity_attacker, true)
+        let victim = Playback.findEntity(event.entity_victim, false)
+        let victimOnMap = Playback.findEntity(event.entity_victim, true)
 
         // Draw a kill line between attacker and victim if
         // both exist on the map
-        if (attacker && victim) {
+        if (attackerOnMap && victimOnMap) {
 
-            let lineData = [attacker.layer.getLatLng(), victim.layer.getLatLng()]
+            let lineData = [attackerOnMap.layer.getLatLng(), victimOnMap.layer.getLatLng()]
 
-            // Work out our attacker faction's line color
-            let factionData = getFactionData(attacker.faction);
+            // Work out our attackerOnMap faction's line color
+            let factionData = getFactionData(attackerOnMap.faction);
             let lineColor = factionData.color;
 
-            // Draw a line between attacker and victim
+            // Draw a line between attackerOnMap and victimOnMap
             let killLine = L.polyline(lineData, {
                 color: lineColor,
                 weight: 1,
@@ -130,7 +134,7 @@ class PlaybackEvents {
 
             let trackAnchorLine = () => {
 
-                let lineData = [attacker.layer.getLatLng(), victim.layer.getLatLng()]
+                let lineData = [attackerOnMap.layer.getLatLng(), victimOnMap.layer.getLatLng()]
 
                 killLine.setLatLngs(lineData)
 
@@ -145,39 +149,39 @@ class PlaybackEvents {
             trackAnchorLine()
 
             if (event.type == "unconscious")
-                victim.unconscious = true
+                victimOnMap.unconscious = true
             else if (event.type == "killed")
-                victim.dead = true
+                victimOnMap.dead = true
 
-            victim.layer.setOpacity(0.4)
-
-            // If an AI was killed by a player or vice versa show notification
-            if (!victim.isPlayer && !attacker.isPlayer)
-                return
-
-            let type = (victim.isPlayer)? 'kill-player' : 'kill-ai'
-
-            // Position is used to focus on the victim if the event is clicked and
-            // we time travel to focus on the event
-            let position = victim.layer.getLatLng()
-            let entityId = (victim.isPlayer)? victim.entity_id : attacker.entity_id
-
-            let victimName = (victim.isPlayer)? victim.name : victim.class
-            let victimHighlightClass = (victim.isPlayer)? 'uppercase' : ''
-
-            let attackerName = (attacker.isPlayer)? attacker.name : attacker.class
-            let attackerHighlightClass = (attacker.isPlayer)? 'uppercase' : ''
-
-            bus.$emit('notification', {
-                message: `
-                    <span class="${victimHighlightClass}">${victimName}</span>
-                    was killed by
-                    <span class="${attackerHighlightClass}">${attackerName}</span>`,
-                type,
-                position,
-                entityId
-            })
+            victimOnMap.layer.setOpacity(0.4)
         }
+
+        // If an AI was killed by a player or vice versa show notification
+        if (!victim.isPlayer && !attacker.isPlayer)
+            return
+
+        let type = (victim.isPlayer)? 'kill-player' : 'kill-ai'
+
+        // Position is used to focus on the victim if the event is clicked and
+        // we time travel to focus on the event
+        let position = victim.layer.getLatLng()
+        let entityId = (victim.isPlayer)? victim.entity_id : attacker.entity_id
+
+        let victimName = (victim.isPlayer)? victim.name : victim.class
+        let victimHighlightClass = (victim.isPlayer)? 'uppercase' : ''
+
+        let attackerName = (attacker.isPlayer)? attacker.name : attacker.class
+        let attackerHighlightClass = (attacker.isPlayer)? 'uppercase' : ''
+
+        bus.$emit('notification', {
+            message: `
+                <span class="${victimHighlightClass}">${victimName}</span>
+                was killed by
+                <span class="${attackerHighlightClass}">${attackerName}</span>`,
+            type,
+            position,
+            entityId
+        })
     }
 
     // Missile or rocket launch

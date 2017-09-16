@@ -20,7 +20,6 @@ class Vehicles {
         this.entities = {}
         this.positions = {}
         this.playersInVehicles = {}
-        this.icons = {}
         this.timeLastSeenKeyFrame = 10
         this.layer
     }
@@ -145,7 +144,7 @@ class Vehicles {
             driver = {...emptyEntity}
 
         if (vehicleEntity.customIcon == null)
-            vehicleEntity.customIcon = this.getVehicleIcon(vehicleEntity.icon_path, vehicleEntity.icon)
+            vehicleEntity.customIcon = Map.getUnitIcon(vehicleEntity.icon_path, vehicleEntity.icon)
 
         let factionData = getFactionData(driver.faction)
 
@@ -242,16 +241,6 @@ class Vehicles {
     // Infantry has gotten out of vehicle, let's remove them as being in a vehicle
     getOut (entityId) {
         delete this.playersInVehicles[entityId]
-    }
-
-    getVehicleIcon (iconPath, defaultIcon) {
-
-        let icon = `${defaultIcon}`
-
-        if (iconPath && this.icons.hasOwnProperty(iconPath.toLowerCase()))
-            icon = `${this.icons[iconPath.toLowerCase()]}`
-
-        return icon
     }
 
     initMapLayer () {
