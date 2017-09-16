@@ -4,6 +4,7 @@
         <div class="fullscreen-loader__content">
             <h1 class="fullscreen-loader__title">{{ title }}</h1>
             <p v-if="title != ''" class="fullscreen-loader__sub-title">{{ subTitle }}</p>
+            <p v-if="author" class="fullscreen-loader__author">by {{ author }}</p>
 
             <loader></loader>
 
@@ -18,7 +19,7 @@
 
     export default {
 
-        props: ['text', 'title', 'subTitle'],
+        props: ['text', 'title', 'subTitle', 'author'],
 
         components: {
             Loader,
@@ -53,6 +54,11 @@
         margin-top 10px
         font-weight 500
         color #AAA
+
+    .fullscreen-loader__author
+        margin-top -10px
+        margin-bottom 25px
+        color #CCC
 
     .fullscreen-loader__text
         color #fff

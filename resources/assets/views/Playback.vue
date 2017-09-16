@@ -6,6 +6,7 @@
                 v-if="loading"
                 :text="currentLoadingStage"
                 :title="missionName"
+                :author="missionAuthor"
                 :subTitle="terrainConfig.name">
             </full-screen-loader>
         </transition>
@@ -14,7 +15,7 @@
             :terrainConfig="terrainConfig">
         </leaflet-map>
 
-        <main-header v-if="!loading" :title="missionName" fixed="true"></main-header>
+        <main-header v-if="!loading" :title="missionName" wide="true" fixed="true"></main-header>
 
         <player-list v-if="!loading"></player-list>
 
@@ -94,6 +95,7 @@
                 terrainConfig: {},
                 missionId: this.urlData.params.id,
                 missionName: '',
+                missionAuthor: false,
                 currentSpeed: this.$store.state.preference.playbackSpeed || 10,
                 shareLink: '',
                 paused: true,
@@ -256,6 +258,9 @@
                     PlaybackTime.initScrubber(0, missionInfo.last_mission_time)
                     this.missionName = (missionInfo.display_name != "")? missionInfo.display_name : missionInfo.name
                     this.missionPlayed = missionInfo.played_human
+
+                    if (missionInfo.author != "")
+                        this.missionAuthor = missionInfo.author
 
                     this.completeLoadingStage('missionInfo')
 

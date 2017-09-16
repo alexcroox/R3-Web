@@ -34,7 +34,6 @@
         padding 0 0 0 25px
         border none
         background none
-        position absolute
         user-select none
         pointer-events none
         white-space nowrap
@@ -43,6 +42,10 @@
 
     .map__label:before
         display none
+
+    .map__label--is-dead
+        opacity 0.4
+        display block
 
     .map__label__poi
         padding 0

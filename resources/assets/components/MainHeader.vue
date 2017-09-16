@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ 'header--fixed': fixed }">
+    <div :class="[{ 'header--fixed': fixed }, { 'header--wide': wide }]">
         <header>
             <h1>
                 <router-link :to="{ name: 'missions.list' }" class="header__logo-link">{{ title }}</router-link>
@@ -91,7 +91,7 @@
             PreferencesModal
         },
 
-        props: ['title', 'fixed'],
+        props: ['title', 'fixed', 'wide'],
 
         data () {
 
@@ -133,6 +133,10 @@
         left 0
         right 0
         z-index 3
+
+    .header--wide header
+        padding-left 20px
+        padding-right 20px
 
     .header__logo-link
         color #FFF

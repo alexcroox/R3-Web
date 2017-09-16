@@ -3,7 +3,7 @@ import Playback from '../index'
 import _each from 'lodash.foreach'
 
 // Return a string containing driver, crew and vehicle text where applicable
-const calculateVehicleLabel = function (driver, crew, cargo) {
+const calculateVehicleLabel = function (driver, crew, cargo, isDead) {
 
     let label = ' '
     let driverLabel = ''
@@ -65,6 +65,9 @@ const calculateVehicleLabel = function (driver, crew, cargo) {
             <span class="map__label__vehicle__cargo">
                 ${cargoLabel}
             </span>`
+
+    if (label != ' ' && isDead)
+        label = `<span class="map__label--is-dead">${label}</span>`
 
     return label
 }

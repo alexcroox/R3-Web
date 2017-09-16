@@ -196,7 +196,7 @@ class Vehicles {
         }
 
         // Update label
-        vehicleEntity.layer.setTooltipContent(calculateVehicleLabel(driver, crew, cargo))
+        vehicleEntity.layer.setTooltipContent(calculateVehicleLabel(driver, crew, cargo, vehicleEntity.dead))
 
         // Update icon
         let markerIcon = Map.prepareIcon(vehicleEntity.customIcon, factionData)
