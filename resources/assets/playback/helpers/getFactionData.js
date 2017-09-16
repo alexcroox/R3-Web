@@ -10,6 +10,11 @@ const getFactionData = function (factionId) {
 
     switch (factionId) {
 
+        case -1:
+            factionData.name = 'empty'
+            factionData.color = '#cccf63'
+            break;
+
         case 0:
 
             factionData.name = 'east'
