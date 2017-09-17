@@ -11,7 +11,8 @@
         "darkaonline/l5-swagger": "~4.0",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
-        "nesbot/carbon": "^1.22"
+        "nesbot/carbon": "^1.22",
+        "codedge/laravel-selfupdater": "5.x-dev"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

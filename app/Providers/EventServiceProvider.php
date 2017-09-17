@@ -16,6 +16,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\SomeEvent' => [
             'App\Listeners\EventListener',
         ],
+        \Codedge\Updater\Events\UpdateAvailable::class => [
+            \Codedge\Updater\Listeners\SendUpdateAvailableNotification::class
+        ],
+        \Codedge\Updater\Events\UpdateSucceeded::class => [
+            \Codedge\Updater\Listeners\SendUpdateSucceededNotification::class
+        ],
     ];
 
     /**

@@ -180,6 +180,7 @@ return [
         Barryvdh\Cors\ServiceProvider::class,
         \L5Swagger\L5SwaggerServiceProvider::class,
         anlutro\LaravelSettings\ServiceProvider::class,
+        Codedge\Updater\UpdaterServiceProvider::class,
 
     ],
 
@@ -230,7 +231,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'Updater' => Codedge\Updater\UpdaterManager::class,
     ],
 
 ];
