@@ -33,6 +33,20 @@
                 }
             }
         },
+        "/infantry": {
+            "get": {
+                "tags": [
+                    "Infantry"
+                ],
+                "summary": "Finds all infantry entities for a mission",
+                "description": "Returns all infantry entities",
+                "responses": {
+                    "200": {
+                        "description": "A list of all infantry entities for a single mission"
+                    }
+                }
+            }
+        },
         "/missions": {
             "get": {
                 "tags": [
@@ -89,15 +103,16 @@
                 }
             }
         },
-        "/settings": {
+        "/positions/[type]": {
             "get": {
                 "tags": [
-                    "Settings"
+                    "positions"
                 ],
-                "summary": "Returns all app settings for the front end",
+                "summary": "Finds all positions for a particular type for a single mission",
+                "description": "Returns all mission positions",
                 "responses": {
                     "200": {
-                        "description": "A list of all public settings"
+                        "description": "A list of all type positions for a single mission"
                     }
                 }
             }
@@ -185,6 +200,19 @@
                 }
             }
         },
+        "/stats/summary": {
+            "get": {
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Returns summary stats",
+                "responses": {
+                    "200": {
+                        "description": "A list of all summary stats"
+                    }
+                }
+            }
+        },
         "/stats/terrains": {
             "get": {
                 "tags": [
@@ -207,6 +235,47 @@
                 "responses": {
                     "200": {
                         "description": "A list of all players, their mission played count and when they were last seen"
+                    }
+                }
+            }
+        },
+        "/stats/player/{playerId}": {
+            "get": {
+                "tags": [
+                    "Stats"
+                ],
+                "summary": "Find player stats by by Id",
+                "parameters": [
+                    {
+                        "name": "playerId",
+                        "in": "path",
+                        "description": "Id of player to return",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64",
+                        "default": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Stats for a single player"
+                    },
+                    "404": {
+                        "description": "Playeer not found"
+                    }
+                }
+            }
+        },
+        "/vehicles": {
+            "get": {
+                "tags": [
+                    "Vehicles"
+                ],
+                "summary": "Finds all vehicle entities for a mission",
+                "description": "Returns all vehicle entities",
+                "responses": {
+                    "200": {
+                        "description": "A list of all vehicle entities for a single mission"
                     }
                 }
             }
