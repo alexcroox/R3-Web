@@ -15,7 +15,7 @@
             :terrainConfig="terrainConfig">
         </leaflet-map>
 
-        <main-header v-if="!loading" :title="missionName" wide="true" fixed="true"></main-header>
+        <main-header v-if="!loading" :title="title" wide="true" fixed="true"></main-header>
 
         <player-list v-if="!loading"></player-list>
 
@@ -68,7 +68,7 @@
     import MainHeader from 'components/MainHeader.vue'
 
     import Playback from 'playback/index'
-    import PlaybackTime from 'playback/time'
+    import Time from 'playback/time'
     import Map from 'playback/map'
     import Infantry from 'playback/infantry'
     import Vehicles from 'playback/vehicles'
@@ -188,7 +188,7 @@
 
         beforeDestroy () {
             // If we navigate away from playback lets stop our timers
-            PlaybackTime.end()
+            Time.end()
         },
 
         methods: {
@@ -255,7 +255,7 @@
 
                 Playback.load(this.missionId).then(missionInfo => {
 
-                    PlaybackTime.initScrubber(0, missionInfo.last_mission_time)
+                    Time.initScrubber(0, missionInfo.last_mission_time)
                     this.missionName = (missionInfo.display_name != "")? missionInfo.display_name : missionInfo.name
                     this.missionPlayed = missionInfo.played_human
 
@@ -323,7 +323,7 @@
 
             togglePlay () {
 
-                PlaybackTime.toggle()
+                Time.toggle()
             },
 
             changeSpeed (newSpeed) {
@@ -331,7 +331,7 @@
                 console.log('Playback: new speed', newSpeed)
 
                 this.currentSpeed = newSpeed
-                PlaybackTime.changeSpeed(this.currentSpeed)
+                Time.changeSpeed(this.currentSpeed)
             },
 
             initPlayback () {
@@ -339,7 +339,16 @@
                 this.initiatedPlayback = true
                 this.loading = false
 
-                PlaybackTime.play()
+                // Have we been linked with a share URL?
+                if (
+                    typeof this.$route.query.share !== "undefined" &&
+                    typeof this.$route.query.centerLat !== "undefined" &&
+                    typeof this.$route.query.centerLng !== "undefined"
+                ) {
+                    this.loadShare(this.$route.query)
+                } else {
+                    Time.play()
+                }
 
                 setTimeout(() => {
                     bus.$emit('notification', {
@@ -352,9 +361,27 @@
                 }, 1000)
             },
 
+            loadShare (shareSettings) {
+                console.log('Route params', shareSettings)
+
+                if (shareSettings.speed)
+                    this.changeSpeed(parseInt(shareSettings.speed))
+
+                if (shareSettings.centerLat)
+                    Map.setView([shareSettings.centerLat, shareSettings.centerLng], shareSettings.zoom)
+
+                if (typeof shareSettings.time !== "undefined")
+                    Time.skipTime(parseInt(shareSettings.time))
+                else
+                    Time.play()
+
+                if (typeof shareSettings.track !== "undefined")
+                    Playback.startHighlightingUnit(shareSettings.track)
+            },
+
             share () {
 
-                this.shareLink = 'https://google.com'
+                this.shareLink = Playback.getShareLink()
                 bus.$emit('showShareModal')
             },
 
@@ -369,6 +396,10 @@
 
             unitName () {
                 return this.$store.state.settings.unitName
+            },
+
+            title () {
+                return (!this.missionName)? `${this.unitName} - ${this.$t('mission-playback')}` : `${this.unitName} - ${this.missionName}`
             },
 
             currentLoadingStage () {
@@ -386,9 +417,6 @@
         },
 
         watch: {
-            unitName () {
-                document.title = (!this.missionName)? `Mission Playback - ${this.unitName}` : `${this.missionName} - ${this.unitName}`
-            },
 
             loadingStages: {
                 handler: function () {

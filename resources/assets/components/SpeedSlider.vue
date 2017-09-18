@@ -12,7 +12,7 @@
 
         </div>
 
-        <div class="speed-slider__info">{{ displaySpeed }}</div>
+        <div class="speed-slider__info">{{ speed }}x</div>
     </div>
 </template>
 
@@ -47,16 +47,14 @@
                 }
             },
 
-            displaySpeed () {
+            calculatedSpeed () {
 
-                let calculatedSpeed = Math.round((this.max - this.min) * this.targetDifference)
+                let calculateSpeed = Math.round((this.max - this.min) * this.targetDifference)
 
-                if (calculatedSpeed < this.min)
-                    calculatedSpeed = this.min
+                if (calculateSpeed < this.min)
+                    calculateSpeed = this.min
 
-                this.$emit('change', calculatedSpeed)
-
-                return `${calculatedSpeed}x`
+                return calculateSpeed
             }
         },
 
@@ -72,6 +70,8 @@
                 console.log(event)
 
                 this.targetDifference = ((((railOffset - this.$refs.container.offsetLeft) / this.$refs.container.offsetWidth)).toFixed(2))
+
+                this.$emit('change', this.calculatedSpeed)
             },
 
             startSlide (event) {
