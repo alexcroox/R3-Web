@@ -68,6 +68,20 @@ class ShareController extends Controller
         }
     }
 
+    // Load and redirect a share
+    public function load($id)
+    {
+        if($share = $this->fetchOne($id)) {
+
+            $data = $share->getData();
+
+            if(isset($data->url))
+                return redirect($data->url);
+            else
+                return redirect('/not-found');
+        }
+    }
+
     /**
      * @SWG\Post(
      *     tags={"Shares"},

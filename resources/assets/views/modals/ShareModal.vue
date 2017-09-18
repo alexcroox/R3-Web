@@ -18,7 +18,7 @@
                 :lightBackground="true"
                 :full="true"
                 @focus="focusShareInput($event)"
-                class="margin__top--large">
+                class="margin__top--medium">
             </input-text>
 
         </div>

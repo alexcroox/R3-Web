@@ -107,28 +107,6 @@ class Playback {
         // Add our faction to the icon name so we get a colour specific version
         return url.replace(".png", `-${factionData.name}.png`)
     }
-
-    getShareLink () {
-
-        Time.pause()
-
-        let shareUrl = `${window.location.origin}/${this.missionInfo.id}/${this.missionInfo.terrain}/${this.missionInfo.slug}?share`
-
-        let mapCenter = Map.handler.getCenter()
-        shareUrl += `&centerLat=${mapCenter.lat}`
-        shareUrl += `&centerLng=${mapCenter.lng}`
-
-        shareUrl += `&zoom=${Map.handler.getZoom()}`
-        shareUrl += `&time=${Time.currentMissionTime}`
-        shareUrl += `&speed=${Time.speed}`
-
-        if (this.highlightUnit)
-            shareUrl += `&track=${this.highlightUnit}`
-
-        console.log('shareUrl', shareUrl)
-
-        return shareUrl
-    }
 }
 
 export default new Playback

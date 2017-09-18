@@ -73,6 +73,7 @@
     import Infantry from 'playback/infantry'
     import Vehicles from 'playback/vehicles'
     import Events from 'playback/events'
+    import Share from 'playback/share'
 
     export default {
 
@@ -177,12 +178,16 @@
 
             this.startTime = moment()
 
-            bus.$on('paused', (paused) => {
+            bus.$on('paused', paused => {
                 this.paused = paused
             })
 
-            bus.$on('ended', (ended) => {
+            bus.$on('ended', ended => {
                 this.ended = ended
+            })
+
+            bus.$on('changeSpeed', speed => {
+                this.changeSpeed(speed)
             })
         },
 
@@ -345,7 +350,7 @@
                     typeof this.$route.query.centerLat !== "undefined" &&
                     typeof this.$route.query.centerLng !== "undefined"
                 ) {
-                    this.loadShare(this.$route.query)
+                    Share.load(this.$route.query)
                 } else {
                     Time.play()
                 }
@@ -361,28 +366,13 @@
                 }, 1000)
             },
 
-            loadShare (shareSettings) {
-                console.log('Route params', shareSettings)
-
-                if (shareSettings.speed)
-                    this.changeSpeed(parseInt(shareSettings.speed))
-
-                if (shareSettings.centerLat)
-                    Map.setView([shareSettings.centerLat, shareSettings.centerLng], shareSettings.zoom)
-
-                if (typeof shareSettings.time !== "undefined")
-                    Time.skipTime(parseInt(shareSettings.time))
-                else
-                    Time.play()
-
-                if (typeof shareSettings.track !== "undefined")
-                    Playback.startHighlightingUnit(shareSettings.track)
-            },
-
             share () {
 
-                this.shareLink = Playback.getShareLink()
-                bus.$emit('showShareModal')
+                Share.getLink()
+                    .then(shareLink => {
+                        this.shareLink = shareLink
+                        bus.$emit('showShareModal')
+                    })
             },
 
             fullscreen () {

@@ -11,6 +11,8 @@
 |
 */
 
+Route::get('share/{id}', 'ShareController@load');
+
 Route::get('{all}', function () {
 
     $mappingAliases = file_get_contents('https://r3tiles-a.titanmods.xyz/config.json');
