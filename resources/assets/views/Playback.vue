@@ -35,16 +35,30 @@
 
             <time-slider class="margin__left--small margin__right--small"></time-slider>
 
-            <button class="timeline__share" @click="share">
-                <i class="fa fa-share-alt"></i>
+            <button v-if="missionStats" class="timeline__action margin__left--medium" @click="showSummary">
+                <i class="fa fa-flag"></i>
+                <span class="timeline__label">Summary</span>
             </button>
 
-            <button class="timeline__fullscreen margin__left--small" @click="fullscreen">
+            <button class="timeline__action margin__right--medium" @click="share">
+                <i class="fa fa-share-alt"></i>
+                <span class="timeline__label">Share</span>
+            </button>
+
+            <button class="timeline__action" @click="fullscreen">
                 <i class="fa fa-arrows-alt"></i>
+                <span class="timeline__label">Fullscreen</span>
             </button>
         </map-box>
 
         <share-modal :link="shareLink"></share-modal>
+
+        <generic-modal id="MissionSummary" :title="missionName" faIcon="fa-flag">
+            <div v-if="missionStats">
+                <stat label="Civilian casulties" :value="missionStats.kills.civilianCasualties"></stat>
+                <stat label="Friendly fire deaths" :value="missionStats.kills.friendlyFire"></stat>
+            </div>
+        </generic-modal>
     </div>
 </template>
 
@@ -64,8 +78,10 @@
     import SpeedSlider from 'components/SpeedSlider.vue'
     import MapBox from 'components/MapBox.vue'
     import ShareModal from 'views/modals/ShareModal.vue'
+    import GenericModal from 'views/modals/GenericModal.vue'
     import PlayerList from 'components/PlayerList.vue'
     import MainHeader from 'components/MainHeader.vue'
+    import Stat from 'components/Stat.vue'
 
     import Playback from 'playback/index'
     import Time from 'playback/time'
@@ -84,8 +100,10 @@
             SpeedSlider,
             MapBox,
             ShareModal,
+            GenericModal,
             PlayerList,
             MainHeader,
+            Stat
         },
 
         props: ['urlData'],
@@ -101,6 +119,7 @@
                 shareLink: '',
                 paused: true,
                 ended: false,
+                missionStats: null,
                 tileDomain: {
                     static: 'https://r3tiles-a.titanmods.xyz',
                     dynamic: 'https://r3tiles-{s}.titanmods.xyz' // sub domain support for faster loading (non http/2 servers)
@@ -274,6 +293,7 @@
                     this.fetchInfantryPositions()
                     this.fetchVehicles()
                     this.fetchVehiclePositions()
+                    this.fetchMissionStats()
 
                 }).catch(error => this.errorReturnToMissionList('That mission cannot be found!', error))
             },
@@ -319,6 +339,20 @@
                         this.completeLoadingStage('vehiclePositions')
                     })
                     .catch(error => this.errorReturnToMissionList('Error loading mission vehiclePositions'))
+            },
+
+            fetchMissionStats () {
+
+                axios.get(`/stats/mission/${this.missionId}`)
+                    .then(response => {
+
+                        console.log('Playback: Got mission stats', response.data)
+
+                        this.missionStats = response.data
+                    })
+                    .catch(error => {
+                        console.error('Error fetching mission stats', error)
+                    })
             },
 
             completeLoadingStage (stageType) {
@@ -373,6 +407,10 @@
                         this.shareLink = shareLink
                         bus.$emit('showShareModal')
                     })
+            },
+
+            showSummary () {
+                bus.$emit('showMissionSummaryModal')
             },
 
             fullscreen () {
@@ -456,21 +494,31 @@
         opacity .8
         cursor pointer
 
-    .timeline__share
-    .timeline__fullscreen
+    .timeline__action
         color #FFF
         display inline-block
         font-size 19px
+        line-height 34px
 
         &:hover
             opacity .8
             cursor pointer
 
+    .timeline__action .fa
+        vertical-align middle
+
+    .timeline__label
+        font-size 13px
+        margin-left 3px
+        vertical-align middle
+        display inline-block
+        font-weight 500
+
 </style>
 
 <style lang="stylus" scoped>
     .timeline
-        left 50%
+        left 32%
         right 10px
         bottom 10px
         height 36px

@@ -111,7 +111,7 @@
         left 0
         right 0
         overflow hidden
-        padding 10px 5px 0 5px
+        padding 10px 5px 10px 5px
         border-top 1px solid #666
         min-height 100px
 

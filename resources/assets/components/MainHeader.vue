@@ -123,6 +123,7 @@
         padding 0 $sidePadding
         line-height 21px
         display flex
+        user-select none
 
         @media (max-width $mobileBreakPoint)
             padding 0 $sidePaddingMobile

@@ -1,5 +1,5 @@
 <template>
-    <div class="speed-slider__container">
+    <div class="speed-slider__container" @mouseleave="stopSlide">
         <div
             class="speed-slider"
             ref="container"

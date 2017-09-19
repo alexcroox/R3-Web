@@ -20,6 +20,7 @@
         position absolute
         background rgba(0,0,0,.5)
         z-index 2
+        user-select none
 
     .map-box--hidden
         visibility hidden

@@ -118,6 +118,96 @@ class StatsController extends Controller
     /**
      * @SWG\Get(
      *     tags={"Stats"},
+     *     path="/stats/mission/{missionId}",
+     *     summary="Find mission stats by by Id",
+     *     @SWG\Parameter(
+     *         description="Id of mission to return",
+     *         in="path",
+     *         name="missionId",
+     *         required=true,
+     *         default=1,
+     *         type="integer",
+     *         format="int64"
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Stats for a single mission"
+     *     ),
+     *     @SWG\Response(
+     *         response="404",
+     *         description="Mission not found"
+     *     )
+     * )
+     */
+    public function fetchMission($missionId = 0)
+    {
+        $stats = [];
+
+        $stats['missionInfo'] = Mission::where('id', $missionId)->where('hidden', 0)->first();
+
+        if(!$stats['missionInfo'])
+            return response()->json(['error' => 'Mission Not Found'], 404);
+
+        $stats['kills'] = new \stdClass();
+
+        // TODO: Log a new mission with vehicle attacker logging so this actually works
+        $stats['kills']->playerVsAi = DB::table('events_downed')
+            ->select(DB::raw('count(events_downed.mission) as total'))
+            ->leftJoin('infantry as i1', function($join)
+            {
+                $join->on('events_downed.entity_attacker', '=', 'i1.entity_id');
+                $join->on('events_downed.mission', '=', 'i1.mission');
+            })
+            ->leftJoin('infantry as i2', function($join)
+            {
+                $join->on('events_downed.entity_victim', '=', 'i2.entity_id');
+                $join->on('events_downed.mission', '=', 'i2.mission');
+            })
+            ->where('i1.mission', $missionId)
+            ->where('i2.mission', $missionId)
+            ->where('i2.player_id', '')
+            ->where('i1.player_id', '<>', '')
+            ->where('events_downed.type', 'killed')
+            ->first();
+
+        $stats['kills']->aiVsPlayer = DB::table('events_downed')
+            ->select(DB::raw('count(events_downed.mission) as total'))
+            ->leftJoin('infantry as i1', function($join)
+            {
+                $join->on('events_downed.entity_attacker', '=', 'i1.entity_id');
+                $join->on('events_downed.mission', '=', 'i1.mission');
+            })
+            ->leftJoin('infantry as i2', function($join)
+            {
+                $join->on('events_downed.entity_victim', '=', 'i2.entity_id');
+                $join->on('events_downed.mission', '=', 'i2.mission');
+            })
+            ->where('i1.mission', $missionId)
+            ->where('i2.mission', $missionId)
+            ->where('i1.player_id', '')
+            ->where('i2.player_id', '<>', '')
+            ->where('events_downed.type', 'killed')
+            ->first();
+
+        // $stats['kills']->friendlyFire = DB::table('events_downed')
+        //     ->select(DB::raw('count(events_downed.mission) as total'))
+        //     ->leftJoin('infantry', function($join)
+        //     {
+        //         $join->on('events_downed.entity_attacker', '=', 'infantry.entity_id');
+        //         $join->on('events_downed.mission', '=', 'infantry.mission');
+        //     })
+        //     ->where('infantry.player_id', $playerId)
+        //     ->where('events_downed.type', 'killed')
+        //     ->where('events_downed.same_faction', 1)
+        //     ->orderBy('total', 'desc')
+        //     ->first();
+
+        return $stats;
+    }
+
+    /**
+     * @SWG\Get(
+     *     tags={"Stats"},
      *     path="/stats/player/{playerId}",
      *     summary="Find player stats by by Id",
      *     @SWG\Parameter(

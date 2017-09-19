@@ -49,4 +49,5 @@ Route::group(['prefix' => 'stats'], function () {
     Route::get('/terrains', 'StatsController@fetchTerrains');
     Route::get('/attendance', 'StatsController@fetchAttendance');
     Route::get('/player/{id}', 'StatsController@fetchPlayer');
+    Route::get('/mission/{id}', 'StatsController@fetchMission');
 });
