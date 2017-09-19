@@ -25,6 +25,7 @@ class CreateMissionsTable extends Migration
             $table->string('addon_version', 10);
             $table->timestamp('last_event_time');
             $table->smallInteger('last_mission_time');
+            $table->string('file_name', 200)->nullable();
 
             $table->timestamps();
         });
