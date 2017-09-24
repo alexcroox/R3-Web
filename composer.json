@@ -8,11 +8,12 @@
         "php": ">=5.6.4",
         "anlutro/l4-settings": "^0.5.0",
         "barryvdh/laravel-cors": "^0.8.6",
+        "codedge/laravel-selfupdater": "5.x-dev",
         "darkaonline/l5-swagger": "~4.0",
+        "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
-        "nesbot/carbon": "^1.22",
-        "codedge/laravel-selfupdater": "5.x-dev"
+        "nesbot/carbon": "^1.22"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

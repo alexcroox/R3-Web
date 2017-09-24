@@ -13,6 +13,10 @@
 
 Route::get('share/{id}', 'ShareController@load');
 
+Auth::routes();
+
+Route::get('/home-auth', 'HomeController@index')->name('home-auth');
+
 Route::get('{all}', function () {
 
     $mappingAliases = file_get_contents('https://r3tiles-a.titanmods.xyz/config.json');
