@@ -1,4 +1,8 @@
 <?php
+// This script will migrate your old R3 data into the new v1 format
+// Unfortunately we cannot migrate positional data so you will not be able to view
+// the playbacks, but your stats will come over at least
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
