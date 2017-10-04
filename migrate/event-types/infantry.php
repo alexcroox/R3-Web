@@ -15,11 +15,6 @@ function infantryEvent($rawEvents) {
 
     $missionTime = $rawEvents['missionTime'];
 
-    if($missionTime % $secondsBetweenKeyFrame == 0)
-        $keyFrame = true;
-    else
-        $keyFrame = false;
-
     foreach($events as $e) {
 
         // First time we've seen this unit?
