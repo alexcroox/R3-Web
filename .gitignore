@@ -14,3 +14,4 @@ yarn.lock
 composer.lock
 npm-debug.log
 stats.json
+migrate/config.php
