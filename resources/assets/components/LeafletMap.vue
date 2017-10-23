@@ -75,6 +75,7 @@
     .map__label__vehicle--driver
         padding 0 6px
         display block
+        line-height 14px
 
     .map__label__vehicle__crew
     .map__label__vehicle__cargo
@@ -87,6 +88,8 @@
         display block
         padding 0 6px
         line-height 14px
+        margin-top 0px
+        color #666
 
     .map__label__text
         display block

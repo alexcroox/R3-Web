@@ -80,7 +80,25 @@ class Playback {
 
         this.highlightUnit = entityId
         this.trackingHighlightedUnit = true
-        Infantry.highlightUnit(entityId)
+        let entity = this.findEntity(entityId, true)
+
+        if (!entity)
+            return
+        else
+            this.highlightEntity(entity)
+    }
+
+    // TODO: this function name doesn't follow convention of others but highlightUnit was created a while ago and is used everywhere
+    // Take the time to rename highlightUnit so we can use it for this function name
+    highlightEntity (entity) {
+
+        if (!entity.hasOwnProperty('layer'))
+            return
+
+        let tooltip = entity.layer.getTooltip().getElement()
+        tooltip.classList.add('map__label--highlighted')
+
+        entity.layer.setZIndexOffset = 1000
     }
 
     stopHighlightingUnit (entityId) {
@@ -90,7 +108,13 @@ class Playback {
         this.highlightUnit = 0
         this.trackingHighlightedUnit = false
 
-        Infantry.stopHighlightingUnit(entityId)
+        let entity = this.findEntity(entityId, true)
+
+        if (!entity)
+            return
+
+        let tooltip = entity.layer.getTooltip().getElement()
+        tooltip.classList.remove('map__label--highlighted')
     }
 
     stopTrackingHighlightedUnit () {

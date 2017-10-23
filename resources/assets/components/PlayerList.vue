@@ -373,6 +373,9 @@
         position relative
         margin-bottom 10px
 
+    .player-list__faction:last-child
+        margin-bottom 40px
+
     .player-list__faction__name
         text-transform uppercase
         letter-spacing 0.03em

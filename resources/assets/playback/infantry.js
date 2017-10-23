@@ -103,7 +103,7 @@ class Infantry {
                     (Time.currentMissionTime - this.timeLastSeenKeyFrame > 9)
                 ) {
                     this.timeLastSeenKeyFrame = Time.currentMissionTime
-                    this.clearMarkers()
+                    //this.clearMarkers()
                 }
 
                 this.updateEntityPosition(posData)
@@ -142,8 +142,15 @@ class Infantry {
             this.addEntityToMap(entity)
 
         // Has this entity been on the map, but isn't right now?
-        if (!this.layer.hasLayer(entity.layer))
+        if (!this.layer.hasLayer(entity.layer)) {
             this.layer.addLayer(entity.layer)
+
+            let tooltip = entity.layer.getTooltip().getElement()
+            if (posData.is_dead == '1')
+                tooltip.style.opacity = 0.4
+            else
+                tooltip.style.opacity = 1
+        }
 
         // Store when we last moved this unit so we can decide to clean up later
         entity.missionTimeLastUpdated = posData.mission_time
@@ -169,7 +176,7 @@ class Infantry {
         // Highlight unit?
         if (Playback.highlightUnit && Playback.highlightUnit == entity.entity_id) {
 
-            this.highlightUnit(entity.entity_id)
+            Playback.highlightEntity(entity.entity_id)
 
             // Lets not continue panning to the unit if the user wants to look around the map
             if (Playback.trackingHighlightedUnit) {
@@ -189,30 +196,6 @@ class Infantry {
             Map.setView(mapPosition, 4)
             Playback.centeredOnFirstPlayer = true
         }
-    }
-
-    highlightUnit (entityId) {
-
-        let entity = this.getEntityById(entityId)
-
-        if (!entity)
-            return
-
-        let tooltip = entity.layer.getTooltip().getElement()
-        tooltip.classList.add('map__label--highlighted')
-    }
-
-    stopHighlightingUnit (entityId) {
-
-        console.log('Stopping highlighting')
-
-        if (!this.entities.hasOwnProperty(entityId))
-            return
-
-        console.log('now', entityId)
-
-        let tooltip = this.entities[entityId].layer.getTooltip().getElement()
-        tooltip.classList.remove('map__label--highlighted')
     }
 
     setEntityRotation (entity, newAngle) {

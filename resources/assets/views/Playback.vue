@@ -40,12 +40,12 @@
                 <span class="timeline__label">Summary</span>
             </button>
 
-            <button class="timeline__action margin__right--medium" @click="share">
+            <button class="timeline__action margin__left--medium" @click="share">
                 <i class="fa fa-share-alt"></i>
                 <span class="timeline__label">Share</span>
             </button>
 
-            <button class="timeline__action" @click="fullscreen">
+            <button class="timeline__action margin__left--medium" @click="fullscreen">
                 <i class="fa fa-arrows-alt"></i>
                 <span class="timeline__label">Fullscreen</span>
             </button>

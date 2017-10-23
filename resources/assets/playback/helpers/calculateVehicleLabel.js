@@ -39,7 +39,7 @@ const calculateVehicleLabel = function (driver, crew, cargo, isDead) {
     // Add cargo to the label
     _each(cargo, cargoEntityId => {
         let cargoEntity = Infantry.getEntityById(cargoEntityId)
-        let highlightClass = (cargoEntity == Playback.highlightUnit)? highlightUnitClass : ''
+        let highlightClass = (cargoEntityId == Playback.highlightUnit)? highlightUnitClass : ''
         cargoLabel += `
             <span class="map__label map__label__vehicle__cargo__unit ${highlightClass}">
                 ${cargoEntity.name}

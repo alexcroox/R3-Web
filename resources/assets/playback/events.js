@@ -154,6 +154,9 @@ class PlaybackEvents {
                 victimOnMap.dead = true
 
             victimOnMap.layer.setOpacity(0.4)
+
+            let tooltip = victimOnMap.layer.getTooltip().getElement()
+            tooltip.style.opacity = 0.4
         }
 
         // If an AI was killed by a player or vice versa show notification
@@ -173,11 +176,15 @@ class PlaybackEvents {
         let attackerName = (attacker.isPlayer)? attacker.name : attacker.class
         let attackerHighlightClass = (attacker.isPlayer)? 'uppercase' : ''
 
+        let deathMessage = ''
+
+        if (attackerName)
+            deathMessage = `by <span class="${attackerHighlightClass}">${attackerName}</span>`
+
         bus.$emit('notification', {
             message: `
                 <span class="${victimHighlightClass}">${victimName}</span>
-                was killed by
-                <span class="${attackerHighlightClass}">${attackerName}</span>`,
+                was killed ${deathMessage}`,
             type,
             position,
             entityId
@@ -246,6 +253,19 @@ class PlaybackEvents {
         setTimeout(() => Map.handler.removeLayer(launchPulse), 1000)
     }
 
+    throwRing (launchPosition, color = 'black') {
+
+        let ring = L.circle(launchPosition, 8000, {
+            weight: 2,
+            color,
+            fillColor: '#f03',
+            fillOpacity: 0,
+            interactive: false
+        }).addTo(Map.handler)
+
+        setTimeout(() => Map.handler.removeLayer(ring), 1000)
+    }
+
     // Throwing or firing HE or Smoke
     // Pulse a large circle around the attacker and animate a smoke or explosion
     // where the projectile lands
@@ -257,7 +277,7 @@ class PlaybackEvents {
 
             let launchPosition = attacker.layer.getLatLng()
 
-            this.pulseCircle(launchPosition, 'black')
+            this.throwRing(launchPosition)
 
             let projectileExplodePosition = Map.rc.unproject([event.x, event.y])
 

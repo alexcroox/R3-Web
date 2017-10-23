@@ -103,7 +103,7 @@ class Vehicles {
                     (Time.currentMissionTime - this.timeLastSeenKeyFrame > 9)
                 ) {
                     this.timeLastSeenKeyFrame = Time.currentMissionTime
-                    this.clearMarkers()
+                    //this.clearMarkers()
                 }
 
                 this.updateEntityPosition(posData)
@@ -190,6 +190,7 @@ class Vehicles {
         if (vehicleEntity.dead == null && posData.is_dead == '1') {
             vehicleEntity.dead = true
             vehicleEntity.layer.setOpacity(0.4)
+            vehicleEntity.layer.setZIndexOffset(-10000)
         } else if (vehicleEntity.dead != null && posData.is_dead == '0') {
             vehicleEntity.dead = null
             vehicleEntity.layer.setOpacity(1)
@@ -222,7 +223,7 @@ class Vehicles {
         // We need to store it's current faction to work out
         // if we need to change it's colour on the next position update
         // I.e if an enemy unit jumps in after
-        entity.faction = factionData.id
+        entity.faction = parseInt(factionData.id)
 
         // Our unit marker image
         let icon = Map.prepareIcon(entity.customIcon, factionData)
@@ -232,6 +233,9 @@ class Vehicles {
         marker.bindTooltip('', {
             className: `map__label map__label__vehicle`
         })
+
+        if (entity.faction === -1)
+            marker.setZIndexOffset(-1000)
 
         // Create the marker, we aren't going to add it to the map
         // just yet so the position isn't important
