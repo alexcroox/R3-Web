@@ -32,6 +32,7 @@ class CreateInfantryTable extends Migration
             $table->index('mission');
             $table->index('entity_id');
             $table->index('player_id');
+            $table->unique(array('mission', 'entity_id'));
         });
     }
 
