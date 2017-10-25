@@ -15,7 +15,7 @@ Route::get('share/{id}', 'ShareController@load');
 
 Auth::routes();
 
-Route::get('/home-auth', 'HomeController@index')->name('home-auth');
+Route::get('/admin', 'AdminController@index');
 
 Route::get('{all}', function () {
 

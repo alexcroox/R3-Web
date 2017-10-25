@@ -16,10 +16,10 @@
                     {{ ucfirst($t('stats')) }}
                 </router-link>
 
-                <router-link :to="{ name: 'admin' }" class="header__list__item" active-class="header__list__item--active">
+                <a href="/admin" class="header__list__item" active-class="header__list__item--active">
                     <i class="fa fa-lock" aria-hidden="true"></i>
                     {{ ucfirst($t('admin')) }}
-                </router-link>
+                </a>
 
                 <button class="header__list__item" @click="showPreferencesModal">
                     <i class="fa fa-cog" aria-hidden="true"></i>

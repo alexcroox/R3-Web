@@ -54,7 +54,7 @@
 
             fetchStats () {
 
-                axios.get('/stats/attendance')
+                axios.get(`/stats/attendance?api_token=${this.$store.state.settings.adminToken}`)
                     .then(response => {
 
                         console.log('Got attendance stats', response.data);

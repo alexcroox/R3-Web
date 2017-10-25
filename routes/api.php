@@ -38,16 +38,16 @@ Route::group(['prefix' => 'positions', 'middleware' => 'checkMissionEnded'], fun
     Route::get('/{type}/{id}', 'PositionController@fetchAll');
 });
 
+Route::group(['prefix' => 'stats'], function () {
+    Route::get('/', 'StatsController@fetchSummary');
+    Route::get('/terrains', 'StatsController@fetchTerrains');
+    Route::get('/attendance', 'StatsController@fetchAttendance')->middleware('auth:api');
+    Route::get('/player/{id}', 'StatsController@fetchPlayer');
+    Route::get('/mission/{id}', 'StatsController@fetchMission');
+});
+
 Route::group(['prefix' => 'shares'], function () {
     Route::get('/', 'ShareController@fetchAll');
     Route::post('/', 'ShareController@store');
     Route::get('/{id}', 'ShareController@fetchOne');
-});
-
-Route::group(['prefix' => 'stats'], function () {
-    Route::get('/', 'StatsController@fetchSummary');
-    Route::get('/terrains', 'StatsController@fetchTerrains');
-    Route::get('/attendance', 'StatsController@fetchAttendance');
-    Route::get('/player/{id}', 'StatsController@fetchPlayer');
-    Route::get('/mission/{id}', 'StatsController@fetchMission');
 });

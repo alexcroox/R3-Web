@@ -24,12 +24,6 @@ let routes = [
     },
 
     {
-        path: '/admin',
-        name: 'admin',
-        component: require('./views/Admin.vue')
-    },
-
-    {
         path: '/stats',
         component: require('./views/stats/Stats.vue'),
         children: [{

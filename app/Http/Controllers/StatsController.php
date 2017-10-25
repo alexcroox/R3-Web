@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mission;
 use App\Infantry;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -82,7 +83,11 @@ class StatsController extends Controller
      */
     public function fetchAttendance()
     {
-        $stats = DB::table(DB::raw('(SELECT player_id, mission, name FROM infantry GROUP BY player_id, mission) as unique_infantry'))
+        if (!Auth::check()) {
+            return response()->json(['error' => 'Not authorised'], 401);
+        }
+
+        $stats = DB::table(DB::raw("(SELECT player_id, mission, ANY_VALUE(name) as name FROM infantry WHERE player_id <> '' GROUP BY player_id, mission) as unique_infantry"))
                     ->distinct('player_id')
                     ->select(
                         'player_id',
@@ -103,7 +108,10 @@ class StatsController extends Controller
                     ->orderBy('mission_count', 'desc')
                     ->get();
 
-        foreach($stats as $stat) {
+        foreach($stats as $key => $stat) {
+
+            if (!$stat->last_seen)
+                unset($stats[$key]);
 
             // Generate extra data for consumption
             $lastSeen = Carbon::parse($stat->last_seen, 'UTC');

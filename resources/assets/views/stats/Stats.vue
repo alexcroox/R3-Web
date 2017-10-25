@@ -2,12 +2,7 @@
     <div>
         <main-header :title="title"></main-header>
 
-        <tab :tabs="[
-            { text: ucfirst($t('summary')), route: 'stats.summary', icon: 'tachometer', exact: true },
-            { text: ucfirst($t('my-stats')), route: 'stats.me', icon: 'address-card', exact: true },
-            { text: ucfirst($t('terrains')), route: 'stats.terrains', icon: 'globe' },
-            { text: ucfirst($t('attendance')), route: 'stats.attendance', icon: 'user', private: true },
-        ]"></tab>
+        <tab :tabs="tabs"></tab>
 
         <router-view></router-view>
     </div>
@@ -26,8 +21,23 @@
             Tab
         },
 
+        data () {
+            return {
+                tabs: []
+            }
+        },
+
         mounted () {
             console.log('Stats mounted')
+
+            this.tabs = [
+                { text: ucfirst(this.$t('summary')), route: 'stats.summary', icon: 'tachometer', exact: true },
+                { text: ucfirst(this.$t('my-stats')), route: 'stats.me', icon: 'address-card', exact: true },
+                { text: ucfirst(this.$t('terrains')), route: 'stats.terrains', icon: 'globe' }
+            ]
+
+            if (this.$store.state.settings.adminToken)
+                this.tabs.push({ text: ucfirst(this.$t('attendance')), route: 'stats.attendance', icon: 'user', private: true })
         },
 
         computed: {

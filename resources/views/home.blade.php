@@ -23,6 +23,12 @@
             mappingAliases: <?php echo $mappingAliases; ?>,
             locales: <?php echo $locales; ?>,
 
+            @if (Auth::check())
+                adminToken: '{{ Auth::user()->api_token }}',
+            @else
+                adminToken: false,
+            @endif
+
             <?php
             foreach($settings as $key => $value) {
                 echo "'{$key}': '{$value}',";
