@@ -211,6 +211,9 @@ class Vehicles {
         if(newAngle == entity.currentAngle)
             return
 
+        if (entity.icon === "iconUnknown")
+            console.warn('Missing vehicle icon', entity)
+
         //let smoothAngle = shortestRotation(entity.currentAngle, newAngle);
 
         entity.currentAngle = newAngle
