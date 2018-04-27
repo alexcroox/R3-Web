@@ -50,6 +50,12 @@ define('MIN_PLAYER_COUNT', 5);
  */
 define('MINUTES_MISSION_END_BLOCK', 2);
 
+/*
+    Event cache json files take up disk space, lets auto clear them out
+    after x hours. Use a value of 0 to disable this behaviour
+ */
+define('HOURS_EXPIRE_EVENT_CACHE_FILE', 5);
+
 // Set this to FALSE if you are deploying
 // to production server
 define('DEBUG', TRUE);

@@ -168,6 +168,8 @@ class Replays {
 
     public function fetchEvents($replayId) {
 
+        $this->cleanupCachefiles();
+
         // We need to use unbuffered queries to avoid memory issues loading a large number
         // of mission events into memory
         $unbufferedPdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASSWORD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
@@ -373,5 +375,27 @@ class Replays {
             DELETE FROM events WHERE replayId = :replayId");
         $query->execute(array('replayId' => $replayId));
         */
+    }
+
+    private function cleanupCachefiles() {
+
+        if (!HOURS_EXPIRE_EVENT_CACHE_FILE)
+            return FALSE;
+
+        // Find all cached json files
+        foreach (glob(APP_PATH . '/cache/events/' . '*.json') as $absoluteFilePath) {
+
+            $modifiedTime = filemtime($absoluteFilePath);
+
+            if ($modifiedTime) {
+                // Get the number of hours since file creation
+                $hourDifference = round((time() - $modifiedTime) / 3600, 1);
+
+                // Is this an old cache file?
+                if ($hourDifference >= HOURS_EXPIRE_EVENT_CACHE_FILE) {
+                    $deleteFile = unlink($absoluteFilePath);
+                }
+            }
+        }
     }
 }
