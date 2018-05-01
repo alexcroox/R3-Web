@@ -63,6 +63,20 @@ class Replays {
         return $query->fetch();
     }
 
+    public function fetchHidden($daysOlderThan = 60) {
+
+        $query = $this->_db->prepare("
+            SELECT id FROM replays
+            WHERE
+                hidden = 1 AND
+                dateStarted < DATE_SUB(NOW(), INTERVAL 60 DAY)
+        ");
+
+        $query->execute();
+
+        return $query->fetch();
+    }
+
     public function updateMeta() {
 
         $util = Util::Instance();

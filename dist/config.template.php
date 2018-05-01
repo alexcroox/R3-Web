@@ -56,6 +56,13 @@ define('MINUTES_MISSION_END_BLOCK', 2);
  */
 define('HOURS_EXPIRE_EVENT_CACHE_FILE', 5);
 
+/*
+    To reduce the growing size of your event database, you can setup a cron job to run
+    /crons/delete-hidden-events.php. The value below controls how many days old a hidden replay
+    must be before deleting it's events
+ */
+define('MIN_DAYS_DELETE_HIDDEN_MISSION_EVENTS', 60);
+
 // Set this to FALSE if you are deploying
 // to production server
 define('DEBUG', TRUE);
