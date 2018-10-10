@@ -24,7 +24,12 @@ $headerTitle = UNIT_NAME;
 $metaImage = WEB_PATH . '/maps/' . strtolower($replayDetails->map) . '/tiles/0/0/0.png';
 $page = 'playback';
 
-$mappingConfig = file_get_contents('https://r3tiles-a.titanmods.xyz/config.json');
+$url = 'https://r3tiles-a.titanmods.xyz/config.json';
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+$mappingConfig = curl_exec($ch);
+curl_close($ch);
 
 $playerList = $replays->fetchReplayPlayers($_GET['replayId'], $replayDetails->playerList);
 

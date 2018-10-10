@@ -290,12 +290,21 @@ class Replays {
 
     public function getIcons() {
 
-        return file_get_contents('https://r3icons.titanmods.xyz/config.json');
+        return $this->my_curl('https://r3icons.titanmods.xyz/config.json');
     }
 
     public function getObjectiveMarkers() {
 
-        return file_get_contents('https://r3icons.titanmods.xyz/markers.json');
+        return $this->my_curl('https://r3icons.titanmods.xyz/markers.json');
+    }
+
+    function my_curl($url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
     }
 
     public function getHtmlReplaysForPlayer($playerId, $replayData = FALSE) {
