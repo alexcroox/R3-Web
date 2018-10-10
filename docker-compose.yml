@@ -1,0 +1,40 @@
+version: '2'
+
+services:
+    db:
+        image: mariadb:10.1.26
+        container_name: r3_db
+        restart: always
+        environment:
+            MYSQL_USER: r3
+            MYSQL_PASSWORD: password
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: r3
+        volumes:
+            - r3_db_data:/var/lib/mysql
+        ports:
+            - "3306:3306"
+
+    web:
+        depends_on:
+          - db
+        build:
+          context: .
+          dockerfile: web.docker
+        image: local/r3_web
+        container_name: r3_web
+        restart: always
+        environment:
+          VIRTUAL_HOST: r3.local
+          DB_HOST: r3_db
+          DB_USER: r3
+          DB_PASSWORD: password
+          DB_NAME: r3
+        ports:
+          - "8080:80"
+        volumes:
+          - ./dist:/var/www/html/
+
+volumes:
+    r3_db_data:
+    dist:
