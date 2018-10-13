@@ -4,8 +4,8 @@
 
 <a href="https://github.com/alexcroox/R3-Web/releases/latest">
     <img src="https://img.shields.io/github/release/alexcroox/R3-Web.svg" alt="Project Version">
-</a>   
-    
+</a>
+
 <a href="https://raw.githubusercontent.com/alexcroox/R3-Web/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-red.svg" alt="Project License">
 </a>
@@ -35,6 +35,10 @@ An exact mirror of this repo [can be viewed here](https://aar.ark-group.org) whi
 2. Download the [latest web release](https://github.com/alexcroox/R3-Web/releases/latest)
 3. Rename `config.template.php` to `config.php`, pay close attention to `DB_*`, `WEB_PATH` and timezone configurations
 4. Upload the files to your web server which matches the URL in `WEB_PATH` in `config.php`. Take note of `/.htaccess` in the download that may be hidden on your system before you upload.
+5. _(linux specifc)_ give the `cache` directory permissions for your web-server user account:
+```
+chown www-data:www-data -R cache/
+```
 
 ### Important information to get the most from R3
 
@@ -56,5 +60,5 @@ You can find me (Titan) on the [R3 Discord](https://discord.gg/qcE3dRP) or feel 
 
 ### Why not x framework/language
 
-In an ideal world I'd be using web sockets and node to stream from the game server straight to a flat json file, and to the browser. 
+In an ideal world I'd be using web sockets and node to stream from the game server straight to a flat json file, and to the browser.
 However the goal is to allow Arma 3 server admins to be able to run this and contribute. PHP + MySQL is the most common setup these administrators (with potentially limited sysadmin knowledge or sudo access) will have so it is the correct choice, as limiting as that can be!
