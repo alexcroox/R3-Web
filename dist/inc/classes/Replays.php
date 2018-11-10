@@ -74,7 +74,7 @@ class Replays {
 
         $query->execute();
 
-        return $query->fetch();
+        return $query->fetchAll();
     }
 
     public function updateMeta() {
